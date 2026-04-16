@@ -16,11 +16,45 @@ from llama_index.llms.openai import OpenAI
 
 from .config import Settings
 from .graph_store import GraphRAGStore
-from .models import OntologyConfig, TaskState
+from .models import LLMConfig, OntologyConfig, TaskState
 from .parser import DocumentParser
 from .pipeline import build_topic_graph
 
 logger = logging.getLogger(__name__)
+
+# Known provider base URLs
+_PROVIDER_URLS = {
+    "lmstudio": "http://localhost:1234/v1",
+    "ollama": "http://localhost:11434/v1",
+}
+
+
+def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optional[Settings] = None):
+    """
+    Create an LLM client from a per-request LLMConfig (preferred) or server-level Settings (fallback).
+
+    Never persists the API key — it's only used for this single client instance.
+    """
+    kwargs = {"model": model, "temperature": 0}
+
+    if llm_config:
+        # Per-request config from the browser session
+        if llm_config.api_key:
+            kwargs["api_key"] = llm_config.api_key
+        base_url = llm_config.base_url or _PROVIDER_URLS.get(llm_config.provider)
+        if base_url:
+            kwargs["api_base"] = base_url
+        # Local providers may not need a real key
+        if llm_config.provider != "openai" and "api_key" not in kwargs:
+            kwargs["api_key"] = "not-needed"
+    elif fallback:
+        # Server-level .env config (for headless / CLI usage)
+        if fallback.openai_api_key:
+            kwargs["api_key"] = fallback.openai_api_key
+        if fallback.llm_base_url:
+            kwargs["api_base"] = fallback.llm_base_url
+
+    return OpenAI(**kwargs)
 
 
 class TaskManager:
@@ -44,6 +78,7 @@ class TaskManager:
         self,
         topic: str,
         ontology: Optional[OntologyConfig],
+        llm_config: Optional[LLMConfig],
         query_engines: dict,
     ) -> None:
         """
@@ -59,7 +94,7 @@ class TaskManager:
         query_engines.pop(topic, None)
 
         asyncio.create_task(
-            self._run_build(topic, ontology or OntologyConfig(), query_engines)
+            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines)
         )
 
     # ── Internal ───────────────────────────────────────────────────────────────
@@ -68,6 +103,7 @@ class TaskManager:
         self,
         topic: str,
         ontology: OntologyConfig,
+        llm_config: Optional[LLMConfig],
         query_engines: dict,
     ) -> None:
         def _progress(msg: str) -> None:
@@ -88,10 +124,12 @@ class TaskManager:
 
             _progress(f"Parsed {len(documents)} documents — building graph...")
 
-            # Build LLM clients using the configured provider
-            extraction_llm = _make_llm(config.extraction_model, config)
+            # Resolve model names: per-request config overrides server defaults
+            extraction_model = (llm_config.extraction_model if llm_config else None) or config.extraction_model
+            query_model = (llm_config.query_model if llm_config else None) or config.query_model
+
+            extraction_llm = make_llm(extraction_model, llm_config, config)
             community_llm = extraction_llm
-            query_llm = _make_llm(config.query_model, config)
 
             store = await build_topic_graph(
                 topic=topic,
@@ -115,21 +153,3 @@ class TaskManager:
                 self._tasks[topic].status = "error"
                 self._tasks[topic].error = str(exc)
                 self._tasks[topic].completed_at = datetime.now(timezone.utc)
-
-
-def _make_llm(model: str, config: Settings):
-    """
-    Create an LLM client. Supports:
-    - OpenAI (gpt-4o, gpt-4o-mini, etc.)
-    - Any OpenAI-compatible API (LM Studio, Ollama, etc.) via LLM_BASE_URL
-    """
-    kwargs = {"model": model, "temperature": 0}
-
-    if config.openai_api_key:
-        kwargs["api_key"] = config.openai_api_key
-
-    # Support for local/custom OpenAI-compatible endpoints
-    if hasattr(config, "llm_base_url") and config.llm_base_url:
-        kwargs["api_base"] = config.llm_base_url
-
-    return OpenAI(**kwargs)

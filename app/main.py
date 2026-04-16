@@ -10,15 +10,15 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from .config import settings
 from .graph_store import GraphRAGStore
-from .models import BuildRequest, QueryRequest, QueryResponse, TopicStatus
+from .models import BuildRequest, LLMConfig, QueryRequest, QueryResponse, TopicStatus
 from .query_engine import GraphRAGQueryEngine
-from .task_manager import TaskManager, _make_llm
+from .task_manager import TaskManager, make_llm
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,6 @@ def _discover_topics() -> list[TopicStatus]:
     graphs_dir = Path(settings.graphs_dir)
     topics: dict[str, TopicStatus] = {}
 
-    # Topics with raw files
     if raw_dir.exists():
         for d in sorted(raw_dir.iterdir()):
             if d.is_dir():
@@ -51,7 +50,6 @@ def _discover_topics() -> list[TopicStatus]:
                     has_graph=False,
                 )
 
-    # Topics with built graphs
     if graphs_dir.exists():
         for d in sorted(graphs_dir.iterdir()):
             if not d.is_dir():
@@ -70,9 +68,7 @@ def _discover_topics() -> list[TopicStatus]:
 
             if d.name not in topics:
                 topics[d.name] = TopicStatus(
-                    topic=d.name,
-                    has_raw_files=False,
-                    has_graph=True,
+                    topic=d.name, has_raw_files=False, has_graph=True,
                 )
             else:
                 topics[d.name].has_graph = True
@@ -81,7 +77,6 @@ def _discover_topics() -> list[TopicStatus]:
             topics[d.name].edge_count = meta.get("edge_count")
             topics[d.name].community_count = meta.get("community_count")
 
-    # Overlay live build status
     result = []
     for name, status in topics.items():
         task = task_manager.get_status(name)
@@ -96,7 +91,31 @@ def _discover_topics() -> list[TopicStatus]:
     return result
 
 
-def _get_query_engine(topic: str) -> GraphRAGQueryEngine:
+def _get_query_engine(topic: str, llm_config: Optional[LLMConfig] = None) -> GraphRAGQueryEngine:
+    """
+    Get or create a query engine for the topic.
+    If llm_config is provided (from the user's session), use it instead of server defaults.
+    """
+    # When per-request LLM config is provided, always create a fresh engine
+    # so the user's key is used (and never cached).
+    if llm_config and llm_config.api_key:
+        graphs_dir = Path(settings.graphs_dir)
+        topic_dir = graphs_dir / topic
+        if not topic_dir.exists():
+            raise HTTPException(status_code=404, detail=f"Graph not found for topic '{topic}'")
+        try:
+            store = GraphRAGStore.load(topic_dir)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc))
+        query_model = llm_config.query_model or settings.query_model
+        extraction_model = llm_config.extraction_model or settings.extraction_model
+        return GraphRAGQueryEngine(
+            graph_store=store,
+            llm=make_llm(query_model, llm_config),
+            community_llm=make_llm(extraction_model, llm_config),
+        )
+
+    # Fallback to cached engine using server-level .env config
     if topic not in _query_engines:
         graphs_dir = Path(settings.graphs_dir)
         topic_dir = graphs_dir / topic
@@ -108,8 +127,8 @@ def _get_query_engine(topic: str) -> GraphRAGQueryEngine:
             raise HTTPException(status_code=404, detail=str(exc))
         _query_engines[topic] = GraphRAGQueryEngine(
             graph_store=store,
-            llm=_make_llm(settings.query_model, settings),
-            community_llm=_make_llm(settings.extraction_model, settings),
+            llm=make_llm(settings.query_model, fallback=settings),
+            community_llm=make_llm(settings.extraction_model, fallback=settings),
         )
     return _query_engines[topic]
 
@@ -140,8 +159,9 @@ async def build_topic(topic: str, body: Optional[BuildRequest] = None):
         )
 
     ontology = (body.ontology if body else None)
+    llm_config = (body.llm if body else None)
     try:
-        await task_manager.start_build(topic, ontology, _query_engines)
+        await task_manager.start_build(topic, ontology, llm_config, _query_engines)
     except RuntimeError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
 
@@ -176,7 +196,7 @@ async def query_topic(topic: str, body: QueryRequest) -> QueryResponse:
     if task and task.status == "building":
         raise HTTPException(status_code=409, detail="Graph is still being built. Please wait.")
 
-    engine = _get_query_engine(topic)
+    engine = _get_query_engine(topic, llm_config=body.llm)
     answer, communities_checked, relevant_communities = engine.custom_query(body.query)
 
     return QueryResponse(

@@ -1,5 +1,5 @@
 /**
- * app.js — topic selection, build management, and chat interface.
+ * app.js — topic selection, build management, chat interface, and LLM settings.
  */
 
 let currentTopic = null;
@@ -10,6 +10,7 @@ let chatHistory = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   await refreshTopics();
+  initSettings();
 
   document.getElementById("topic-select").addEventListener("change", onTopicChange);
   document.getElementById("btn-build").addEventListener("click", onBuild);
@@ -19,7 +20,129 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("btn-send").addEventListener("click", sendMessage);
 });
 
-// ── Topic management ──────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// LLM SETTINGS — stored only in sessionStorage, never sent to disk
+// ══════════════════════════════════════════════════════════════════════════════
+
+const SETTINGS_KEY = "graphrag_llm_config";
+
+function getLLMConfig() {
+  try {
+    const raw = sessionStorage.getItem(SETTINGS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function saveLLMConfig(config) {
+  sessionStorage.setItem(SETTINGS_KEY, JSON.stringify(config));
+  updateSettingsIndicator();
+}
+
+function updateSettingsIndicator() {
+  const btn = document.getElementById("btn-settings");
+  const config = getLLMConfig();
+  const hasKey = config && (config.api_key || config.provider !== "openai");
+  btn.classList.toggle("configured", !!hasKey);
+  btn.title = hasKey
+    ? `LLM: ${config.provider} (${config.extraction_model || "default"})`
+    : "LLM Settings — not configured";
+}
+
+function initSettings() {
+  const btn       = document.getElementById("btn-settings");
+  const backdrop  = document.getElementById("settings-backdrop");
+  const closeBtn  = document.getElementById("settings-close");
+  const saveBtn   = document.getElementById("btn-save-settings");
+  const provider  = document.getElementById("llm-provider");
+
+  btn.addEventListener("click", () => openSettingsModal());
+  backdrop.addEventListener("click", e => { if (e.target === backdrop) closeSettingsModal(); });
+  closeBtn.addEventListener("click", closeSettingsModal);
+  saveBtn.addEventListener("click", onSaveSettings);
+
+  // Toggle fields based on provider
+  provider.addEventListener("change", () => updateProviderFields());
+
+  updateSettingsIndicator();
+}
+
+function openSettingsModal() {
+  const config = getLLMConfig() || {};
+  document.getElementById("llm-provider").value         = config.provider || "openai";
+  document.getElementById("llm-api-key").value           = config.api_key || "";
+  document.getElementById("llm-base-url").value          = config.base_url || "";
+  document.getElementById("llm-extraction-model").value  = config.extraction_model || "";
+  document.getElementById("llm-query-model").value       = config.query_model || "";
+
+  updateProviderFields();
+  document.getElementById("settings-backdrop").style.display = "flex";
+}
+
+function closeSettingsModal() {
+  document.getElementById("settings-backdrop").style.display = "none";
+}
+
+function updateProviderFields() {
+  const provider = document.getElementById("llm-provider").value;
+  const apiKeyGroup  = document.getElementById("group-api-key");
+  const baseUrlGroup = document.getElementById("group-base-url");
+  const extractionInput = document.getElementById("llm-extraction-model");
+  const queryInput      = document.getElementById("llm-query-model");
+
+  if (provider === "openai") {
+    apiKeyGroup.style.display  = "block";
+    baseUrlGroup.style.display = "none";
+    extractionInput.placeholder = "gpt-4o-mini";
+    queryInput.placeholder      = "gpt-4o";
+  } else if (provider === "lmstudio") {
+    apiKeyGroup.style.display  = "none";
+    baseUrlGroup.style.display = "none";
+    extractionInput.placeholder = "your-model-name";
+    queryInput.placeholder      = "your-model-name";
+  } else if (provider === "ollama") {
+    apiKeyGroup.style.display  = "none";
+    baseUrlGroup.style.display = "none";
+    extractionInput.placeholder = "llama3";
+    queryInput.placeholder      = "llama3";
+  } else {
+    // custom
+    apiKeyGroup.style.display  = "block";
+    baseUrlGroup.style.display = "block";
+    extractionInput.placeholder = "model-name";
+    queryInput.placeholder      = "model-name";
+  }
+}
+
+function onSaveSettings() {
+  const config = {
+    provider:         document.getElementById("llm-provider").value,
+    api_key:          document.getElementById("llm-api-key").value.trim() || null,
+    base_url:         document.getElementById("llm-base-url").value.trim() || null,
+    extraction_model: document.getElementById("llm-extraction-model").value.trim() || null,
+    query_model:      document.getElementById("llm-query-model").value.trim() || null,
+  };
+  saveLLMConfig(config);
+  closeSettingsModal();
+}
+
+/** Build the `llm` payload to include in API requests. Returns null if nothing configured. */
+function llmPayload() {
+  const config = getLLMConfig();
+  if (!config) return null;
+  // Only include non-null fields
+  const payload = { provider: config.provider };
+  if (config.api_key)          payload.api_key = config.api_key;
+  if (config.base_url)         payload.base_url = config.base_url;
+  if (config.extraction_model) payload.extraction_model = config.extraction_model;
+  if (config.query_model)      payload.query_model = config.query_model;
+  return payload;
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TOPIC MANAGEMENT
+// ══════════════════════════════════════════════════════════════════════════════
 
 async function refreshTopics() {
   try {
@@ -37,7 +160,6 @@ async function refreshTopics() {
         : `${t.topic} (not built)`;
       select.appendChild(opt);
     });
-    // Restore selection
     if (currentVal) select.value = currentVal;
   } catch (err) {
     console.error("Failed to load topics:", err);
@@ -58,7 +180,6 @@ async function onTopicChange() {
   clearChat();
   stopPolling();
 
-  // Load status
   const status = await fetchTopicStatus(topic);
   applyStatus(status);
 
@@ -88,11 +209,22 @@ function applyStatus(status) {
   }
 }
 
-// ── Graph build ───────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GRAPH BUILD
+// ══════════════════════════════════════════════════════════════════════════════
 
 async function onBuild() {
   if (!currentTopic) {
     alert("Please select a topic first.");
+    return;
+  }
+
+  // Require LLM settings to be configured
+  const llm = llmPayload();
+  if (!llm || (!llm.api_key && llm.provider === "openai")) {
+    openSettingsModal();
+    appendMessage("system", "Please configure your LLM provider and API key before building.");
     return;
   }
 
@@ -103,7 +235,7 @@ async function onBuild() {
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/build`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ llm }),
     });
 
     if (res.status === 409) {
@@ -151,7 +283,10 @@ function stopPolling() {
   if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
 }
 
-// ── Graph visualization ───────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GRAPH VISUALIZATION
+// ══════════════════════════════════════════════════════════════════════════════
 
 async function loadGraph(topic) {
   try {
@@ -165,7 +300,10 @@ async function loadGraph(topic) {
   }
 }
 
-// ── Status badge ──────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STATUS BADGE
+// ══════════════════════════════════════════════════════════════════════════════
 
 function setStatus(state, message) {
   const badge = document.getElementById("status-badge");
@@ -174,7 +312,10 @@ function setStatus(state, message) {
   text.textContent = message || "";
 }
 
-// ── Chat ──────────────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════════════════════════════════════════════
 
 function clearChat() {
   chatHistory = [];
@@ -192,6 +333,14 @@ async function sendMessage() {
     return;
   }
 
+  // Require LLM settings for querying too
+  const llm = llmPayload();
+  if (!llm || (!llm.api_key && llm.provider === "openai")) {
+    openSettingsModal();
+    appendMessage("system", "Please configure your LLM provider and API key before querying.");
+    return;
+  }
+
   const input = document.getElementById("chat-input");
   const query = input.value.trim();
   if (!query) return;
@@ -205,7 +354,7 @@ async function sendMessage() {
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/query`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query, llm }),
     });
 
     const data = await res.json();
@@ -238,7 +387,6 @@ function appendMessage(role, content, loading = false, meta = null) {
   if (loading) {
     div.innerHTML = `<div class="chat-loading"><span></span><span></span><span></span></div>`;
   } else {
-    // Convert newlines to <br> and basic markdown bold
     const html = (content || "")
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")

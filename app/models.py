@@ -57,14 +57,31 @@ class ExtractionResult(BaseModel):
     relationships: list[ExtractedRelationship] = Field(default_factory=list)
 
 
+# ── LLM provider config (per-request, never persisted on disk) ────────────────
+
+class LLMConfig(BaseModel):
+    """
+    LLM provider settings passed from the browser session with every request.
+    The API key lives only in sessionStorage — it is never saved to disk.
+    """
+
+    provider: str = "openai"  # openai | lmstudio | ollama | custom
+    api_key: Optional[str] = None  # for OpenAI; empty for local providers
+    base_url: Optional[str] = None  # auto-set for known providers, or custom URL
+    extraction_model: str = "gpt-4o-mini"
+    query_model: str = "gpt-4o"
+
+
 # ── API request / response models ─────────────────────────────────────────────
 
 class BuildRequest(BaseModel):
     ontology: Optional[OntologyConfig] = None
+    llm: Optional[LLMConfig] = None
 
 
 class QueryRequest(BaseModel):
     query: str
+    llm: Optional[LLMConfig] = None
 
 
 class QueryResponse(BaseModel):
