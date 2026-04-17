@@ -102,6 +102,7 @@ class TaskManager:
         llm_config: Optional[LLMConfig],
         query_engines: dict,
         force: bool = False,
+        thinking: bool = False,
     ) -> None:
         """
         Launch a background build task for the given topic.
@@ -117,7 +118,7 @@ class TaskManager:
         query_engines.pop(topic, None)
 
         asyncio.create_task(
-            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines, force)
+            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines, force, thinking)
         )
 
     # ── Internal ───────────────────────────────────────────────────────────────
@@ -129,6 +130,7 @@ class TaskManager:
         llm_config: Optional[LLMConfig],
         query_engines: dict,
         force: bool = False,
+        thinking: bool = False,
     ) -> None:
         def _progress(msg: str) -> None:
             if topic in self._tasks:
@@ -164,6 +166,7 @@ class TaskManager:
                 community_llm=community_llm,
                 progress_callback=_progress,
                 force=force,
+                thinking=thinking,
             )
 
             self._stores[topic] = store

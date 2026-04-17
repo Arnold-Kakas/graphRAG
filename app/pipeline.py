@@ -37,12 +37,12 @@ logger = logging.getLogger(__name__)
 
 # ── Extraction prompt ──────────────────────────────────────────────────────────
 
-def build_extraction_prompt(ontology: OntologyConfig) -> str:
+def build_extraction_prompt(ontology: OntologyConfig, thinking: bool = False) -> str:
     entity_types_str = ", ".join(ontology.entity_types)
     relation_types_str = ", ".join(ontology.relation_types)
+    prefix = "" if thinking else "/no_think\n"
 
-    return f"""/no_think
-Given a document, identify all entities mentioned and their relationships.
+    return f"""{prefix}Given a document, identify all entities mentioned and their relationships.
 
 Extract up to {{max_knowledge_triplets}} entity-relation triplets.
 
@@ -186,6 +186,7 @@ async def build_topic_graph(
     community_llm: LLM,
     progress_callback: Optional[Callable[[str], None]] = None,
     force: bool = False,
+    thinking: bool = False,
 ) -> GraphRAGStore:
     """
     Full or incremental pipeline for one topic.
@@ -264,7 +265,7 @@ async def build_topic_graph(
     ]
 
     _p("Building extraction prompt...")
-    prompt_str = build_extraction_prompt(ontology)
+    prompt_str = build_extraction_prompt(ontology, thinking=thinking)
 
     kg_extractor = GraphRAGExtractor(
         llm=extraction_llm,

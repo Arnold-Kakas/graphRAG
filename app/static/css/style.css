@@ -246,6 +246,7 @@ select#topic-select:focus { border-color: var(--brand-primary); }
   overflow-y: auto;
   box-shadow: 0 20px 60px var(--shadow-lg);
 }
+.modal-sm { width: 340px; }
 .modal-header {
   display: flex;
   align-items: center;

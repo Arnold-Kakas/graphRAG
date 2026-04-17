@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initSettings();
   initTheme();
 
+  initAlertModal();
   document.getElementById("topic-select").addEventListener("change", onTopicChange);
   document.getElementById("btn-build").addEventListener("click", onBuild);
   document.getElementById("chat-input").addEventListener("keydown", e => {
@@ -22,6 +23,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   document.getElementById("btn-send").addEventListener("click", sendMessage);
 });
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ALERT MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+function initAlertModal() {
+  const backdrop = document.getElementById("alert-backdrop");
+  document.getElementById("alert-close").addEventListener("click", closeAlertModal);
+  document.getElementById("alert-ok").addEventListener("click", closeAlertModal);
+  backdrop.addEventListener("click", e => { if (e.target === backdrop) closeAlertModal(); });
+}
+
+function showAlert(message, title = "Notice") {
+  document.getElementById("alert-title").textContent = title;
+  document.getElementById("alert-message").textContent = message;
+  document.getElementById("alert-backdrop").style.display = "flex";
+}
+
+function closeAlertModal() {
+  document.getElementById("alert-backdrop").style.display = "none";
+}
 
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -248,7 +271,7 @@ function applyStatus(status) {
 
 async function onBuild() {
   if (!currentTopic) {
-    alert("Please select a topic first.");
+    showAlert("Please select a topic first.", "No Topic Selected");
     return;
   }
 
@@ -270,12 +293,13 @@ async function onBuild() {
   btn.disabled = true;
 
   const force = document.getElementById("chk-force-rebuild")?.checked || false;
+  const thinking = document.getElementById("chk-thinking")?.checked || false;
 
   try {
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/build`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ llm, force }),
+      body: JSON.stringify({ llm, force, thinking }),
     });
 
     if (res.status === 409) {

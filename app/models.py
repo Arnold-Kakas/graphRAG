@@ -77,7 +77,8 @@ class LLMConfig(BaseModel):
 class BuildRequest(BaseModel):
     ontology: Optional[OntologyConfig] = None
     llm: Optional[LLMConfig] = None
-    force: bool = False  # if True, ignore manifest and rebuild from scratch
+    force: bool = False    # if True, ignore manifest and rebuild from scratch
+    thinking: bool = False # if True, allow LLM reasoning/thinking mode during extraction
 
 
 class QueryRequest(BaseModel):

@@ -8,6 +8,7 @@ Phase 2: Aggregate relevant partial answers with the stronger LLM.
 from __future__ import annotations
 
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from llama_index.core.llms.llm import LLM
 from llama_index.core.query_engine import CustomQueryEngine
@@ -15,6 +16,8 @@ from llama_index.core.query_engine import CustomQueryEngine
 from .graph_store import GraphRAGStore
 
 logger = logging.getLogger(__name__)
+
+_NO_INFO_MARKER = "<<NO_RELEVANT_INFO>>"
 
 
 class GraphRAGQueryEngine(CustomQueryEngine):
@@ -29,6 +32,7 @@ class GraphRAGQueryEngine(CustomQueryEngine):
     graph_store: GraphRAGStore
     llm: LLM
     community_llm: LLM
+    max_workers: int = 4
 
     def custom_query(self, query_str: str) -> tuple[str, int, int]:
         """
@@ -44,10 +48,18 @@ class GraphRAGQueryEngine(CustomQueryEngine):
             )
 
         communities_checked = len(summaries)
-        community_answers = [
-            self._answer_from_community(summary, query_str)
-            for summary in summaries.values()
-        ]
+
+        with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
+            futures = {
+                pool.submit(self._answer_from_community, summary, query_str): cid
+                for cid, summary in summaries.items()
+            }
+            community_answers = []
+            for future in as_completed(futures):
+                try:
+                    community_answers.append(future.result())
+                except Exception as exc:
+                    logger.error("Community future error: %s", exc)
 
         relevant_answers = [a for a in community_answers if a.strip()]
         relevant_communities = len(relevant_answers)
@@ -67,13 +79,16 @@ class GraphRAGQueryEngine(CustomQueryEngine):
             f"Community summary:\n{summary}\n\n"
             f"Question: {query}\n\n"
             f"If this summary contains information relevant to the question, answer it based only on "
-            f"the summary. If not relevant, reply exactly: 'No relevant information.'\n\n"
+            f"the summary. If not relevant, reply exactly: '{_NO_INFO_MARKER}'\n\n"
             f"Answer:"
         )
         try:
             response = self.community_llm.complete(prompt)
+            # Strip reasoning content — take only the last non-empty block after </think>
             text = response.text.strip()
-            return "" if "no relevant information" in text.lower() else text
+            if "</think>" in text:
+                text = text.split("</think>")[-1].strip()
+            return "" if _NO_INFO_MARKER in text else text
         except Exception as exc:
             logger.error("Community answer error: %s", exc)
             return ""

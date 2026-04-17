@@ -173,8 +173,9 @@ async def build_topic(topic: str, body: Optional[BuildRequest] = None):
     ontology = (body.ontology if body else None)
     llm_config = (body.llm if body else None)
     force = (body.force if body else False)
+    thinking = (body.thinking if body else False)
     try:
-        await task_manager.start_build(topic, ontology, llm_config, _query_engines, force)
+        await task_manager.start_build(topic, ontology, llm_config, _query_engines, force, thinking)
     except RuntimeError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
 
