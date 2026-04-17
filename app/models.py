@@ -77,8 +77,9 @@ class LLMConfig(BaseModel):
 class BuildRequest(BaseModel):
     ontology: Optional[OntologyConfig] = None
     llm: Optional[LLMConfig] = None
-    force: bool = False    # if True, ignore manifest and rebuild from scratch
-    thinking: bool = False # if True, allow LLM reasoning/thinking mode during extraction
+    force: bool = False
+    thinking: bool = False
+    build_context: Optional[str] = None
 
 
 class QueryRequest(BaseModel):
@@ -102,6 +103,10 @@ class TopicStatus(BaseModel):
     build_status: str = "idle"   # idle | building | complete | error
     build_progress: Optional[str] = None
     build_error: Optional[str] = None
+    docs_processed: Optional[int] = None
+    docs_total: Optional[int] = None
+    nodes_extracted: Optional[int] = None
+    edges_extracted: Optional[int] = None
 
 
 # ── Internal task state ────────────────────────────────────────────────────────
@@ -114,3 +119,7 @@ class TaskState(BaseModel):
     completed_at: Optional[datetime] = None
     error: Optional[str] = None
     up_to_date: bool = False    # True when build skipped because no files changed
+    docs_processed: int = 0
+    docs_total: int = 0
+    nodes_extracted: int = 0
+    edges_extracted: int = 0

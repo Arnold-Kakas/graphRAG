@@ -84,6 +84,10 @@ def _discover_topics() -> list[TopicStatus]:
             status.build_status = task.status
             status.build_progress = task.progress
             status.build_error = task.error
+            status.docs_processed = task.docs_processed
+            status.docs_total = task.docs_total
+            status.nodes_extracted = task.nodes_extracted
+            status.edges_extracted = task.edges_extracted
         elif status.has_graph:
             status.build_status = "complete"
         result.append(status)
@@ -174,8 +178,9 @@ async def build_topic(topic: str, body: Optional[BuildRequest] = None):
     llm_config = (body.llm if body else None)
     force = (body.force if body else False)
     thinking = (body.thinking if body else False)
+    build_context = (body.build_context if body else None)
     try:
-        await task_manager.start_build(topic, ontology, llm_config, _query_engines, force, thinking)
+        await task_manager.start_build(topic, ontology, llm_config, _query_engines, force, thinking, build_context)
     except RuntimeError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
 

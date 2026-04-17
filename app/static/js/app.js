@@ -3,6 +3,7 @@
  */
 
 let currentTopic = null;
+let currentTopicHasGraph = false;
 let pollInterval = null;
 let chatHistory = [];
 let serverConfig = null;
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
 
   initAlertModal();
+  initContextModal();
   document.getElementById("topic-select").addEventListener("change", onTopicChange);
   document.getElementById("btn-build").addEventListener("click", onBuild);
   document.getElementById("chat-input").addEventListener("keydown", e => {
@@ -44,6 +46,37 @@ function showAlert(message, title = "Notice") {
 
 function closeAlertModal() {
   document.getElementById("alert-backdrop").style.display = "none";
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BUILD CONTEXT MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+function initContextModal() {
+  const backdrop = document.getElementById("context-backdrop");
+  document.getElementById("context-close").addEventListener("click", () => closeContextModal(false));
+  document.getElementById("btn-context-skip").addEventListener("click", () => closeContextModal(true));
+  document.getElementById("btn-context-build").addEventListener("click", () => closeContextModal(true));
+  backdrop.addEventListener("click", e => { if (e.target === backdrop) closeContextModal(false); });
+}
+
+let _contextResolve = null;
+
+function openContextModal() {
+  document.getElementById("build-context-input").value = "";
+  document.getElementById("context-backdrop").style.display = "flex";
+  document.getElementById("build-context-input").focus();
+  return new Promise(resolve => { _contextResolve = resolve; });
+}
+
+function closeContextModal(proceed) {
+  const context = document.getElementById("build-context-input").value.trim() || null;
+  document.getElementById("context-backdrop").style.display = "none";
+  if (_contextResolve) {
+    _contextResolve(proceed ? context : false);
+    _contextResolve = null;
+  }
 }
 
 
@@ -225,6 +258,7 @@ async function onTopicChange() {
   const topic = document.getElementById("topic-select").value;
   if (!topic) {
     currentTopic = null;
+    currentTopicHasGraph = false;
     clearGraph();
     clearChat();
     setStatus("", "");
@@ -236,6 +270,7 @@ async function onTopicChange() {
   stopPolling();
 
   const status = await fetchTopicStatus(topic);
+  currentTopicHasGraph = status.has_graph;
   applyStatus(status);
 
   if (status.has_graph) {
@@ -254,6 +289,10 @@ async function fetchTopicStatus(topic) {
 function applyStatus(status) {
   if (status.build_status === "building") {
     setStatus("building", status.build_progress || "Building...");
+    if (status.nodes_extracted != null) {
+      document.getElementById("stat-nodes").textContent = status.nodes_extracted;
+      document.getElementById("stat-edges").textContent = status.edges_extracted;
+    }
     startPolling(status.topic);
   } else if (status.build_status === "complete") {
     setStatus("complete", `${status.node_count || "?"} nodes · ${status.edge_count || "?"} edges · ${status.community_count || "?"} communities`);
@@ -275,7 +314,6 @@ async function onBuild() {
     return;
   }
 
-  // Use session LLM config if set, otherwise fall back to server .env config
   const llm = llmPayload();
   const serverReady = serverConfig && serverConfig.has_server_config;
   if (!llm && !serverReady) {
@@ -283,23 +321,31 @@ async function onBuild() {
     appendMessage("system", "Please configure your LLM provider and API key before building.");
     return;
   }
-  if (!llm && llm?.provider === "openai" && !llm?.api_key && !serverReady) {
-    openSettingsModal();
-    appendMessage("system", "Please configure your LLM provider and API key before building.");
-    return;
+
+  const force = document.getElementById("chk-force-rebuild")?.checked || false;
+
+  // Show context modal on first build or full rebuild
+  let build_context = null;
+  if (!currentTopicHasGraph || force) {
+    const result = await openContextModal();
+    if (result === false) return; // user closed modal without confirming
+    build_context = result; // null = empty input (backend uses default)
   }
 
+  await submitBuild(llm, force, build_context);
+}
+
+async function submitBuild(llm, force, build_context) {
   const btn = document.getElementById("btn-build");
   btn.disabled = true;
 
-  const force = document.getElementById("chk-force-rebuild")?.checked || false;
   const thinking = document.getElementById("chk-thinking")?.checked || false;
 
   try {
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/build`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ llm, force, thinking }),
+      body: JSON.stringify({ llm, force, thinking, build_context }),
     });
 
     if (res.status === 409) {
@@ -312,6 +358,9 @@ async function onBuild() {
       return;
     } else {
       setStatus("building", "Starting...");
+      document.getElementById("stat-nodes").textContent = "—";
+      document.getElementById("stat-edges").textContent = "—";
+      document.getElementById("stat-communities").textContent = "—";
     }
 
     startPolling(currentTopic);
@@ -332,6 +381,7 @@ function startPolling(topic) {
       applyStatus(status);
       if (status.build_status === "complete") {
         stopPolling();
+        currentTopicHasGraph = true;
         document.getElementById("btn-build").disabled = false;
         await loadGraph(topic);
         await refreshTopics();

@@ -79,6 +79,30 @@
   </div>
 </div>
 
+<!-- ── Build context modal ─────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="context-backdrop" style="display:none">
+  <div class="modal" id="context-modal">
+    <div class="modal-header">
+      <div class="modal-title">Graph Build Context</div>
+      <div class="modal-close" id="context-close">&#10005;</div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-hint">
+        Describe what you want to focus on — the purpose of this graph, key topics, entities, or relationships to prioritize. Leave blank to use general defaults.
+      </p>
+      <div class="form-group">
+        <label class="form-label" for="build-context-input">Focus &amp; Purpose</label>
+        <textarea id="build-context-input" class="form-input context-textarea"
+          placeholder="e.g. Focus on marketing channels, budget allocation, and ROI metrics. Highlight relationships between campaigns and business outcomes."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="btn-context-skip">Skip</button>
+      <button class="btn-primary" id="btn-context-build">Build Graph</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Settings modal ──────────────────────────────────────────────────────── -->
 <div class="modal-backdrop" id="settings-backdrop" style="display:none">
   <div class="modal" id="settings-modal">

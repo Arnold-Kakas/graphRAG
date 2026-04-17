@@ -27,7 +27,7 @@ from llama_index.core.graph_stores.types import (
 from llama_index.core.llms.llm import LLM
 from llama_index.core.prompts import PromptTemplate
 from llama_index.core.schema import BaseNode, TransformComponent
-from pydantic import Field, field_validator
+from pydantic import Field, PrivateAttr, field_validator
 
 from .config import Settings as AppSettings
 from .graph_store import GraphRAGStore
@@ -38,11 +38,25 @@ logger = logging.getLogger(__name__)
 
 # ── Extraction prompt ──────────────────────────────────────────────────────────
 
-def build_extraction_prompt(ontology: OntologyConfig, thinking: bool = False) -> str:
+_DEFAULT_CONTEXT = (
+    "Build a comprehensive knowledge graph. Extract all significant entities, key concepts, "
+    "relationships, and how they interconnect. Prioritize coverage and accuracy to support "
+    "general exploration and question answering across the full content."
+)
+
+
+def build_extraction_prompt(ontology: OntologyConfig, thinking: bool = False, build_context: Optional[str] = None) -> str:
     entity_types_str = ", ".join(ontology.entity_types)
     relation_types_str = ", ".join(ontology.relation_types)
 
+    context_text = ((build_context.strip() + " ") if build_context and build_context.strip() else "") + _DEFAULT_CONTEXT
+
     base = f"""Given a document, identify all entities mentioned and their relationships.
+
+-Build Context & Focus-
+{context_text}
+
+
 
 Extract up to {{max_knowledge_triplets}} entity-relation triplets.
 
@@ -71,11 +85,7 @@ text: {{text}}
 """
 
     if thinking:
-        # Plain-text completion path: model outputs JSON directly after reasoning
-        return base + """
-Output ONLY a raw JSON object — no markdown, no code fences, no extra text:
-{"entities": [{"name": "...", "type": "...", "description": "..."}], "relationships": [{"source": "...", "target": "...", "relation": "...", "description": "..."}]}
-"""
+        return base  # JSON hint is appended by _acomplete_extract at call time
     else:
         return "/no_think\n" + base
 
@@ -97,6 +107,12 @@ class GraphRAGExtractor(TransformComponent):
     thinking: bool = False
     valid_entity_types: list[str] = Field(default_factory=list)
     valid_relation_types: list[str] = Field(default_factory=list)
+    total_nodes: int = Field(default=0)
+
+    _processed: int = PrivateAttr(default=0)
+    _nodes_extracted: int = PrivateAttr(default=0)
+    _edges_extracted: int = PrivateAttr(default=0)
+    _stats_callback: Optional[Callable] = PrivateAttr(default=None)
 
     @field_validator("extract_prompt", mode="before")
     @classmethod
@@ -106,13 +122,17 @@ class GraphRAGExtractor(TransformComponent):
     def __call__(self, nodes, show_progress=False, **kwargs):
         return asyncio.run(self.acall(nodes, show_progress=show_progress, **kwargs))
 
+    _JSON_OUTPUT_HINT = (
+        "\nOutput ONLY a raw JSON object — no markdown, no code fences, no extra text:\n"
+        '{"entities": [{"name": "...", "type": "...", "description": "..."}], '
+        '"relationships": [{"source": "...", "target": "...", "relation": "...", "description": "..."}]}'
+    )
+
     def _parse_json_result(self, text: str) -> Optional[ExtractionResult]:
-        """Extract ExtractionResult from a raw JSON string (thinking mode fallback)."""
+        """Parse ExtractionResult from raw text, handling markdown fences and partial JSON."""
         text = text.strip()
-        # Strip markdown fences if present
         text = re.sub(r"^```(?:json)?\s*", "", text)
         text = re.sub(r"\s*```$", "", text)
-        # Find the outermost JSON object
         match = re.search(r"\{.*\}", text, re.DOTALL)
         if not match:
             return None
@@ -120,31 +140,34 @@ class GraphRAGExtractor(TransformComponent):
             data = json.loads(match.group())
             return ExtractionResult.model_validate(data)
         except Exception as exc:
-            logger.error("JSON parse error in thinking mode: %s", exc)
+            logger.error("JSON parse error: %s", exc)
             return None
+
+    async def _acomplete_extract(self, text: str) -> tuple[list, list]:
+        """
+        Plain-text completion path for thinking models (Gemma 4, Qwen3 with thinking ON,
+        DeepSeek-R1, etc.) that output JSON as regular text instead of via tool calls.
+        """
+        try:
+            prompt_text = self.extract_prompt.format(
+                text=text,
+                max_knowledge_triplets=self.max_paths_per_chunk,
+            ) + self._JSON_OUTPUT_HINT
+            response = await self.llm.acomplete(prompt_text)
+            raw = response.text.strip()
+            result = self._parse_json_result(raw) if raw else None
+            if result:
+                return result.entities, result.relationships
+            logger.warning("Plain-text extraction returned no parseable JSON")
+        except Exception as exc:
+            logger.error("Plain-text extraction error: %s", exc)
+        return [], []
 
     async def _aextract(self, node: BaseNode) -> BaseNode:
         text = node.get_content(metadata_mode="llm")
 
         if self.thinking:
-            # Thinking mode: use plain text completion so the model can reason freely,
-            # then parse JSON from the response text.
-            entities, relationships = [], []
-            try:
-                prompt_text = self.extract_prompt.format(
-                    text=text,
-                    max_knowledge_triplets=self.max_paths_per_chunk,
-                )
-                response = await self.llm.acomplete(prompt_text)
-                raw = response.text.strip()
-                result = self._parse_json_result(raw) if raw else None
-                if result:
-                    entities = result.entities
-                    relationships = result.relationships
-                else:
-                    logger.warning("Thinking extraction returned no parseable JSON for node %s", node.node_id)
-            except Exception as exc:
-                logger.error("Extraction error on node %s: %s", node.node_id, exc)
+            entities, relationships = await self._acomplete_extract(text)
         else:
             try:
                 result: ExtractionResult = await self.llm.astructured_predict(
@@ -156,8 +179,22 @@ class GraphRAGExtractor(TransformComponent):
                 entities = result.entities
                 relationships = result.relationships
             except Exception as exc:
-                logger.error("Extraction error on node %s: %s", node.node_id, exc)
-                entities, relationships = [], []
+                err = str(exc)
+                # Thinking models (Gemma 4, Qwen3, DeepSeek-R1) that put output in
+                # reasoning_content instead of tool_calls trigger this error. Fall back
+                # to plain-text completion rather than letting LlamaIndex retry in a loop.
+                if "0 tool calls" in err or "could not be parsed" in err.lower():
+                    logger.warning("Function calling unsupported for node %s (%s) — falling back to plain-text", node.node_id, exc)
+                    entities, relationships = await self._acomplete_extract(text)
+                else:
+                    logger.error("Extraction error on node %s: %s", node.node_id, exc)
+                    entities, relationships = [], []
+
+        self._processed += 1
+        self._nodes_extracted += len(entities)
+        self._edges_extracted += len(relationships)
+        if self._stats_callback and self.total_nodes:
+            self._stats_callback(self._processed, self.total_nodes, self._nodes_extracted, self._edges_extracted)
 
         # Post-validate types against the ontology; unknown → "OTHER" / "RELATED_TO"
         for e in entities:
@@ -232,8 +269,10 @@ async def build_topic_graph(
     extraction_llm: LLM,
     community_llm: LLM,
     progress_callback: Optional[Callable[[str], None]] = None,
+    stats_callback: Optional[Callable[[int, int, int, int], None]] = None,
     force: bool = False,
     thinking: bool = False,
+    build_context: Optional[str] = None,
 ) -> GraphRAGStore:
     """
     Full or incremental pipeline for one topic.
@@ -312,7 +351,7 @@ async def build_topic_graph(
     ]
 
     _p("Building extraction prompt...")
-    prompt_str = build_extraction_prompt(ontology, thinking=thinking)
+    prompt_str = build_extraction_prompt(ontology, thinking=thinking, build_context=build_context)
 
     kg_extractor = GraphRAGExtractor(
         llm=extraction_llm,
@@ -322,7 +361,9 @@ async def build_topic_graph(
         thinking=thinking,
         valid_entity_types=ontology.entity_types,
         valid_relation_types=ontology.relation_types,
+        total_nodes=len(nodes),
     )
+    kg_extractor._stats_callback = stats_callback
 
     _p("Extracting entities and relationships (this may take several minutes)...")
     Settings.llm = extraction_llm

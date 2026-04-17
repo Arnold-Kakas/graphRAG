@@ -103,6 +103,7 @@ class TaskManager:
         query_engines: dict,
         force: bool = False,
         thinking: bool = False,
+        build_context: Optional[str] = None,
     ) -> None:
         """
         Launch a background build task for the given topic.
@@ -118,7 +119,7 @@ class TaskManager:
         query_engines.pop(topic, None)
 
         asyncio.create_task(
-            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines, force, thinking)
+            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines, force, thinking, build_context)
         )
 
     # ── Internal ───────────────────────────────────────────────────────────────
@@ -131,10 +132,23 @@ class TaskManager:
         query_engines: dict,
         force: bool = False,
         thinking: bool = False,
+        build_context: Optional[str] = None,
     ) -> None:
         def _progress(msg: str) -> None:
             if topic in self._tasks:
                 self._tasks[topic].progress = msg
+
+        def _stats_update(docs: int, total: int, nodes: int, edges: int) -> None:
+            if topic in self._tasks:
+                task = self._tasks[topic]
+                task.docs_processed = docs
+                task.docs_total = total
+                task.nodes_extracted = nodes
+                task.edges_extracted = edges
+                if docs >= total:
+                    task.progress = "Extraction complete — building graph index..."
+                else:
+                    task.progress = f"Extracting · {docs}/{total} docs"
 
         try:
             config = self.config
@@ -165,8 +179,10 @@ class TaskManager:
                 extraction_llm=extraction_llm,
                 community_llm=community_llm,
                 progress_callback=_progress,
+                stats_callback=_stats_update,
                 force=force,
                 thinking=thinking,
+                build_context=build_context,
             )
 
             self._stores[topic] = store
