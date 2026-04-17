@@ -5,12 +5,15 @@
 let currentTopic = null;
 let pollInterval = null;
 let chatHistory = [];
+let serverConfig = null;
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
+  serverConfig = await fetch("/api/config").then(r => r.json()).catch(() => null);
   await refreshTopics();
   initSettings();
+  initTheme();
 
   document.getElementById("topic-select").addEventListener("change", onTopicChange);
   document.getElementById("btn-build").addEventListener("click", onBuild);
@@ -19,6 +22,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   document.getElementById("btn-send").addEventListener("click", sendMessage);
 });
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// THEME — persisted in localStorage
+// ══════════════════════════════════════════════════════════════════════════════
+
+function initTheme() {
+  const saved = localStorage.getItem("graphrag_theme") || "dark";
+  applyTheme(saved);
+
+  document.getElementById("btn-theme").addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    applyTheme(next);
+    localStorage.setItem("graphrag_theme", next);
+  });
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  const moon = document.querySelector("#btn-theme .icon-moon");
+  const sun  = document.querySelector("#btn-theme .icon-sun");
+  if (theme === "light") {
+    moon.style.display = "none";
+    sun.style.display  = "block";
+  } else {
+    moon.style.display = "block";
+    sun.style.display  = "none";
+  }
+}
 
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -220,9 +252,15 @@ async function onBuild() {
     return;
   }
 
-  // Require LLM settings to be configured
+  // Use session LLM config if set, otherwise fall back to server .env config
   const llm = llmPayload();
-  if (!llm || (!llm.api_key && llm.provider === "openai")) {
+  const serverReady = serverConfig && serverConfig.has_server_config;
+  if (!llm && !serverReady) {
+    openSettingsModal();
+    appendMessage("system", "Please configure your LLM provider and API key before building.");
+    return;
+  }
+  if (!llm && llm?.provider === "openai" && !llm?.api_key && !serverReady) {
     openSettingsModal();
     appendMessage("system", "Please configure your LLM provider and API key before building.");
     return;
@@ -231,11 +269,13 @@ async function onBuild() {
   const btn = document.getElementById("btn-build");
   btn.disabled = true;
 
+  const force = document.getElementById("chk-force-rebuild")?.checked || false;
+
   try {
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/build`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ llm }),
+      body: JSON.stringify({ llm, force }),
     });
 
     if (res.status === 409) {
@@ -251,6 +291,8 @@ async function onBuild() {
     }
 
     startPolling(currentTopic);
+    const chk = document.getElementById("chk-force-rebuild");
+    if (chk) chk.checked = false;
   } catch (err) {
     setStatus("error", "Network error: " + err.message);
     btn.disabled = false;
@@ -269,6 +311,7 @@ function startPolling(topic) {
         document.getElementById("btn-build").disabled = false;
         await loadGraph(topic);
         await refreshTopics();
+        if (status.up_to_date) showToast("No changes detected — graph is already up to date. Use \"Full rebuild\" to force re-extraction.");
       } else if (status.build_status === "error") {
         stopPolling();
         document.getElementById("btn-build").disabled = false;
@@ -276,11 +319,23 @@ function startPolling(topic) {
     } catch (err) {
       console.error("Poll error:", err);
     }
-  }, 2500);
+  }, 10000);
 }
 
 function stopPolling() {
   if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+}
+
+function showToast(message, duration = 6000) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add("toast-visible"));
+  setTimeout(() => {
+    toast.classList.remove("toast-visible");
+    toast.addEventListener("transitionend", () => toast.remove());
+  }, duration);
 }
 
 
@@ -333,9 +388,10 @@ async function sendMessage() {
     return;
   }
 
-  // Require LLM settings for querying too
+  // Use session LLM config if set, otherwise fall back to server .env config
   const llm = llmPayload();
-  if (!llm || (!llm.api_key && llm.provider === "openai")) {
+  const serverReady = serverConfig && serverConfig.has_server_config;
+  if (!llm && !serverReady) {
     openSettingsModal();
     appendMessage("system", "Please configure your LLM provider and API key before querying.");
     return;

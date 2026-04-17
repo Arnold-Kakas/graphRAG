@@ -1,94 +1,137 @@
-# GraphRAG — AI Copyright & Governance Knowledge Graph
+# GraphRAG — Multi-Topic Knowledge Graph Web App
 
-An end-to-end GraphRAG pipeline that scrapes web content about AI intellectual property and copyright, extracts entities and relationships using LLMs, builds a queryable knowledge graph, and renders it as an interactive visualization.
+An end-to-end GraphRAG web application that ingests your documents, extracts entities and relationships using LLMs, builds a queryable knowledge graph, and renders it as an interactive visualization.
 
 ## Overview
 
-This project combines web scraping, LLM-powered entity extraction, graph analysis, and interactive visualization to build a domain-specific Retrieval-Augmented Generation (RAG) system focused on AI copyright and governance topics.
+Drop documents into a topic folder, trigger the pipeline from the UI, and query the resulting knowledge graph in natural language. Supports OpenAI and any OpenAI-compatible local model (LM Studio, Ollama, etc.).
 
 ## Tech Stack
 
 | Layer | Tools |
 |-------|-------|
-| LLM / RAG | LlamaIndex, OpenAI (gpt-4o-mini, gpt-4o) |
-| Web scraping | SerpAPI, Trafilatura, YouTube Transcript API |
-| Graph analysis | NetworkX, Graspologic (Louvain community detection) |
-| Visualization | D3.js v7, vis-network 9.1.2 |
+| LLM / RAG | LlamaIndex, OpenAI-compatible API |
+| Document parsing | PyMuPDF, python-docx, Trafilatura, BeautifulSoup |
+| Graph analysis | NetworkX, Graspologic (Leiden community detection) |
+| Visualization | D3.js v7 |
+| Backend | FastAPI, Uvicorn |
 | Data | Pandas, Pydantic |
-
 
 ## Project Structure
 
 ```
 graphrag/
-├── scrape_info.ipynb              # Web scraping & text enrichment
-├── graphrag_ai_copyright.ipynb    # GraphRAG pipeline, queries & visualization
-├── ai_copyright_dataset.csv       # Scraped articles/videos (810 rows)
-├── graph_data.json                # Extracted knowledge graph (nodes + edges)
-├── ai_copyright_graph.html        # Interactive visualization (generated output)
-├── graph_template.html            # HTML/D3.js template for visualization
-├── .env                           # API keys (not committed)
-└── lib/
-    ├── bindings/utils.js          # Graph interaction utilities
-    ├── vis-9.1.2/                 # vis-network library
-    └── tom-select/                # Dropdown UI component
+├── app/
+│   ├── main.py           # FastAPI routes
+│   ├── config.py         # Settings (loaded from .env)
+│   ├── parser.py         # Document parser (PDF, DOCX, HTML, TXT, MD, CSV)
+│   ├── pipeline.py       # GraphRAG pipeline (extraction, clustering, summarization)
+│   ├── query_engine.py   # Query engine
+│   ├── graph_store.py    # Graph persistence
+│   ├── task_manager.py   # Background task management
+│   ├── models.py         # Pydantic models
+│   ├── templates/        # Jinja2 HTML templates
+│   └── static/           # CSS and JS assets
+├── raw/                  # Input documents, organized by topic (raw/<topic>/)
+├── graphs/               # Generated graph data (persisted across restarts)
+├── Dockerfile
+├── docker-compose.yml
+└── .env                  # API keys and settings (not committed)
 ```
 
 ## Prerequisites
 
-- Python 3.10+
-- A [SerpAPI](https://serpapi.com/) key (Google Search)
-- An [OpenAI](https://platform.openai.com/) API key
-- API key variables added in the `.env` file
+- Docker and Docker Compose
+- An OpenAI API key **or** a local LLM running an OpenAI-compatible API (LM Studio, Ollama)
 
 ## Setup
 
-1. **Clone the repo and create a virtual environment:**
+1. **Clone the repo:**
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate
+   git clone <repo-url>
+   cd graphRAG
    ```
 
-2. **Install dependencies:**
+2. **Create your `.env` file:**
    ```bash
-   pip install llama-index llama-index-llms-openai graspologic \
-               pandas nest-asyncio python-dotenv \
-               google-search-results trafilatura youtube_transcript_api requests
+   cp .env.example .env
+   ```
+   Then edit `.env` with your settings.
+
+3. **Configure your LLM provider** in `.env`:
+
+   **Option A — OpenAI:**
+   ```env
+   OPENAI_API_KEY=sk-...
+   EXTRACTION_MODEL=gpt-4o-mini
+   QUERY_MODEL=gpt-4o
    ```
 
-3. **Configure API keys** — create a `.env` file in the project root:
+   **Option B — Local model (LM Studio):**
+   ```env
+   OPENAI_API_KEY=not-needed
+   LLM_BASE_URL=http://host.docker.internal:1234/v1
+   EXTRACTION_MODEL=your-model-name
+   QUERY_MODEL=your-model-name
+   LLM_CONTEXT_WINDOW=8192
    ```
-   SERPAPI_KEY=your_serpapi_key_here
-   OPENAI_API_KEY=your_openai_api_key_here
+
+   **Option C — Local model (Ollama):**
+   ```env
+   OPENAI_API_KEY=not-needed
+   LLM_BASE_URL=http://host.docker.internal:11434/v1
+   EXTRACTION_MODEL=your-model-name
+   QUERY_MODEL=your-model-name
+   LLM_CONTEXT_WINDOW=8192
    ```
+
+   > **Note for Docker:** Use `host.docker.internal` to reach services on your host machine. If that doesn't work on Linux, use your LAN IP (e.g. `http://192.168.1.100:1234/v1`) instead.
+
+4. **Add your documents** — create a folder under `raw/` for each topic and place your files inside:
+   ```
+   raw/
+   └── my-topic/
+       ├── document1.pdf
+       ├── article.html
+       └── notes.txt
+   ```
+   Supported formats: `.pdf`, `.docx`, `.html`, `.htm`, `.txt`, `.md`, `.csv`
+
+5. **Build and run:**
+   ```bash
+   docker-compose up --build
+   ```
+
+6. **Open the app** at `http://localhost:8000`
 
 ## Usage
 
-### Step 1 — Scrape content (`scrape_info.ipynb`)
+1. Select a topic from the dropdown
+2. Click **Build Graph** to run the pipeline (entity extraction, community detection, summarization)
+3. Explore the interactive graph visualization
+4. Ask questions in natural language via the chat interface
 
-Searches Google for AI copyright/IP articles and YouTube videos, then enriches them with full article text (via Trafilatura) and video transcripts (via YouTube Transcript API).
-You can swap out the search queries with any other search terms relevant to your project.
+### Adding documents to an existing topic
 
-Output: `ai_copyright_dataset.csv`
+Just drop new files into `raw/<topic>/` and click **Build Graph** again. The pipeline runs **incrementally** — it compares each file's last-modified time against the previous build and only re-processes new or changed files. Unchanged files are skipped, saving significant LLM costs on large topic folders.
 
-### Step 2 — Build the knowledge graph (`graphrag_ai_copyright.ipynb`)
+After the incremental run, community detection and summaries are regenerated over the full (merged) graph.
 
-Loads the scraped dataset and runs the full GraphRAG pipeline:
+#### Incremental build limitations
 
-- **Entity extraction** — uses GPT4o to extract entities and relationships (under the types defined in ontology).
-- **Relationship extraction** — maps typed relationships between entities using Pydantic-validated schemas
-- **Community detection** — runs Louvain clustering to group related entities into thematic communities
-- **Community summarization** — generates LLM summaries for each cluster
-- **Query engine** — answers complex questions by synthesizing context across communities using `gpt-4o`
-- **Export** — writes `graph_data.json` and renders `ai_copyright_graph.html`
+- **Deleted files** — nodes extracted from a deleted file remain in the graph until you do a full rebuild. The graph has no record of which file each node came from.
+- **Modified files** — re-extracted and merged in; the old nodes from that file stay too (LlamaIndex deduplicates by entity name where possible, but duplicates can occur for substantially rewritten content).
 
-### Step 3 — Explore the visualization
+To force a complete rebuild from scratch, tick the **Full rebuild** checkbox next to the Build Graph button before triggering the build.
 
-Open `ai_copyright_graph.html` in a browser. Features:
+## Pipeline Parameters
 
-- Force-directed graph layout (D3.js)
-- Filter nodes by entity type via the sidebar legend
-- Search nodes by name
-- Click a node to highlight its direct connections
-- Hover for entity details in a tooltip
-- Adjust link distance with the slider
+Tunable via `.env`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MAX_DOCUMENTS` | 50 | Max documents processed per build (full builds only) |
+| `NUM_WORKERS` | 4 | Parallel LLM workers for extraction |
+| `MAX_PATHS_PER_CHUNK` | 20 | Max entity-relationship triplets per document chunk |
+| `MAX_CLUSTER_SIZE` | 10 | Max nodes per community cluster |
+| `LLM_CONTEXT_WINDOW` | 8192 | Context window size (set to your model's actual limit) |

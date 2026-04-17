@@ -41,8 +41,7 @@ def build_extraction_prompt(ontology: OntologyConfig) -> str:
     entity_types_str = ", ".join(ontology.entity_types)
     relation_types_str = ", ".join(ontology.relation_types)
 
-    return f"""
--Goal-
+    return f"""/no_think
 Given a document, identify all entities mentioned and their relationships.
 
 Extract up to {{max_knowledge_triplets}} entity-relation triplets.
@@ -186,13 +185,24 @@ async def build_topic_graph(
     extraction_llm: LLM,
     community_llm: LLM,
     progress_callback: Optional[Callable[[str], None]] = None,
+    force: bool = False,
 ) -> GraphRAGStore:
     """
-    Full pipeline for one topic:
-      1. Convert parsed docs to LlamaIndex Document objects
-      2. Extract entities/relationships (LLM)
-      3. Run Leiden community detection
-      4. Generate LLM community summaries
+    Full or incremental pipeline for one topic.
+
+    Incremental mode (default when a prior build exists):
+      - Compares each file's mtime against the stored manifest.
+      - Only re-extracts new or modified files; unchanged files are skipped.
+      - Deleted files' nodes remain in the graph until a full rebuild is forced.
+
+    Force a full rebuild by passing force=True (or ticking "Full rebuild" in the UI),
+    which ignores the manifest and re-processes every file from scratch.
+
+    Steps:
+      1. Determine which documents need (re-)processing.
+      2. Extract entities/relationships (LLM) for those documents.
+      3. Run Leiden community detection on the full graph.
+      4. Generate LLM community summaries.
       5. Save all artifacts to graphs/<topic>/
     """
 
@@ -202,14 +212,55 @@ async def build_topic_graph(
             progress_callback(msg)
 
     graphs_dir = Path(config.graphs_dir)
+    topic_dir = graphs_dir / topic
+    manifest_path = topic_dir / "manifest.json"
 
-    _p(f"Preparing {len(documents)} documents...")
+    # ── Load existing manifest (mtimes from last build) ────────────────────────
+    existing_manifest: dict = {}
+    if not force and manifest_path.exists():
+        try:
+            existing_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    stored_mtimes: dict[str, float] = existing_manifest.get("files", {})
+    current_mtimes: dict[str, float] = {
+        doc["filename"]: doc["metadata"].get("mtime", 0.0)
+        for doc in documents
+    }
+
+    # ── Decide full vs incremental ─────────────────────────────────────────────
+    pkl_exists = (topic_dir / "store.pkl").exists()
+    is_incremental = bool(stored_mtimes) and pkl_exists and not force
+
+    if is_incremental:
+        docs_to_process = [
+            doc for doc in documents
+            if current_mtimes[doc["filename"]] > stored_mtimes.get(doc["filename"], 0.0)
+        ]
+        skipped = len(documents) - len(docs_to_process)
+
+        if not docs_to_process:
+            _p(f"Graph is already up to date — all {len(documents)} file(s) unchanged")
+            return GraphRAGStore.load(topic_dir)
+
+        _p(f"Incremental build: {len(docs_to_process)} new/modified file(s), {skipped} unchanged (skipped)")
+        graph_store = GraphRAGStore.load(topic_dir)
+    else:
+        docs_to_process = documents[: config.max_documents]
+        if force and pkl_exists:
+            _p(f"Forced full rebuild: processing all {len(docs_to_process)} file(s)")
+        else:
+            _p(f"Full build: processing {len(docs_to_process)} file(s)")
+        graph_store = GraphRAGStore()
+
+    # ── Build LlamaIndex nodes (strip mtime from metadata — it's build infra) ──
     nodes = [
         Document(
             text=doc["text"],
-            metadata=doc.get("metadata", {}),
+            metadata={k: v for k, v in doc.get("metadata", {}).items() if k != "mtime"},
         )
-        for doc in documents[: config.max_documents]
+        for doc in docs_to_process
     ]
 
     _p("Building extraction prompt...")
@@ -224,17 +275,19 @@ async def build_topic_graph(
         valid_relation_types=ontology.relation_types,
     )
 
-    graph_store = GraphRAGStore()
-
     _p("Extracting entities and relationships (this may take several minutes)...")
     Settings.llm = extraction_llm
 
-    index = PropertyGraphIndex(  # noqa: F841
-        nodes=nodes,
-        kg_extractors=[kg_extractor],
-        property_graph_store=graph_store,
-        embed_kg_nodes=False,
-        show_progress=True,
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(
+        None,
+        lambda: PropertyGraphIndex(
+            nodes=nodes,
+            kg_extractors=[kg_extractor],
+            property_graph_store=graph_store,
+            embed_kg_nodes=False,
+            show_progress=True,
+        ),
     )
 
     _p("Running community detection and generating summaries...")
@@ -246,7 +299,6 @@ async def build_topic_graph(
     )
 
     _p("Saving graph artifacts...")
-    topic_dir = graphs_dir / topic
     graph_store.save(topic_dir)
 
     # Save ontology used for this build
@@ -259,7 +311,7 @@ async def build_topic_graph(
     meta = {
         "topic": topic,
         "built_at": datetime.now(timezone.utc).isoformat(),
-        "document_count": len(nodes),
+        "document_count": len(documents),
         "node_count": len(graph_data["nodes"]),
         "edge_count": len(graph_data["links"]),
         "community_count": graph_data["communities"],
@@ -267,6 +319,14 @@ async def build_topic_graph(
     (topic_dir / "build_meta.json").write_text(
         json.dumps(meta, indent=2), encoding="utf-8"
     )
+
+    # Save manifest — records mtime of every file so incremental builds can
+    # detect changes on the next run.
+    manifest = {
+        "files": current_mtimes,
+        "built_at": meta["built_at"],
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     _p(
         f"Build complete — {meta['node_count']} nodes, "

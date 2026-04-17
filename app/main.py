@@ -139,9 +139,21 @@ def _get_query_engine(topic: str, llm_config: Optional[LLMConfig] = None) -> Gra
 async def index(request: Request):
     topics = _discover_topics()
     return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "topics": topics},
+        request=request,
+        name="index.html",
+        context={"topics": topics},
     )
+
+
+@app.get("/api/config")
+async def get_config():
+    """Return server-side LLM config status (no secrets exposed)."""
+    return {
+        "has_server_config": bool(settings.openai_api_key or settings.llm_base_url),
+        "extraction_model": settings.extraction_model,
+        "query_model": settings.query_model,
+        "has_base_url": bool(settings.llm_base_url),
+    }
 
 
 @app.get("/api/topics")
@@ -160,8 +172,9 @@ async def build_topic(topic: str, body: Optional[BuildRequest] = None):
 
     ontology = (body.ontology if body else None)
     llm_config = (body.llm if body else None)
+    force = (body.force if body else False)
     try:
-        await task_manager.start_build(topic, ontology, llm_config, _query_engines)
+        await task_manager.start_build(topic, ontology, llm_config, _query_engines, force)
     except RuntimeError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
 

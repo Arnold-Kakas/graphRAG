@@ -51,7 +51,12 @@ class DocumentParser:
                 {
                     "filename": path.name,
                     "text": text.strip(),
-                    "metadata": {"source": str(path), "filename": path.name, **extra_meta},
+                    "metadata": {
+                        "source": str(path),
+                        "filename": path.name,
+                        "mtime": path.stat().st_mtime,
+                        **extra_meta,
+                    },
                 }
             )
 

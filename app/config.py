@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     raw_dir: Path = Path("./raw")
     graphs_dir: Path = Path("./graphs")
 
+    # ── LLM context window (required for non-OpenAI models) ─────────────────────
+    llm_context_window: int = 8192
+
+    # ── LLM request timeout in seconds (increase for slow local models) ─────────
+    llm_request_timeout: float = 300.0
+
     # ── Pipeline parameters ─────────────────────────────────────────────────────
     max_paths_per_chunk: int = 20
     num_workers: int = 4

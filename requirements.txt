@@ -5,6 +5,7 @@ python-multipart>=0.0.9
 pydantic-settings>=2.0.0
 llama-index>=0.10.0
 llama-index-llms-openai>=0.1.0
+llama-index-llms-openai-like>=0.1.0
 graspologic>=3.3.0
 pandas>=2.0.0
 networkx>=3.0

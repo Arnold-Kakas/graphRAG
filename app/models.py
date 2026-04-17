@@ -77,6 +77,7 @@ class LLMConfig(BaseModel):
 class BuildRequest(BaseModel):
     ontology: Optional[OntologyConfig] = None
     llm: Optional[LLMConfig] = None
+    force: bool = False  # if True, ignore manifest and rebuild from scratch
 
 
 class QueryRequest(BaseModel):
@@ -111,3 +112,4 @@ class TaskState(BaseModel):
     started_at: datetime = Field(default_factory=datetime.utcnow)
     completed_at: Optional[datetime] = None
     error: Optional[str] = None
+    up_to_date: bool = False    # True when build skipped because no files changed

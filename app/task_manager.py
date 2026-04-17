@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from llama_index.llms.openai import OpenAI
+from llama_index.llms.openai_like import OpenAILike
 
 from .config import Settings
 from .graph_store import GraphRAGStore
@@ -33,28 +34,48 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
     """
     Create an LLM client from a per-request LLMConfig (preferred) or server-level Settings (fallback).
 
+    Uses OpenAILike for non-OpenAI providers (bypasses model name validation).
     Never persists the API key — it's only used for this single client instance.
     """
-    kwargs = {"model": model, "temperature": 0}
-
     if llm_config:
-        # Per-request config from the browser session
+        base_url = llm_config.base_url or (fallback.llm_base_url if fallback else None) or _PROVIDER_URLS.get(llm_config.provider or "")
+        if llm_config.provider != "openai" and base_url:
+            return OpenAILike(
+                model=model,
+                api_base=base_url,
+                api_key=llm_config.api_key or "not-needed",
+                is_chat_model=True,
+                is_function_calling_model=True,
+                context_window=fallback.llm_context_window if fallback else 8192,
+                temperature=0,
+                timeout=fallback.llm_request_timeout if fallback else 300.0,
+            )
+        # OpenAI provider
+        kwargs: dict = {"model": model, "temperature": 0}
         if llm_config.api_key:
             kwargs["api_key"] = llm_config.api_key
-        base_url = llm_config.base_url or _PROVIDER_URLS.get(llm_config.provider)
-        if base_url:
-            kwargs["api_base"] = base_url
-        # Local providers may not need a real key
-        if llm_config.provider != "openai" and "api_key" not in kwargs:
-            kwargs["api_key"] = "not-needed"
+        return OpenAI(**kwargs)
+
     elif fallback:
-        # Server-level .env config (for headless / CLI usage)
+        if fallback.llm_base_url:
+            logger.info("Using OpenAILike with base_url=%s model=%s", fallback.llm_base_url, model)
+            return OpenAILike(
+                model=model,
+                api_base=fallback.llm_base_url,
+                api_key=fallback.openai_api_key or "not-needed",
+                is_chat_model=True,
+                is_function_calling_model=True,
+                context_window=fallback.llm_context_window,
+                temperature=0,
+                timeout=fallback.llm_request_timeout,
+            )
+        # Standard OpenAI via .env
+        kwargs = {"model": model, "temperature": 0}
         if fallback.openai_api_key:
             kwargs["api_key"] = fallback.openai_api_key
-        if fallback.llm_base_url:
-            kwargs["api_base"] = fallback.llm_base_url
+        return OpenAI(**kwargs)
 
-    return OpenAI(**kwargs)
+    return OpenAI(model=model, temperature=0)
 
 
 class TaskManager:
@@ -80,10 +101,12 @@ class TaskManager:
         ontology: Optional[OntologyConfig],
         llm_config: Optional[LLMConfig],
         query_engines: dict,
+        force: bool = False,
     ) -> None:
         """
         Launch a background build task for the given topic.
         If a build is already running, raises RuntimeError.
+        Pass force=True to ignore the incremental manifest and rebuild from scratch.
         """
         existing = self._tasks.get(topic)
         if existing and existing.status == "building":
@@ -94,7 +117,7 @@ class TaskManager:
         query_engines.pop(topic, None)
 
         asyncio.create_task(
-            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines)
+            self._run_build(topic, ontology or OntologyConfig(), llm_config, query_engines, force)
         )
 
     # ── Internal ───────────────────────────────────────────────────────────────
@@ -105,6 +128,7 @@ class TaskManager:
         ontology: OntologyConfig,
         llm_config: Optional[LLMConfig],
         query_engines: dict,
+        force: bool = False,
     ) -> None:
         def _progress(msg: str) -> None:
             if topic in self._tasks:
@@ -122,7 +146,7 @@ class TaskManager:
             if not documents:
                 raise ValueError(f"No parseable documents found in raw/{topic}/")
 
-            _progress(f"Parsed {len(documents)} documents — building graph...")
+            _progress(f"Parsed {len(documents)} document(s) — checking for changes...")
 
             # Resolve model names: per-request config overrides server defaults
             extraction_model = (llm_config.extraction_model if llm_config else None) or config.extraction_model
@@ -139,11 +163,14 @@ class TaskManager:
                 extraction_llm=extraction_llm,
                 community_llm=community_llm,
                 progress_callback=_progress,
+                force=force,
             )
 
             self._stores[topic] = store
+            up_to_date = "already up to date" in self._tasks[topic].progress.lower()
             self._tasks[topic].status = "complete"
-            self._tasks[topic].progress = "Build complete"
+            self._tasks[topic].progress = "No changes detected — graph is up to date" if up_to_date else "Build complete"
+            self._tasks[topic].up_to_date = up_to_date
             self._tasks[topic].completed_at = datetime.now(timezone.utc)
             logger.info("Build complete for topic '%s'", topic)
 
