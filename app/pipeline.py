@@ -11,6 +11,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Optional
@@ -40,9 +41,8 @@ logger = logging.getLogger(__name__)
 def build_extraction_prompt(ontology: OntologyConfig, thinking: bool = False) -> str:
     entity_types_str = ", ".join(ontology.entity_types)
     relation_types_str = ", ".join(ontology.relation_types)
-    prefix = "" if thinking else "/no_think\n"
 
-    return f"""{prefix}Given a document, identify all entities mentioned and their relationships.
+    base = f"""Given a document, identify all entities mentioned and their relationships.
 
 Extract up to {{max_knowledge_triplets}} entity-relation triplets.
 
@@ -70,6 +70,15 @@ text: {{text}}
 ######################
 """
 
+    if thinking:
+        # Plain-text completion path: model outputs JSON directly after reasoning
+        return base + """
+Output ONLY a raw JSON object — no markdown, no code fences, no extra text:
+{"entities": [{"name": "...", "type": "...", "description": "..."}], "relationships": [{"source": "...", "target": "...", "relation": "...", "description": "..."}]}
+"""
+    else:
+        return "/no_think\n" + base
+
 
 # ── GraphRAGExtractor ──────────────────────────────────────────────────────────
 
@@ -85,6 +94,7 @@ class GraphRAGExtractor(TransformComponent):
     )
     num_workers: int = 4
     max_paths_per_chunk: int = 20
+    thinking: bool = False
     valid_entity_types: list[str] = Field(default_factory=list)
     valid_relation_types: list[str] = Field(default_factory=list)
 
@@ -96,21 +106,58 @@ class GraphRAGExtractor(TransformComponent):
     def __call__(self, nodes, show_progress=False, **kwargs):
         return asyncio.run(self.acall(nodes, show_progress=show_progress, **kwargs))
 
+    def _parse_json_result(self, text: str) -> Optional[ExtractionResult]:
+        """Extract ExtractionResult from a raw JSON string (thinking mode fallback)."""
+        text = text.strip()
+        # Strip markdown fences if present
+        text = re.sub(r"^```(?:json)?\s*", "", text)
+        text = re.sub(r"\s*```$", "", text)
+        # Find the outermost JSON object
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if not match:
+            return None
+        try:
+            data = json.loads(match.group())
+            return ExtractionResult.model_validate(data)
+        except Exception as exc:
+            logger.error("JSON parse error in thinking mode: %s", exc)
+            return None
+
     async def _aextract(self, node: BaseNode) -> BaseNode:
         text = node.get_content(metadata_mode="llm")
 
-        try:
-            result: ExtractionResult = await self.llm.astructured_predict(
-                ExtractionResult,
-                self.extract_prompt,
-                text=text,
-                max_knowledge_triplets=self.max_paths_per_chunk,
-            )
-            entities = result.entities
-            relationships = result.relationships
-        except Exception as exc:
-            logger.error("Extraction error on node %s: %s", node.node_id, exc)
+        if self.thinking:
+            # Thinking mode: use plain text completion so the model can reason freely,
+            # then parse JSON from the response text.
             entities, relationships = [], []
+            try:
+                prompt_text = self.extract_prompt.format(
+                    text=text,
+                    max_knowledge_triplets=self.max_paths_per_chunk,
+                )
+                response = await self.llm.acomplete(prompt_text)
+                raw = response.text.strip()
+                result = self._parse_json_result(raw) if raw else None
+                if result:
+                    entities = result.entities
+                    relationships = result.relationships
+                else:
+                    logger.warning("Thinking extraction returned no parseable JSON for node %s", node.node_id)
+            except Exception as exc:
+                logger.error("Extraction error on node %s: %s", node.node_id, exc)
+        else:
+            try:
+                result: ExtractionResult = await self.llm.astructured_predict(
+                    ExtractionResult,
+                    self.extract_prompt,
+                    text=text,
+                    max_knowledge_triplets=self.max_paths_per_chunk,
+                )
+                entities = result.entities
+                relationships = result.relationships
+            except Exception as exc:
+                logger.error("Extraction error on node %s: %s", node.node_id, exc)
+                entities, relationships = [], []
 
         # Post-validate types against the ontology; unknown → "OTHER" / "RELATED_TO"
         for e in entities:
@@ -272,6 +319,7 @@ async def build_topic_graph(
         extract_prompt=prompt_str,
         max_paths_per_chunk=config.max_paths_per_chunk,
         num_workers=config.num_workers,
+        thinking=thinking,
         valid_entity_types=ontology.entity_types,
         valid_relation_types=ontology.relation_types,
     )
