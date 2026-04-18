@@ -1,0 +1,22 @@
+{
+  "entity_types": [
+    "PERSON",
+    "ORGANIZATION",
+    "CONCEPT",
+    "EVENT",
+    "LOCATION",
+    "DOCUMENT",
+    "TECHNOLOGY",
+    "PRODUCT"
+  ],
+  "relation_types": [
+    "RELATED_TO",
+    "PART_OF",
+    "CREATED_BY",
+    "LOCATED_IN",
+    "REFERENCES",
+    "OPPOSES",
+    "SUPPORTS",
+    "REGULATES"
+  ]
+}

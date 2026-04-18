@@ -1,0 +1,2983 @@
+{
+  "nodes": [
+    {
+      "id": "Regression Modeling",
+      "label": "Regression Modeling",
+      "type": "CONCEPT",
+      "description": "A statistical method used in MMM to derive an equation describing the KPI by assigning coefficients to independent variables."
+    },
+    {
+      "id": "Ridge Regression",
+      "label": "Ridge Regression",
+      "type": "CONCEPT",
+      "description": "A regularized regression method used in Robyn to handle multicollinearity among media variables."
+    },
+    {
+      "id": "Adstock",
+      "label": "Adstock",
+      "type": "CONCEPT",
+      "description": "A concept representing the carryover effect of marketing spend over time, where effects persist beyond the investment week."
+    },
+    {
+      "id": "Saturation",
+      "label": "Saturation",
+      "type": "CONCEPT",
+      "description": "A concept representing the diminishing returns of marketing spend on a target metric as investment increases."
+    },
+    {
+      "id": "Prophet",
+      "label": "Prophet",
+      "type": "TECHNOLOGY",
+      "description": "A time-series forecast package by Meta used for trend and seasonality decomposition in Robyn."
+    },
+    {
+      "id": "Meta",
+      "label": "Meta",
+      "type": "ORGANIZATION",
+      "description": "The organization that collaborated with Deloitte to develop the Measurement 360 framework for advertisers."
+    },
+    {
+      "id": "Robyn",
+      "label": "Robyn",
+      "type": "TECHNOLOGY",
+      "description": "An R package for Marketing Mix Modeling that automates model specification, optimization, and calibration."
+    },
+    {
+      "id": "Nevergrad",
+      "label": "Nevergrad",
+      "type": "TECHNOLOGY",
+      "description": "Meta's gradient-free optimization platform used by Robyn for multi-objective hyperparameter optimization."
+    },
+    {
+      "id": "Budget Allocator",
+      "label": "Budget Allocator",
+      "type": "PRODUCT",
+      "description": "A feature within Robyn designed to optimize marketing spend across different media channels."
+    },
+    {
+      "id": "Data Collection",
+      "label": "Data Collection",
+      "type": "CONCEPT",
+      "description": "One of the most important steps in an MMM study involving collecting time-series data for sales, media, non-media marketing and macroeconomic factors."
+    },
+    {
+      "id": "Feature Engineering",
+      "label": "Feature Engineering",
+      "type": "CONCEPT",
+      "description": "The process of transforming raw data into features that better represent the underlying problem to predictive models, critical for MMM accuracy."
+    },
+    {
+      "id": "Model Selection",
+      "label": "Model Selection",
+      "type": "CONCEPT",
+      "description": "The process of choosing the final model for analysis, often involving trade-offs between statistical quality and business plausibility."
+    },
+    {
+      "id": "ROI",
+      "label": "ROI",
+      "type": "CONCEPT",
+      "description": "Return on Investment, a crucial metric for measuring the effectiveness of marketing channel investments."
+    },
+    {
+      "id": "KPI",
+      "label": "KPI",
+      "type": "CONCEPT",
+      "description": "Key Performance Indicator, the primary metric or dependent variable that the MMM will measure against such as sales or website visits."
+    },
+    {
+      "id": "Time Series Analysis",
+      "label": "Time Series Analysis",
+      "type": "CONCEPT",
+      "description": "Used to determine seasonality trends which can be incorporated in the final model using tools like Prophet."
+    },
+    {
+      "id": "Budget Allocation",
+      "label": "Budget Allocation",
+      "type": "CONCEPT",
+      "description": "A feature in Robyn that calculates optimum cross-media budget splits based on response or target efficiency."
+    },
+    {
+      "id": "Carryover Effect",
+      "label": "Carryover Effect",
+      "type": "CONCEPT",
+      "description": "The lagged effect of advertising on consumer purchase behavior, where ads seen earlier influence purchases later."
+    },
+    {
+      "id": "Shape Effect",
+      "label": "Shape Effect",
+      "type": "CONCEPT",
+      "description": "The non-linear relationship between media spend and sales, accounting for ad saturation and diminishing returns at high levels of spend."
+    },
+    {
+      "id": "Adstock Function",
+      "label": "Adstock Function",
+      "type": "TECHNOLOGY",
+      "description": "A transformation function used to model the carryover effect by weighting current and past media spend over a duration."
+    },
+    {
+      "id": "Hill Function",
+      "label": "Hill Function",
+      "type": "CONCEPT",
+      "description": "A nonlinear function implemented in Robyn for flexible transformation into S- or L-shape saturation curves."
+    },
+    {
+      "id": "Bayesian Methods",
+      "label": "Bayesian Methods",
+      "type": "CONCEPT",
+      "description": "State-of-the-art flavors of MMMs that are considered the standard for modern-day modeling."
+    },
+    {
+      "id": "Markov Chain Monte Carlo (MCMC)",
+      "label": "Markov Chain Monte Carlo (MCMC)",
+      "type": "CONCEPT",
+      "description": "A computational algorithm used to sample from posterior distributions in Bayesian models for inference."
+    },
+    {
+      "id": "Gibbs Sampling",
+      "label": "Gibbs Sampling",
+      "type": "TECHNOLOGY",
+      "description": "A specific MCMC algorithm that partitions the parameter vector and converts high-dimensional sampling into iteratively sampling low-dimensional conditional distributions."
+    },
+    {
+      "id": "Hamiltonian Monte Carlo (HMC)",
+      "label": "Hamiltonian Monte Carlo (HMC)",
+      "type": "TECHNOLOGY",
+      "description": "A sampling method used in Bayesian inference that is popular for its efficiency in navigating complex posterior distributions."
+    },
+    {
+      "id": "Return on Ad Spend (ROAS)",
+      "label": "Return on Ad Spend (ROAS)",
+      "type": "CONCEPT",
+      "description": "A key performance metric measuring the revenue generated for every dollar spent on advertising."
+    },
+    {
+      "id": "Marginal ROAS (mROAS)",
+      "label": "Marginal ROAS (mROAS)",
+      "type": "CONCEPT",
+      "description": "The additional revenue generated by one-unit increase in spend, typically calculated as the derivative of predicted sales with respect to spend."
+    },
+    {
+      "id": "Optimal Media Mix",
+      "label": "Optimal Media Mix",
+      "type": "CONCEPT",
+      "description": "The allocation of media spend across channels that maximizes revenue under a budget constraint."
+    },
+    {
+      "id": "Posterior Distribution",
+      "label": "Posterior Distribution",
+      "type": "CONCEPT",
+      "description": "The probability distribution of parameters after updating with observed data during the learning step."
+    },
+    {
+      "id": "Bayesian Information Criterion (BIC)",
+      "label": "Bayesian Information Criterion (BIC)",
+      "type": "CONCEPT",
+      "description": "A model selection criterion that balances the need for fitting the data well against model complexity to choose appropriate specifications."
+    },
+    {
+      "id": "Control Variables",
+      "label": "Control Variables",
+      "type": "CONCEPT",
+      "description": "Non-media variables such as price, product distribution, and seasonality included in the model to account for external factors affecting sales."
+    },
+    {
+      "id": "Sales Response",
+      "label": "Sales Response",
+      "type": "CONCEPT",
+      "description": "The dependent variable in media mix models, typically representing weekly or monthly aggregated sales volume."
+    },
+    {
+      "id": "Media Spend",
+      "label": "Media Spend",
+      "type": "CONCEPT",
+      "description": "The independent variable representing the amount of money spent on advertising across different media channels."
+    },
+    {
+      "id": "STAN",
+      "label": "STAN",
+      "type": "TECHNOLOGY",
+      "description": "A probabilistic programming language used to specify log density functions and perform Bayesian inference with Hamiltonian Monte Carlo sampling."
+    },
+    {
+      "id": "C++",
+      "label": "C++",
+      "type": "TECHNOLOGY",
+      "description": "A programming language used to implement custom Gibbs samplers for efficient model estimation in media mix modeling."
+    },
+    {
+      "id": "Geometric Decay",
+      "label": "Geometric Decay",
+      "type": "CONCEPT",
+      "description": "A functional form for the adstock weight function that assumes advertising effect peaks at the same time period as ad exposure."
+    },
+    {
+      "id": "Delayed Adstock",
+      "label": "Delayed Adstock",
+      "type": "TECHNOLOGY",
+      "description": "An adstock function variant that accounts for a delay in the peak effect of advertising compared to the exposure time."
+    },
+    {
+      "id": "Reach Transformation",
+      "label": "Reach Transformation",
+      "type": "CONCEPT",
+      "description": "A parsimonious functional form equivalent to fixing the slope parameter in the Hill function, used to model the shape effect."
+    },
+    {
+      "id": "Marketing Mix Modeling",
+      "label": "Marketing Mix Modeling",
+      "type": "CONCEPT",
+      "description": "A measurement methodology referenced in the document context as part of the broader measurement landscape advertisers are reevaluating."
+    },
+    {
+      "id": "Calibration",
+      "label": "Calibration",
+      "type": "CONCEPT",
+      "description": "A process to adjust model predictions using experimental results to align with true causal effects."
+    },
+    {
+      "id": "siMMMulator",
+      "label": "siMMMulator",
+      "type": "TECHNOLOGY",
+      "description": "A data simulation package from Meta used to generate simulated MMM datasets for testing calibration."
+    },
+    {
+      "id": "GeoLift",
+      "label": "GeoLift",
+      "type": "TECHNOLOGY",
+      "description": "A library in R provided by Meta that leverages Synthetic Control Methods for geographical testing."
+    },
+    {
+      "id": "Randomized Controlled Trials (RCT)",
+      "label": "Randomized Controlled Trials (RCT)",
+      "type": "CONCEPT",
+      "description": "Experimental method used to generate true lift data points for model calibration purposes."
+    },
+    {
+      "id": "Mean Absolute Percentage Error (MAPE)",
+      "label": "Mean Absolute Percentage Error (MAPE)",
+      "type": "CONCEPT",
+      "description": "An evaluation metric computed between the true ROAS from simulation and estimated ROAS from Robyn."
+    },
+    {
+      "id": "Meta Marketing Science",
+      "label": "Meta Marketing Science",
+      "type": "ORGANIZATION",
+      "description": "The organization behind Robyn, the open-source MMM package, co-authored by Gufeng Zhou and others."
+    },
+    {
+      "id": "TV Channel",
+      "label": "TV Channel",
+      "type": "PRODUCT",
+      "description": "A simulated media channel used in experiments to evaluate MMM calibration performance."
+    },
+    {
+      "id": "ROBYN HACKATHON 2022",
+      "label": "ROBYN HACKATHON 2022",
+      "type": "EVENT",
+      "description": "The public hackathon where the Robyn package was showcased and calibration projects were evaluated."
+    },
+    {
+      "id": "Trend & Seasonality",
+      "label": "Trend & Seasonality",
+      "type": "CONCEPT",
+      "description": "Data patterns in revenue that are included in simulations to mimic real-life situations."
+    },
+    {
+      "id": "Conversions",
+      "label": "Conversions",
+      "type": "CONCEPT",
+      "description": "The causal effect of a unit impression used directly to create RCT results for calibration."
+    },
+    {
+      "id": "Statistical Fit",
+      "label": "Statistical Fit",
+      "type": "CONCEPT",
+      "description": "A measure of how well a model fits the data statistically, often prioritized in traditional analytics but weighed against business logic in this context."
+    },
+    {
+      "id": "Business Logic",
+      "label": "Business Logic",
+      "type": "CONCEPT",
+      "description": "The practical reasoning and plausibility of results within a specific industry or client context, prioritized over pure statistical fit by experts."
+    },
+    {
+      "id": "Plausibility",
+      "label": "Plausibility",
+      "type": "CONCEPT",
+      "description": "The quality of being reasonable or believable, used to evaluate MMM decomposition and model outcomes against business reality."
+    },
+    {
+      "id": "MMM Decomposition",
+      "label": "MMM Decomposition",
+      "type": "CONCEPT",
+      "description": "A key output of MMM detailing model attribution of outcomes to individual variables, typically presented as a stacked chart over time."
+    },
+    {
+      "id": "Heuristics",
+      "label": "Heuristics",
+      "type": "CONCEPT",
+      "description": "Simple rules or mental shortcuts used by practitioners to evaluate business logic and select models when specific formulas are not utilized."
+    },
+    {
+      "id": "Formulas",
+      "label": "Formulas",
+      "type": "CONCEPT",
+      "description": "Specific mathematical expressions or heuristics utilized by some providers for evaluating model output against business logic."
+    },
+    {
+      "id": "Experiments",
+      "label": "Experiments",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Non-MMM measurements",
+      "label": "Non-MMM measurements",
+      "type": "CONCEPT",
+      "description": "Alternative data sources or metrics that are more accurate than MMM for certain variables, used as a benchmark for model selection."
+    },
+    {
+      "id": "Industry Norms",
+      "label": "Industry Norms",
+      "type": "CONCEPT",
+      "description": "Typical values and standards specific to an industry that influence the evaluation of MMM results and model selection."
+    },
+    {
+      "id": "Client Confidence",
+      "label": "Client Confidence",
+      "type": "CONCEPT",
+      "description": "The level of trust a client places in the results, considered as a factor when choosing the final model alongside statistical fit."
+    },
+    {
+      "id": "Expertise and Experience",
+      "label": "Expertise and Experience",
+      "type": "CONCEPT",
+      "description": "The accumulated knowledge and practical judgment of practitioners used to evaluate business logic instead of specific formulas."
+    },
+    {
+      "id": "Decision-Making Processes",
+      "label": "Decision-Making Processes",
+      "type": "CONCEPT",
+      "description": "The multifaceted steps and criteria involved in selecting models, emphasizing business plausibility over statistical precision."
+    },
+    {
+      "id": "Marketing Science",
+      "label": "Marketing Science",
+      "type": "DOCUMENT",
+      "description": "A journal that published the survey article on decision-making processes in Marketing Mix Modelling."
+    },
+    {
+      "id": "Decision-Making Processes in Marketing Mix Modelling: A Survey of MMM Providers",
+      "label": "Decision-Making Processes in Marketing Mix Modelling: A Survey of MMM Providers",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Attribution Model",
+      "label": "Attribution Model",
+      "type": "CONCEPT",
+      "description": "A method used to determine which marketing interactions contribute to a conversion, such as first click or last click models."
+    },
+    {
+      "id": "Incrementality tests",
+      "label": "Incrementality tests",
+      "type": "CONCEPT",
+      "description": "Tests evaluating the incremental impact of a channel by comparing conversion numbers between exposed and non-exposed groups."
+    },
+    {
+      "id": "Conversion Lift Tests (CLT)",
+      "label": "Conversion Lift Tests (CLT)",
+      "type": "CONCEPT",
+      "description": "A type of incrementality test where randomization is based on individual users, often run directly on advertiser platforms like Meta."
+    },
+    {
+      "id": "Cost per Incremental Conversion (CPIC)",
+      "label": "Cost per Incremental Conversion (CPIC)",
+      "type": "CONCEPT",
+      "description": "A metric computed from incrementality tests used to adjust marketing budget allocation."
+    },
+    {
+      "id": "Meta Pixel",
+      "label": "Meta Pixel",
+      "type": "TECHNOLOGY",
+      "description": "A tracking tool used in Meta Conversion Lift Tests to track conversions between control and treated groups."
+    },
+    {
+      "id": "Marketing Measurement series",
+      "label": "Marketing Measurement series",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Getting the best of both worlds in marketing incrementality tests...",
+      "label": "Getting the best of both worlds in marketing incrementality tests...",
+      "type": "DOCUMENT",
+      "description": "An article within the Marketing Measurement series discussing combining Meta Conversion Lift tests with in-house geo-based tests."
+    },
+    {
+      "id": "Qonto",
+      "label": "Qonto",
+      "type": "ORGANIZATION",
+      "description": "Company that published the Marketing Measurement series and operates in 4 European markets."
+    },
+    {
+      "id": "France",
+      "label": "France",
+      "type": "LOCATION",
+      "description": "The country where the marketing experiment was conducted, divided into administrative regions."
+    },
+    {
+      "id": "Budget adaptation",
+      "label": "Budget adaptation",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Gufeng Zhou",
+      "label": "Gufeng Zhou",
+      "type": "PERSON",
+      "description": "Author of the Robyn MMM package and co-author of this technical note on budget allocation."
+    },
+    {
+      "id": "Bernardo Lares",
+      "label": "Bernardo Lares",
+      "type": "PERSON",
+      "description": "Co-author of the technical note discussing Robyn's budget allocator scenarios."
+    },
+    {
+      "id": "Hitting ROAS target using Robyn's budget allocator",
+      "label": "Hitting ROAS target using Robyn's budget allocator",
+      "type": "DOCUMENT",
+      "description": "A Medium article detailing the new 'target_efficiency' scenario in Robyn's budget allocator v3.10.1."
+    },
+    {
+      "id": "Target Efficiency",
+      "label": "Target Efficiency",
+      "type": "CONCEPT",
+      "description": "A new scenario in the budget allocator allowing users to set ROAS or CPA targets for optimization."
+    },
+    {
+      "id": "Max Response",
+      "label": "Max Response",
+      "type": "CONCEPT",
+      "description": "An existing scenario in the budget allocator that maximizes response given a fixed total budget level."
+    },
+    {
+      "id": "Saturation Curve",
+      "label": "Saturation Curve",
+      "type": "CONCEPT",
+      "description": "A mathematical model representing the relationship between media spend and response, foundational to allocation."
+    },
+    {
+      "id": "SLSQP",
+      "label": "SLSQP",
+      "type": "TECHNOLOGY",
+      "description": "Sequential Least Square Quadratic Programming, an optimization algorithm used by Robyn to solve allocation problems."
+    },
+    {
+      "id": "nloptr",
+      "label": "nloptr",
+      "type": "TECHNOLOGY",
+      "description": "A library that provides the SLSQP algorithm implementation utilized in Robyn's budget allocator."
+    },
+    {
+      "id": "Break-even",
+      "label": "Break-even",
+      "type": "CONCEPT",
+      "description": "A business threshold where total response equals total spend, often used as a reference target (ROAS=1)."
+    },
+    {
+      "id": "Diminishing Return",
+      "label": "Diminishing Return",
+      "type": "CONCEPT",
+      "description": "An economic concept describing how efficiency decreases as spend increases beyond a certain point."
+    },
+    {
+      "id": "BARK",
+      "label": "BARK",
+      "type": "ORGANIZATION",
+      "description": "Dog-centric company headquartered in New York offering subscription services like BarkBox and Super Chewer."
+    },
+    {
+      "id": "Michoel Snow",
+      "label": "Michoel Snow",
+      "type": "PERSON",
+      "description": "Lead Data Scientist at BARK who implemented the Robyn MMM solution."
+    },
+    {
+      "id": "New York",
+      "label": "New York",
+      "type": "LOCATION",
+      "description": "City where BARK is headquartered."
+    },
+    {
+      "id": "BarkBox",
+      "label": "BarkBox",
+      "type": "PRODUCT",
+      "description": "Monthly subscription service offered by BARK for dogs."
+    },
+    {
+      "id": "Super Chewer",
+      "label": "Super Chewer",
+      "type": "PRODUCT",
+      "description": "Subscription service offered by BARK for large dog breeds."
+    },
+    {
+      "id": "BARK Bright",
+      "label": "BARK Bright",
+      "type": "PRODUCT",
+      "description": "Subscription service offered by BARK for pet health and wellness."
+    },
+    {
+      "id": "BARK Eats",
+      "label": "BARK Eats",
+      "type": "PRODUCT",
+      "description": "Subscription service offered by BARK for dog food."
+    },
+    {
+      "id": "Google",
+      "label": "Google",
+      "type": "ORGANIZATION",
+      "description": "Source of seminal papers and tools like AMSS used for parameter recovery exercises in MMM."
+    },
+    {
+      "id": "Amazon",
+      "label": "Amazon",
+      "type": "ORGANIZATION",
+      "description": "Online marketplace and digital advertising channel used by BARK."
+    },
+    {
+      "id": "Email",
+      "label": "Email",
+      "type": "TECHNOLOGY",
+      "description": "Digital communication channel evaluated for customer acquisition costs by BARK."
+    },
+    {
+      "id": "Linear TV",
+      "label": "Linear TV",
+      "type": "TECHNOLOGY",
+      "description": "Traditional television advertising channel evaluated by BARK for marketing effectiveness."
+    },
+    {
+      "id": "Resident",
+      "label": "Resident",
+      "type": "ORGANIZATION",
+      "description": "An e-commerce company with digitally native home goods brands including Nectar and DreamCloud, selling products through digital channels and brick-and-mortar stores."
+    },
+    {
+      "id": "In-house Model",
+      "label": "In-house Model",
+      "type": "TECHNOLOGY",
+      "description": "A marketing measurement solution developed by Resident's data science team before adopting Facebook's Robyn."
+    },
+    {
+      "id": "First Click",
+      "label": "First Click",
+      "type": "CONCEPT",
+      "description": "An attribution model type that credits the first interaction with a user for the conversion."
+    },
+    {
+      "id": "Last Click",
+      "label": "Last Click",
+      "type": "CONCEPT",
+      "description": "An attribution model type that credits the final interaction before a conversion."
+    },
+    {
+      "id": "Revenue Growth",
+      "label": "Revenue Growth",
+      "type": "CONCEPT",
+      "description": "A business metric measuring the increase in sales revenue over a specific period, such as quarter-over-quarter."
+    },
+    {
+      "id": "Cost per Acquisition",
+      "label": "Cost per Acquisition",
+      "type": "CONCEPT",
+      "description": "A marketing metric representing the cost incurred to acquire one paying customer."
+    },
+    {
+      "id": "Privacy Changes",
+      "label": "Privacy Changes",
+      "type": "EVENT",
+      "description": "Upcoming shifts in the digital landscape regarding data privacy that impact marketing measurement signals and quality."
+    },
+    {
+      "id": "Offline Media",
+      "label": "Offline Media",
+      "type": "CONCEPT",
+      "description": "Traditional advertising channels such as TV, radio, or print that are distinct from digital online advertising."
+    },
+    {
+      "id": "Online Advertising",
+      "label": "Online Advertising",
+      "type": "CONCEPT",
+      "description": "Digital marketing channels including social media and search ads where privacy changes significantly impact measurement."
+    },
+    {
+      "id": "Robyn 2.0",
+      "label": "Robyn 2.0",
+      "type": "TECHNOLOGY",
+      "description": "A newer iteration of the Robyn solution that includes support for calibration and increased granularity."
+    },
+    {
+      "id": "Avi Shenshakir",
+      "label": "Avi Shenshakir",
+      "type": "PERSON",
+      "description": "Vice President of Data at Resident who highlighted the importance of MMM as an additional measurement tool."
+    },
+    {
+      "id": "Conversion Duplication",
+      "label": "Conversion Duplication",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Incrementality",
+      "label": "Incrementality",
+      "type": "CONCEPT",
+      "description": "A metric used to validate best practices and understand if strategies are actually working through test-and-learn approaches."
+    },
+    {
+      "id": "A/B Testing",
+      "label": "A/B Testing",
+      "type": "CONCEPT",
+      "description": "An experimental research method often seen as the gold standard, but deemed unsuitable here due to funnel timing issues."
+    },
+    {
+      "id": "Geographical Test",
+      "label": "Geographical Test",
+      "type": "CONCEPT",
+      "description": "A testing strategy that splits a country into groups of regions to measure impact by varying budget in specific areas."
+    },
+    {
+      "id": "Synthetic Control Methods",
+      "label": "Synthetic Control Methods",
+      "type": "CONCEPT",
+      "description": "A methodology popularized in the early 2000s used to construct a synthetic version of a control group based on pre-test data."
+    },
+    {
+      "id": "Online Paid Acquisition",
+      "label": "Online Paid Acquisition",
+      "type": "CONCEPT",
+      "description": "One of the three categories of client acquisition, consisting mainly of clickable ads on platforms like LinkedIn and Instagram."
+    },
+    {
+      "id": "Regions",
+      "label": "Regions",
+      "type": "LOCATION",
+      "description": "Administrative divisions of France used to split the market for the geographical test."
+    },
+    {
+      "id": "Sign-ups",
+      "label": "Sign-ups",
+      "type": "CONCEPT",
+      "description": "A key metric tracked to measure customer acquisition and the impact of budget changes."
+    },
+    {
+      "id": "Counterfactual Group",
+      "label": "Counterfactual Group",
+      "type": "CONCEPT",
+      "description": "A synthetic control group constructed to inform what performance would have been under business as usual configuration."
+    },
+    {
+      "id": "Experiment Protocol",
+      "label": "Experiment Protocol",
+      "type": "CONCEPT",
+      "description": "The structured approach used to ensure causal relationships between actions and results in the study."
+    },
+    {
+      "id": "NRMSE",
+      "label": "NRMSE",
+      "type": "CONCEPT",
+      "description": "Normalized Root Mean Square Error used as an objective function to measure prediction error in Robyn."
+    },
+    {
+      "id": "DECOMP.RSSD",
+      "label": "DECOMP.RSSD",
+      "type": "CONCEPT",
+      "description": "Decomposition Root Sum of Squared Distance used as an objective function to measure business error in Robyn."
+    },
+    {
+      "id": "MAPE.LIFT",
+      "label": "MAPE.LIFT",
+      "type": "CONCEPT",
+      "description": "Mean Absolute Percentage Error for experiments used as an objective function for calibration in Robyn."
+    },
+    {
+      "id": "Project Halo",
+      "label": "Project Halo",
+      "type": "ORGANIZATION",
+      "description": "An industry-wide collaboration providing privacy-safe cross-channel reach deduplication data for calibration."
+    },
+    {
+      "id": "K-means Clustering",
+      "label": "K-means Clustering",
+      "type": "CONCEPT",
+      "description": "A clustering method used by Robyn to reduce model choice among Pareto-optimal candidates."
+    },
+    {
+      "id": "Holistic Calibration",
+      "label": "Holistic Calibration",
+      "type": "CONCEPT",
+      "description": "An advanced feature in Robyn integrating MMM, experiments, and attribution for comprehensive measurement."
+    },
+    {
+      "id": "Incrementality Test Scheduling",
+      "label": "Incrementality Test Scheduling",
+      "type": "CONCEPT",
+      "description": "The practice of planning when and how frequently to run incrementality experiments, balancing speed of results against result quality"
+    },
+    {
+      "id": "Velocity vs. Validity Trade-off",
+      "label": "Velocity vs. Validity Trade-off",
+      "type": "CONCEPT",
+      "description": "A fundamental tension between running many experiments quickly versus ensuring their results can be generalized beyond the specific test context"
+    },
+    {
+      "id": "Internal Validity",
+      "label": "Internal Validity",
+      "type": "CONCEPT",
+      "description": "The degree to which a study accurately establishes cause-effect relationships within its specific experimental design and context"
+    },
+    {
+      "id": "External Validity",
+      "label": "External Validity",
+      "type": "CONCEPT",
+      "description": "The degree to which experimental results can be generalized to other situations, populations, or settings beyond the test context"
+    },
+    {
+      "id": "Marketing Experiments (XPs)",
+      "label": "Marketing Experiments (XPs)",
+      "type": "CONCEPT",
+      "description": "Incrementality tests conducted in marketing contexts to measure causal impact of marketing channels on business outcomes"
+    },
+    {
+      "id": "Cookie Contamination",
+      "label": "Cookie Contamination",
+      "type": "CONCEPT",
+      "description": "A threat to external validity where users exposed to multiple platforms' ads simultaneously cause overestimation of each platform's incremental impact"
+    },
+    {
+      "id": "Multi-cell Tests",
+      "label": "Multi-cell Tests",
+      "type": "TECHNOLOGY",
+      "description": "Advanced geo testing approach that allows running simultaneous geo tests without introducing contamination through proper randomization"
+    },
+    {
+      "id": "Minimum Detectable Effect (MDE)",
+      "label": "Minimum Detectable Effect (MDE)",
+      "type": "CONCEPT",
+      "description": "The smallest effect size an experiment can reliably detect, which influences sample size and test design requirements"
+    },
+    {
+      "id": "Bayesian Marketing Mix Modeling",
+      "label": "Bayesian Marketing Mix Modeling",
+      "type": "TECHNOLOGY",
+      "description": "A modeling approach that incorporates experimental results as informative priors while allowing the model to disagree with them"
+    },
+    {
+      "id": "Time delay",
+      "label": "Time delay",
+      "type": "CONCEPT",
+      "description": "Also known as lag effect, this refers to the time gap between an ad exposure and the resulting increase in a target KPI like sales."
+    },
+    {
+      "id": "Time decay",
+      "label": "Time decay",
+      "type": "CONCEPT",
+      "description": "Also known as memory or carryover effect, this refers to the gradual forgetting of an ad's impact over time after exposure."
+    },
+    {
+      "id": "Geometric Adstock",
+      "label": "Geometric Adstock",
+      "type": "TECHNOLOGY",
+      "description": "A specific function used in MMM to model adstock effects, known for being simple and easy to understand."
+    },
+    {
+      "id": "Weibull PDF adstock",
+      "label": "Weibull PDF adstock",
+      "type": "TECHNOLOGY",
+      "description": "A versatile adstock function capable of modeling both fixed delay and flexible decay, though trickier to optimize."
+    },
+    {
+      "id": "Linear saturation",
+      "label": "Linear saturation",
+      "type": "CONCEPT",
+      "description": "A saturation curve type representing constant returns to scale, suggesting infinite increases in conversions with spend."
+    },
+    {
+      "id": "Concave saturation",
+      "label": "Concave saturation",
+      "type": "CONCEPT",
+      "description": "A saturation curve type representing diminishing returns to scale, commonly used in MMM as it aligns with marketing science theory."
+    },
+    {
+      "id": "S-shaped saturation",
+      "label": "S-shaped saturation",
+      "type": "CONCEPT",
+      "description": "A saturation curve type representing variable returns to scale, introducing the concept of a threshold before returns are seen."
+    },
+    {
+      "id": "Logistic function",
+      "label": "Logistic function",
+      "type": "TECHNOLOGY",
+      "description": "A mathematical function used in MMM to represent concave response curves for advertising channels."
+    },
+    {
+      "id": "Dimension reduction",
+      "label": "Dimension reduction",
+      "type": "CONCEPT",
+      "description": "A pre-processing technique used in MMM to reduce the number of control features while retaining information and improving model parsimony."
+    },
+    {
+      "id": "Model parsimony",
+      "label": "Model parsimony",
+      "type": "CONCEPT",
+      "description": "The principle of reducing the number of variables in a model to improve interpretability and avoid overfitting."
+    },
+    {
+      "id": "Streamlit demo app",
+      "label": "Streamlit demo app",
+      "type": "PRODUCT",
+      "description": "An interactive application provided by Qonto to allow users to experiment with adstock and saturation functions in an MMM context."
+    },
+    {
+      "id": "Google MMM paper",
+      "label": "Google MMM paper",
+      "type": "DOCUMENT",
+      "description": "A seminal research paper outlining Bayesian methods for media mix modeling with carryover and shape effects."
+    },
+    {
+      "id": "Lag effect",
+      "label": "Lag effect",
+      "type": "CONCEPT",
+      "description": "An alternative term for time delay, describing the postponement of advertising impact on KPIs."
+    },
+    {
+      "id": "Memory effect",
+      "label": "Memory effect",
+      "type": "CONCEPT",
+      "description": "An alternative term for time decay, describing how the memory of an ad fades over time."
+    },
+    {
+      "id": "Bayesian statistics",
+      "label": "Bayesian statistics",
+      "type": "CONCEPT",
+      "description": "A statistical philosophy where probability expresses a degree of belief in an event, updated with new evidence."
+    },
+    {
+      "id": "Bayes' Theorem",
+      "label": "Bayes' Theorem",
+      "type": "CONCEPT",
+      "description": "A fundamental theorem describing how to update the probabilities of hypotheses when given evidence."
+    },
+    {
+      "id": "Prior distributions",
+      "label": "Prior distributions",
+      "type": "CONCEPT",
+      "description": "Probability distributions representing beliefs about model parameters before observing data in Bayesian inference."
+    },
+    {
+      "id": "Likelihood",
+      "label": "Likelihood",
+      "type": "CONCEPT",
+      "description": "A function representing the probability of observing the data given specific parameter values in the model."
+    },
+    {
+      "id": "Marginal likelihood",
+      "label": "Marginal likelihood",
+      "type": "CONCEPT",
+      "description": "A normalizing factor in Bayes' Theorem ensuring the final result is a valid probability."
+    },
+    {
+      "id": "Uncertainty",
+      "label": "Uncertainty",
+      "type": "CONCEPT",
+      "description": "The degree of confidence in possible values of parameters, often quantified by distributions in Bayesian models."
+    },
+    {
+      "id": "PyMC",
+      "label": "PyMC",
+      "type": "TECHNOLOGY",
+      "description": "Tool used for specifying a Bayesian model with inputs for a Bayesian model in MMM."
+    },
+    {
+      "id": "Delphi Method",
+      "label": "Delphi Method",
+      "type": "CONCEPT",
+      "description": "A technique leveraging expert opinions to define priors and mitigate bias in Bayesian MMM."
+    },
+    {
+      "id": "Customer Acquisition Cost (CAC)",
+      "label": "Customer Acquisition Cost (CAC)",
+      "type": "CONCEPT",
+      "description": "The cost associated with acquiring a new customer, often used to inform prior distributions for referral coefficients."
+    },
+    {
+      "id": "Streamlit app",
+      "label": "Streamlit app",
+      "type": "TECHNOLOGY",
+      "description": "A tool allowing users to interact with probability distributions and parameters defined in the article."
+    },
+    {
+      "id": "Probability distributions",
+      "label": "Probability distributions",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Probabilistic programming language",
+      "label": "Probabilistic programming language",
+      "type": "CONCEPT",
+      "description": "A type of programming language that allows users to specify probabilistic models for inference."
+    },
+    {
+      "id": "Customer Lifetime Value",
+      "label": "Customer Lifetime Value",
+      "type": "CONCEPT",
+      "description": "A metric representing the total revenue a business can expect from a single customer account, modeled using PyMC-Marketing."
+    },
+    {
+      "id": "No-U-Turn Sampler",
+      "label": "No-U-Turn Sampler",
+      "type": "CONCEPT",
+      "description": "An MCMC sampling algorithm included in PyMC that explores the parameter space efficiently."
+    },
+    {
+      "id": "Metropolis sampling",
+      "label": "Metropolis sampling",
+      "type": "CONCEPT",
+      "description": "An MCMC sampling algorithm used to explore the parameter space and focus on regions with high posterior probability."
+    },
+    {
+      "id": "Deterministic variables",
+      "label": "Deterministic variables",
+      "type": "CONCEPT",
+      "description": "Variables in PyMC that are dependent on other objects and fixed once the values from dependent objects are known."
+    },
+    {
+      "id": "Stochastic variables",
+      "label": "Stochastic variables",
+      "type": "CONCEPT",
+      "description": "Random variables in PyMC, typically represented as various types of distributions such as HalfNormal or Normal."
+    },
+    {
+      "id": "Data containers",
+      "label": "Data containers",
+      "type": "CONCEPT",
+      "description": "A feature in PyMC that allows grouping and organizing input data into dimensions and coordinates for easier management."
+    },
+    {
+      "id": "Normal distribution",
+      "label": "Normal distribution",
+      "type": "CONCEPT",
+      "description": "The likelihood function used to bridge modeled data and true observed data in the Bayesian framework."
+    },
+    {
+      "id": "Half Normal distribution",
+      "label": "Half Normal distribution",
+      "type": "CONCEPT",
+      "description": "A probability distribution used for priors on parameters that must be non-negative, such as intercept or coefficients."
+    },
+    {
+      "id": "Beta distribution",
+      "label": "Beta distribution",
+      "type": "CONCEPT",
+      "description": "A probability distribution used for adstock parameters which should be between 0 and 1."
+    },
+    {
+      "id": "Gamma distribution",
+      "label": "Gamma distribution",
+      "type": "CONCEPT",
+      "description": "A probability distribution used for saturation parameters like lambda which must be greater than 0."
+    },
+    {
+      "id": "Student-T distribution",
+      "label": "Student-T distribution",
+      "type": "CONCEPT",
+      "description": "An alternative to Normal distribution for likelihood when residuals are not evenly distributed about the mean."
+    },
+    {
+      "id": "PyMC-Marketing",
+      "label": "PyMC-Marketing",
+      "type": "TECHNOLOGY",
+      "description": "An open-source package built on top of PyMC allowing users to build Customer Lifetime Value and Marketing Mix Models."
+    },
+    {
+      "id": "Bayesian Model",
+      "label": "Bayesian Model",
+      "type": "CONCEPT",
+      "description": "A type of MMM that uses Bayesian inference to estimate parameters with uncertainty and prior distributions."
+    },
+    {
+      "id": "Ruari Walker",
+      "label": "Ruari Walker",
+      "type": "PERSON",
+      "description": "The author of the article detailing how Qonto specified a Bayesian MMM using PyMC."
+    },
+    {
+      "id": "Project Robyn",
+      "label": "Project Robyn",
+      "type": "ORGANIZATION",
+      "description": "An organization that provided the fictitious dataset used for the demonstration in the notebook."
+    },
+    {
+      "id": "MinMaxScaler",
+      "label": "MinMaxScaler",
+      "type": "TECHNOLOGY",
+      "description": "A scaling method that normalizes features to a fixed range, often used for exogenous variables in MMM."
+    },
+    {
+      "id": "MaxAbsScaler",
+      "label": "MaxAbsScaler",
+      "type": "TECHNOLOGY",
+      "description": "A scaling method that scales features by their maximum absolute value, preferred for endogenous variables to allow rescaling."
+    },
+    {
+      "id": "Train Set",
+      "label": "Train Set",
+      "type": "CONCEPT",
+      "description": "A subset of the dataset used for model training and defining the trace in Bayesian modeling."
+    },
+    {
+      "id": "Test Set",
+      "label": "Test Set",
+      "type": "CONCEPT",
+      "description": "A subset of data held back to evaluate the validity, accuracy, and generalizability of the model."
+    },
+    {
+      "id": "Overfitting",
+      "label": "Overfitting",
+      "type": "CONCEPT",
+      "description": "Risk in MMM due to the high ratio of features-to-data that test-set validation mitigates."
+    },
+    {
+      "id": "RD-D2 shrinkage prior",
+      "label": "RD-D2 shrinkage prior",
+      "type": "CONCEPT",
+      "description": "An advanced technique using a prior on the coefficient of determination to prevent overfitting with many inputs."
+    },
+    {
+      "id": "Fourier modes",
+      "label": "Fourier modes",
+      "type": "CONCEPT",
+      "description": "A mathematical tool used in the model specification to capture seasonality components in the data."
+    },
+    {
+      "id": "Linear feature",
+      "label": "Linear feature",
+      "type": "CONCEPT",
+      "description": "A type of variable transformation used to model trend components in the marketing mix model."
+    },
+    {
+      "id": "Exogenous Features",
+      "label": "Exogenous Features",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Endogenous Variable",
+      "label": "Endogenous Variable",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Seasonality",
+      "label": "Seasonality",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Trend",
+      "label": "Trend",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Alexandre Prot",
+      "label": "Alexandre Prot",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Steve Anavi",
+      "label": "Steve Anavi",
+      "type": "ENTITY",
+      "description": ""
+    },
+    {
+      "id": "Causal DAG",
+      "label": "Causal DAG",
+      "type": "CONCEPT",
+      "description": "A directed acyclic graph used to represent causal relationships between variables in the marketing mix."
+    },
+    {
+      "id": "MLOps",
+      "label": "MLOps",
+      "type": "CONCEPT",
+      "description": "Machine Learning Operations, a set of practices integrating machine learning workflows into software development and operations lifecycle."
+    },
+    {
+      "id": "DVC",
+      "label": "DVC",
+      "type": "TECHNOLOGY",
+      "description": "Data Version Control, an open-source tool for versioning data, models, pipelines, and experiments in machine learning projects."
+    },
+    {
+      "id": "MLFlow",
+      "label": "MLFlow",
+      "type": "TECHNOLOGY",
+      "description": "An open-source platform for managing workflows and artifacts across the machine learning lifecycle, including experiment tracking and model registry."
+    },
+    {
+      "id": "Git",
+      "label": "Git",
+      "type": "TECHNOLOGY",
+      "description": "A distributed version control system used to track changes in source code and metadata for DVC projects."
+    },
+    {
+      "id": "AWS S3",
+      "label": "AWS S3",
+      "type": "TECHNOLOGY",
+      "description": "Amazon Web Services Simple Storage Service, a cloud storage service used with DVC for remote data storage."
+    },
+    {
+      "id": "Kibana",
+      "label": "Kibana",
+      "type": "TECHNOLOGY",
+      "description": "A visualization tool used in the MLOps architecture for logging and monitoring MLFlow deployments."
+    },
+    {
+      "id": "Prometheus",
+      "label": "Prometheus",
+      "type": "TECHNOLOGY",
+      "description": "An open-source systems monitoring and alerting toolkit used for monitoring MLFlow deployments."
+    },
+    {
+      "id": "Data Scientists",
+      "label": "Data Scientists",
+      "type": "PERSON",
+      "description": "Professionals who develop and manage machine learning models, utilizing tools like DVC and MLFlow in an MLOps framework."
+    },
+    {
+      "id": "Site Reliability Engineers",
+      "label": "Site Reliability Engineers",
+      "type": "PERSON",
+      "description": "Engineers who assist with the deployment and hosting of MLOps solutions to ensure reliability and scalability."
+    },
+    {
+      "id": "Stakeholders",
+      "label": "Stakeholders",
+      "type": "PERSON",
+      "description": "Business or growth teams that provide prior beliefs, expert knowledge, and business logic for MMM models."
+    },
+    {
+      "id": "MLFlow Experiment Tracking",
+      "label": "MLFlow Experiment Tracking",
+      "type": "CONCEPT",
+      "description": "A component of MLFlow that allows logging and tracking of experiments, metrics, parameters, and artifacts."
+    },
+    {
+      "id": "MLFlow Model Registry",
+      "label": "MLFlow Model Registry",
+      "type": "CONCEPT",
+      "description": "A component of MLFlow providing a central repository for managing and versioning models."
+    },
+    {
+      "id": "Marketing Measurement Stack",
+      "label": "Marketing Measurement Stack",
+      "type": "CONCEPT",
+      "description": "Broader framework where MMM works as a component, complementing attribution models and incrementality experiments."
+    },
+    {
+      "id": "Linear Regression",
+      "label": "Linear Regression",
+      "type": "TECHNOLOGY",
+      "description": "Simple method possible for MMM but not recommended compared to Bayesian approaches."
+    },
+    {
+      "id": "Aggregated Data",
+      "label": "Aggregated Data",
+      "type": "CONCEPT",
+      "description": "Type of data used by MMMs that requires no Personally Identifiable Information (PII) to be run."
+    },
+    {
+      "id": "Offline Marketing Channels",
+      "label": "Offline Marketing Channels",
+      "type": "CONCEPT",
+      "description": "Channels such as TV, Out-of-Home, or Radio whose efficiencies are typically hard to measure but can be analyzed by MMMs."
+    },
+    {
+      "id": "Out-of-sample Validation",
+      "label": "Out-of-sample Validation",
+      "type": "CONCEPT",
+      "description": "Method used to evaluate how the MMM will generalize to new data and mitigate overfitting risk."
+    },
+    {
+      "id": "Root-Mean-Square-Error (RMSE)",
+      "label": "Root-Mean-Square-Error (RMSE)",
+      "type": "CONCEPT",
+      "description": "Genuine error metric for model evaluation that should be viewed alongside R-Squared values."
+    },
+    {
+      "id": "R-Squared",
+      "label": "R-Squared",
+      "type": "CONCEPT",
+      "description": "Metric indicating the proportion of variance of a KPI explained by the MMM, which can be easily increased by adding variables."
+    },
+    {
+      "id": "Confidence Intervals",
+      "label": "Confidence Intervals",
+      "type": "CONCEPT",
+      "description": "Indispensable insight into the uncertainty of model results that should be demanded from consultancies."
+    },
+    {
+      "id": "Open Source",
+      "label": "Open Source",
+      "type": "CONCEPT",
+      "description": "Rapidly developing field for MMM solutions where Qonto has experimented with several options."
+    },
+    {
+      "id": "Consultancy Route",
+      "label": "Consultancy Route",
+      "type": "CONCEPT",
+      "description": "Option for building and delivering MMMs via external vendors or consultancies."
+    },
+    {
+      "id": "In-house Route",
+      "label": "In-house Route",
+      "type": "CONCEPT",
+      "description": "Option for building MMMs internally within a company's data team."
+    },
+    {
+      "id": "Measurement 360",
+      "label": "Measurement 360",
+      "type": "CONCEPT",
+      "description": "A measurement framework developed by Meta and Deloitte that adopts an agile measurement strategy to deliver a holistic view of campaign performance."
+    },
+    {
+      "id": "Deloitte",
+      "label": "Deloitte",
+      "type": "ORGANIZATION",
+      "description": "The consulting firm that collaborated with Meta to develop the Measurement 360 framework."
+    },
+    {
+      "id": "First-party data",
+      "label": "First-party data",
+      "type": "CONCEPT",
+      "description": "Data type emphasized in the framework's strategy to enable privacy by design and rely on available data sources."
+    },
+    {
+      "id": "Data privacy",
+      "label": "Data privacy",
+      "type": "CONCEPT",
+      "description": "A key value placed by consumers that influences the need for future-proof methodologies and privacy-safe measurement strategies."
+    },
+    {
+      "id": "Campaign performance",
+      "label": "Campaign performance",
+      "type": "CONCEPT",
+      "description": "The primary metric outcome that Measurement 360 aims to deliver a holistic view of across multiple channels."
+    },
+    {
+      "id": "Customer journey",
+      "label": "Customer journey",
+      "type": "CONCEPT",
+      "description": "The customer lifecycle path that the Measurement 360 framework helps marketers gain a holistic view of in an agile way."
+    },
+    {
+      "id": "Test-and-learn approach",
+      "label": "Test-and-learn approach",
+      "type": "CONCEPT",
+      "description": "An operationalized methodology within the framework to validate best practices and gain insight into incrementality."
+    },
+    {
+      "id": "Robyn v3.8",
+      "label": "Robyn v3.8",
+      "type": "TECHNOLOGY",
+      "description": "An open-source MMM package from Meta that introduced a new contextual calibration feature to isolate immediate and carryover effects."
+    },
+    {
+      "id": "Correlation",
+      "label": "Correlation",
+      "type": "CONCEPT",
+      "description": "A statistical relationship between variables that does not imply causation, which is the core nature of traditional MMM."
+    },
+    {
+      "id": "Causation",
+      "label": "Causation",
+      "type": "CONCEPT",
+      "description": "The cause-and-effect relationship between variables, which experiments aim to measure rather than mere correlation."
+    },
+    {
+      "id": "Immediate Effect",
+      "label": "Immediate Effect",
+      "type": "CONCEPT",
+      "description": "The short-term impact of advertising on consumer behavior that occurs during the study period in an experiment."
+    },
+    {
+      "id": "Na\u00efve Calibration",
+      "label": "Na\u00efve Calibration",
+      "type": "CONCEPT",
+      "description": "An approach that simply drives MMM's total predicted effect closer to causal estimates, often leading to underestimation of calibrated channels."
+    },
+    {
+      "id": "Contextual Calibration",
+      "label": "Contextual Calibration",
+      "type": "CONCEPT",
+      "description": "A feature in Robyn v3.8 that isolates immediate and carryover effects to calibrate only the appropriate subset of MMM's total effect."
+    },
+    {
+      "id": "Last Dollar Impact",
+      "label": "Last Dollar Impact",
+      "type": "CONCEPT",
+      "description": "The incremental impact measured by experiments where the absence of a tested channel is filled by others, representing the lower bound of effect."
+    },
+    {
+      "id": "Average Dollar Impact",
+      "label": "Average Dollar Impact",
+      "type": "CONCEPT",
+      "description": "The long-term average impact of ads on all outcomes measured by MMM within the modeling window."
+    }
+  ],
+  "links": [
+    {
+      "source": "Regression Modeling",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "MMM relies on regression modeling to derive an equation that describes the KPI and quantify incremental impact."
+    },
+    {
+      "source": "Ridge Regression",
+      "target": "Marketing Mix Modeling",
+      "label": "PART_OF",
+      "description": "Ridge regression is a common regularization technique used within MMM to prevent overfitting and address multicollinearity."
+    },
+    {
+      "source": "Ridge Regression",
+      "target": "Model Selection",
+      "label": "RELATED_TO",
+      "description": "Model selection in Robyn involves configuring Ridge regression parameters like lambda to control penalty and variance."
+    },
+    {
+      "source": "Ridge Regression",
+      "target": "Robyn",
+      "label": "SUPPORTS",
+      "description": "Robyn implements Ridge regression to counter multicollinearity issues common in marketing mix models."
+    },
+    {
+      "source": "Adstock",
+      "target": "Marketing Mix Modeling",
+      "label": "PART_OF",
+      "description": "Adstock is a component concept included in the specification of an MMM model."
+    },
+    {
+      "source": "Adstock",
+      "target": "Time delay",
+      "label": "PART_OF",
+      "description": "Time delay is one of the two important marketing effects encapsulated by the Adstock concept."
+    },
+    {
+      "source": "Adstock",
+      "target": "Time decay",
+      "label": "PART_OF",
+      "description": "Time decay is one of the two important marketing effects encapsulated by the Adstock concept."
+    },
+    {
+      "source": "Adstock",
+      "target": "Geometric Adstock",
+      "label": "RELATED_TO",
+      "description": "Geometric Adstock is a specific function type available for modeling adstock effects in an MMM regression equation."
+    },
+    {
+      "source": "Adstock",
+      "target": "Weibull PDF adstock",
+      "label": "RELATED_TO",
+      "description": "Weibull PDF adstock is a specific function type available for modeling adstock effects, capable of modeling both fixed delay and flexible decay."
+    },
+    {
+      "source": "Adstock",
+      "target": "Streamlit demo app",
+      "label": "REFERENCES",
+      "description": "The Streamlit demo app is used to experiment with and visualize Adstock functions and parameters."
+    },
+    {
+      "source": "Adstock",
+      "target": "Beta distribution",
+      "label": "RELATED_TO",
+      "description": "Beta distribution is used for the prior on adstock parameters which should be between 0 and 1."
+    },
+    {
+      "source": "Adstock",
+      "target": "Bayesian Model",
+      "label": "PART_OF",
+      "description": "Adstock transformations are a component of the model specification block in the Bayesian MMM."
+    },
+    {
+      "source": "Adstock",
+      "target": "Carryover Effect",
+      "label": "RELATED_TO",
+      "description": "Adstocking transformation is applied on input media variables to account for the immediate and carryover portion of transformed variables."
+    },
+    {
+      "source": "Saturation",
+      "target": "Marketing Mix Modeling",
+      "label": "PART_OF",
+      "description": "Saturation is a component concept included in the specification of an MMM model."
+    },
+    {
+      "source": "Saturation",
+      "target": "Hill Function",
+      "label": "PART_OF",
+      "description": "The Hill function is the specific mathematical implementation used by Robyn to model saturation curves."
+    },
+    {
+      "source": "Saturation",
+      "target": "Linear saturation",
+      "label": "PART_OF",
+      "description": "Linear saturation is one of the four types of saturation curves representing constant returns to scale."
+    },
+    {
+      "source": "Saturation",
+      "target": "Concave saturation",
+      "label": "PART_OF",
+      "description": "Concave saturation is one of the four types of saturation curves representing diminishing returns to scale."
+    },
+    {
+      "source": "Saturation",
+      "target": "S-shaped saturation",
+      "label": "PART_OF",
+      "description": "S-shaped saturation is one of the four types of saturation curves representing variable returns to scale with a threshold."
+    },
+    {
+      "source": "Saturation",
+      "target": "Gamma distribution",
+      "label": "RELATED_TO",
+      "description": "Gamma distribution is advised for the prior on saturation parameters like lambda which must be greater than 0."
+    },
+    {
+      "source": "Saturation",
+      "target": "Bayesian Model",
+      "label": "PART_OF",
+      "description": "Saturation transformations are a component of the model specification block in the Bayesian MMM."
+    },
+    {
+      "source": "Prophet",
+      "target": "Meta",
+      "label": "CREATED_BY",
+      "description": "Prophet is an open source code for forecasting time series data built by Meta and included in the Robyn code."
+    },
+    {
+      "source": "Prophet",
+      "target": "Time Series Analysis",
+      "label": "RELATED_TO",
+      "description": "Time series analysis is used with Prophet to determine seasonality trends which are incorporated into the final MMM model."
+    },
+    {
+      "source": "Prophet",
+      "target": "Robyn",
+      "label": "SUPPORTS",
+      "description": "Robyn supports the use of Prophet for automatic trend, season, holiday, and weekday decomposition in time-series data."
+    },
+    {
+      "source": "Meta",
+      "target": "Robyn",
+      "label": "SUPPORTS",
+      "description": "Facebook's Marketing Science team educated Resident about Robyn and supported the open-source initiative with feature development."
+    },
+    {
+      "source": "Meta",
+      "target": "Marketing Mix Modeling",
+      "label": "REFERENCES",
+      "description": "Meta provides resources like the Analyst's Guide to MMM considered the best entry-point document."
+    },
+    {
+      "source": "Meta",
+      "target": "Conversion Lift Tests (CLT)",
+      "label": "SUPPORTS",
+      "description": "Meta offers Conversion Lift Tests directly on their platforms, handling test management and analysis to reduce workload."
+    },
+    {
+      "source": "Meta",
+      "target": "BARK",
+      "label": "RELATED_TO",
+      "description": "BARK used Meta Open Source's MMM solution, Robyn, to optimize its budget allocation."
+    },
+    {
+      "source": "Meta",
+      "target": "Resident",
+      "label": "RELATED_TO",
+      "description": "Resident partnered with Facebook to compare and iterate on both measurement models, specifically using Robyn."
+    },
+    {
+      "source": "Meta",
+      "target": "GeoLift",
+      "label": "CREATED_BY",
+      "description": "Meta is the organization that created the GeoLift library."
+    },
+    {
+      "source": "Meta",
+      "target": "Measurement 360",
+      "label": "CREATED_BY",
+      "description": "The Measurement 360 framework was developed by Meta in collaboration with Deloitte."
+    },
+    {
+      "source": "Robyn",
+      "target": "Budget Allocator",
+      "label": "PART_OF",
+      "description": "The Budget Allocator is a built-in function in Robyn that uses model results to simulate and predict optimal budget allocations."
+    },
+    {
+      "source": "Robyn",
+      "target": "Meta Marketing Science",
+      "label": "RELATED_TO",
+      "description": "Meta Marketing Science is the organization associated with the creation of Robyn."
+    },
+    {
+      "source": "Robyn",
+      "target": "ROBYN HACKATHON 2022",
+      "label": "RELATED_TO",
+      "description": "The hackathon event was hosted to showcase and evaluate the Robyn package for machine-learning based MMM."
+    },
+    {
+      "source": "Robyn",
+      "target": "Gufeng Zhou",
+      "label": "CREATED_BY",
+      "description": "Gufeng Zhou is the author of the Robyn open source MMM package."
+    },
+    {
+      "source": "Robyn",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "Robyn is the open source codebase specifically for Marketing Mix Modeling methodology."
+    },
+    {
+      "source": "Robyn",
+      "target": "Budget Allocation",
+      "label": "PART_OF",
+      "description": "Budget allocation is a functional component of Robyn that calculates optimum cross-media budget splits."
+    },
+    {
+      "source": "Robyn",
+      "target": "Robyn 2.0",
+      "label": "RELATED_TO",
+      "description": "Resident implemented Robyn 2.0 after learning about benefits included in the new iteration of the solution."
+    },
+    {
+      "source": "Robyn",
+      "target": "Resident",
+      "label": "RELATED_TO",
+      "description": "Resident began using Facebook's Robyn alongside its in-house model for monthly budget allocations and validation."
+    },
+    {
+      "source": "Robyn",
+      "target": "Nevergrad",
+      "label": "SUPPORTS",
+      "description": "Robyn uses Nevergrad for multi-objective hyperparameter optimization to balance prediction and interpretability."
+    },
+    {
+      "source": "Robyn",
+      "target": "NRMSE",
+      "label": "SUPPORTS",
+      "description": "Robyn supports NRMSE as an objective function to minimize prediction error during model optimization."
+    },
+    {
+      "source": "Robyn",
+      "target": "DECOMP.RSSD",
+      "label": "SUPPORTS",
+      "description": "Robyn supports DECOMP.RSSD as an objective function to ensure alignment between spend share and effect share."
+    },
+    {
+      "source": "Robyn",
+      "target": "MAPE.LIFT",
+      "label": "SUPPORTS",
+      "description": "Robyn supports MAPE.LIFT as an objective function to minimize the difference between predicted and causal effects."
+    },
+    {
+      "source": "Robyn",
+      "target": "K-means Clustering",
+      "label": "SUPPORTS",
+      "description": "Robyn supports K-means clustering to group Pareto-optimal models into clusters for winner selection."
+    },
+    {
+      "source": "Nevergrad",
+      "target": "Model Selection",
+      "label": "RELATED_TO",
+      "description": "Robyn leverages Nevergrad to automate model selection by achieving optimal hyperparameters through multi-objective optimization."
+    },
+    {
+      "source": "Budget Allocator",
+      "target": "Target Efficiency",
+      "label": "PART_OF",
+      "description": "Target Efficiency is a specific scenario available within the Budget Allocator tool."
+    },
+    {
+      "source": "Budget Allocator",
+      "target": "Max Response",
+      "label": "PART_OF",
+      "description": "Max Response is an existing scenario available within the Budget Allocator tool."
+    },
+    {
+      "source": "Budget Allocator",
+      "target": "Saturation Curve",
+      "label": "SUPPORTS",
+      "description": "The Saturation Curve model provides the mathematical foundation for the Budget Allocator's optimization logic."
+    },
+    {
+      "source": "Budget Allocator",
+      "target": "SLSQP",
+      "label": "SUPPORTS",
+      "description": "The SLSQP algorithm is used by Robyn to solve the nonlinear optimization problem for budget allocation."
+    },
+    {
+      "source": "Budget Allocator",
+      "target": "Diminishing Return",
+      "label": "RELATED_TO",
+      "description": "The law of diminishing return influences the efficiency metric behavior at higher spend levels in the allocator."
+    },
+    {
+      "source": "Data Collection",
+      "target": "Marketing Mix Modeling",
+      "label": "PART_OF",
+      "description": "Data collection is one of the most important steps in an MMM study involving gathering time-series data for sales and marketing inputs."
+    },
+    {
+      "source": "Data Collection",
+      "target": "Feature Engineering",
+      "label": "SUPPORTS",
+      "description": "Accurate data collection supports feature engineering by providing the raw inputs needed to transform into model features."
+    },
+    {
+      "source": "Feature Engineering",
+      "target": "Marketing Mix Modeling",
+      "label": "PART_OF",
+      "description": "Feature engineering is a critical step in MMM that transforms raw data into features to improve model accuracy on unseen data."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Calibration",
+      "label": "SUPPORTS",
+      "description": "Model calibration increases confidence when selecting the final model, especially when there is no strong prior knowledge of media effectiveness."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "Marketing Mix Modelling is the core analytical tool that requires a specific process for selecting the final model."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Business Logic",
+      "label": "SUPPORTS",
+      "description": "Practitioners prioritize evaluating models against business logic when selecting the final model, even if it differs from the best statistical fit."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Heuristics",
+      "label": "SUPPORTS",
+      "description": "Some providers utilize specific heuristics to evaluate model output against business logic during the selection process."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Formulas",
+      "label": "SUPPORTS",
+      "description": "Specific formulas or heuristics are utilized by some respondents for evaluating business logic when choosing the final model."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Experiments",
+      "label": "SUPPORTS",
+      "description": "Experiments provide data that supports the selection of models closer to accurate measurements when available."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Non-MMM measurements",
+      "label": "SUPPORTS",
+      "description": "Non-MMM measurements serve as benchmarks to support the selection of models that align with more accurate data sources."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Industry Norms",
+      "label": "RELATED_TO",
+      "description": "Partners consider industry-specific norms and values that are typical in specific industries when choosing the final model."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Client Confidence",
+      "label": "RELATED_TO",
+      "description": "Some partners consider the client's confidence in the results as a factor when selecting the final model."
+    },
+    {
+      "source": "Model Selection",
+      "target": "Expertise and Experience",
+      "label": "RELATED_TO",
+      "description": "A blend of expertise and experience is relied upon by some providers for evaluating business logic instead of specific formulas."
+    },
+    {
+      "source": "ROI",
+      "target": "Marketing Mix Modeling",
+      "label": "SUPPORTS",
+      "description": "Marketing mix modelling is planned to assign spend in the most impactful way, supporting ROI measurement."
+    },
+    {
+      "source": "KPI",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "The KPI is the dependent variable in MMM that the model aims to quantify, such as sales volume or website visits."
+    },
+    {
+      "source": "Budget Allocation",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "Marketing Mix Modeling analysis provides insights that guide budget allocation strategies."
+    },
+    {
+      "source": "Budget Allocation",
+      "target": "Optimal Media Mix",
+      "label": "SUPPORTS",
+      "description": "The optimal media mix is the result of optimization aimed at maximizing revenue under a budget constraint for allocation."
+    },
+    {
+      "source": "Carryover Effect",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "Media mix models are designed to capture the carryover effect of advertising which occurs in time periods following ad exposure."
+    },
+    {
+      "source": "Carryover Effect",
+      "target": "Adstock Function",
+      "label": "PART_OF",
+      "description": "The adstock function is the transformation used specifically to model the carryover effect in media mix models."
+    },
+    {
+      "source": "Carryover Effect",
+      "target": "Immediate Effect",
+      "label": "PART_OF",
+      "description": "Robyn v3.8 separates the immediate effect from the carryover effect for a given channel during calibration."
+    },
+    {
+      "source": "Carryover Effect",
+      "target": "Contextual Calibration",
+      "label": "PART_OF",
+      "description": "Robyn v3.8 isolates immediate, historical carryover and future carryover response separately for better calibration."
+    },
+    {
+      "source": "Shape Effect",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "Media mix models incorporate shape effects to account for diminishing returns and ad saturation at high levels of spend."
+    },
+    {
+      "source": "Shape Effect",
+      "target": "Hill Function",
+      "label": "PART_OF",
+      "description": "The Hill function is a curvature function used to model the shape effect of advertising on sales response."
+    },
+    {
+      "source": "Shape Effect",
+      "target": "Reach Transformation",
+      "label": "PART_OF",
+      "description": "Reach transformation is a parsimonious functional form used to model the shape effect, equivalent to fixing the slope parameter in the Hill function."
+    },
+    {
+      "source": "Adstock Function",
+      "target": "Geometric Decay",
+      "label": "PART_OF",
+      "description": "Geometric decay is a commonly used functional form for the weight function within the adstock transformation."
+    },
+    {
+      "source": "Adstock Function",
+      "target": "Delayed Adstock",
+      "label": "PART_OF",
+      "description": "Delayed adstock is a variant of the adstock function introduced to account for a delay in the peak effect of advertising."
+    },
+    {
+      "source": "Hill Function",
+      "target": "Saturation Curve",
+      "label": "SUPPORTS",
+      "description": "The Hill Function is the specific mathematical implementation used to derive the Saturation Curve in Robyn."
+    },
+    {
+      "source": "Hill Function",
+      "target": "S-shaped saturation",
+      "label": "RELATED_TO",
+      "description": "The Hill function is used in MMM to represent S-shaped response curves for advertising channels."
+    },
+    {
+      "source": "Bayesian Methods",
+      "target": "Markov Chain Monte Carlo (MCMC)",
+      "label": "SUPPORTS",
+      "description": "Bayesian methods utilize Markov Chain Monte Carlo algorithms to estimate model parameters using posterior distributions."
+    },
+    {
+      "source": "Bayesian Methods",
+      "target": "Gibbs Sampling",
+      "label": "PART_OF",
+      "description": "Gibbs sampling is a popular sampling method used within the Bayesian framework for parameter estimation."
+    },
+    {
+      "source": "Bayesian Methods",
+      "target": "Hamiltonian Monte Carlo (HMC)",
+      "label": "PART_OF",
+      "description": "Hamiltonian Monte Carlo is a sampling method that has gained popularity recently within the Bayesian framework for inference."
+    },
+    {
+      "source": "Bayesian Methods",
+      "target": "STAN",
+      "label": "SUPPORTS",
+      "description": "STAN is a probabilistic programming language that supports Bayesian inference with Hamiltonian Monte Carlo sampling for model estimation."
+    },
+    {
+      "source": "Bayesian Methods",
+      "target": "Marketing Mix Modeling",
+      "label": "REFERENCES",
+      "description": "Bayesian flavors of MMMs are considered the state-of-the-art for modern-day modeling."
+    },
+    {
+      "source": "Markov Chain Monte Carlo (MCMC)",
+      "target": "Posterior Distribution",
+      "label": "SUPPORTS",
+      "description": "MCMC methods are used to sample from the posterior distribution during the learning step."
+    },
+    {
+      "source": "Markov Chain Monte Carlo (MCMC)",
+      "target": "PyMC",
+      "label": "SUPPORTS",
+      "description": "PyMC is a library that implements MCMC machinery for Bayesian modeling."
+    },
+    {
+      "source": "Markov Chain Monte Carlo (MCMC)",
+      "target": "No-U-Turn Sampler",
+      "label": "PART_OF",
+      "description": "No-U-Turn Sampler is an MCMC sampling algorithm included in PyMC for efficient parameter space exploration."
+    },
+    {
+      "source": "Markov Chain Monte Carlo (MCMC)",
+      "target": "Metropolis sampling",
+      "label": "PART_OF",
+      "description": "Metropolis sampling is an MCMC algorithm used to explore the parameter space and focus on high probability regions."
+    },
+    {
+      "source": "Markov Chain Monte Carlo (MCMC)",
+      "target": "Bayesian Model",
+      "label": "SUPPORTS",
+      "description": "MCMC methods are used within Bayesian Models to sample from the posterior distribution."
+    },
+    {
+      "source": "Gibbs Sampling",
+      "target": "C++",
+      "label": "SUPPORTS",
+      "description": "C++ was used to implement a customized Gibbs sampler which is more efficient than standard samplers for large data sets."
+    },
+    {
+      "source": "Return on Ad Spend (ROAS)",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "ROAS is an attribution metric derived from media mix models to measure revenue per dollar spent on a medium."
+    },
+    {
+      "source": "Return on Ad Spend (ROAS)",
+      "target": "Calibration",
+      "label": "RELATED_TO",
+      "description": "The goal of calibration is to recover the true ROAS by using experimental results as an objective function."
+    },
+    {
+      "source": "Return on Ad Spend (ROAS)",
+      "target": "siMMMulator",
+      "label": "RELATED_TO",
+      "description": "The siMMMulator package allows users to define true ROAS values for the beta estimates in simulations."
+    },
+    {
+      "source": "Return on Ad Spend (ROAS)",
+      "target": "Target Efficiency",
+      "label": "RELATED_TO",
+      "description": "ROAS is the primary metric used for targeting in the Target Efficiency scenario."
+    },
+    {
+      "source": "Return on Ad Spend (ROAS)",
+      "target": "Break-even",
+      "label": "RELATED_TO",
+      "description": "Break-even is a significant threshold often evaluated using a ROAS target of 1.0."
+    },
+    {
+      "source": "Marginal ROAS (mROAS)",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "Marginal ROAS is an attribution metric derived from media mix models to measure additional revenue from increased spend."
+    },
+    {
+      "source": "Posterior Distribution",
+      "target": "Prior distributions",
+      "label": "RELATED_TO",
+      "description": "The Prior Distribution is updated with data to form the Posterior Distribution in Bayesian inference."
+    },
+    {
+      "source": "Posterior Distribution",
+      "target": "Likelihood",
+      "label": "RELATED_TO",
+      "description": "Likelihood represents the data evidence used to update the prior into a posterior."
+    },
+    {
+      "source": "Posterior Distribution",
+      "target": "Bayesian Model",
+      "label": "RELATED_TO",
+      "description": "The Bayesian Model produces a Posterior Distribution after the learning step."
+    },
+    {
+      "source": "Bayesian Information Criterion (BIC)",
+      "target": "Marketing Mix Modeling",
+      "label": "RELATED_TO",
+      "description": "BIC is used to select the most appropriate specification of functional forms for media mix models based on data and complexity."
+    },
+    {
+      "source": "Control Variables",
+      "target": "Marketing Mix Modeling",
+      "label": "PART_OF",
+      "description": "Control variables such as price and seasonality are included in media mix models to account for external factors affecting sales."
+    },
+    {
+      "source": "Sales Response",
+      "target": "Media Spend",
+      "label": "RELATED_TO",
+      "description": "Media spend is the independent variable that affects the dependent variable, which is the sales response in media mix models."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Calibration",
+      "label": "SUPPORTS",
+      "description": "Calibrated models are shown to be better at predicting true ROAS within the context of Marketing Mix Modeling."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "GeoLift",
+      "label": "REFERENCES",
+      "description": "GeoLift is referred to as a great option to conduct geo-experiments alongside MMM analysis."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Mean Absolute Percentage Error (MAPE)",
+      "label": "RELATED_TO",
+      "description": "MAPE is computed between true ROAS and estimated ROAS to evaluate Marketing Mix Model performance."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "TV Channel",
+      "label": "PART_OF",
+      "description": "TV is one of the simulated media channels created as part of the Marketing Mix Modeling simulation setup."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Trend & Seasonality",
+      "label": "PART_OF",
+      "description": "Revenue with trend and seasonal pattern is included as dependent variables in the Marketing Mix Modeling simulation."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Decision-Making Processes",
+      "label": "PART_OF",
+      "description": "The application of Marketing Mix Modelling is a significant component of the broader decision-making processes in marketing analytics."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "MMM Decomposition",
+      "label": "PART_OF",
+      "description": "MMM Decomposition is a key output and integral part of the Marketing Mix Modelling methodology."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Incrementality tests",
+      "label": "RELATED_TO",
+      "description": "MMM complements incrementality experiments which measure causal impact by comparing treated and control groups."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Attribution Model",
+      "label": "SUPPORTS",
+      "description": "MMMs complement attribution models, with efficiency estimates falling between the bounds provided by both."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Qonto",
+      "label": "SUPPORTS",
+      "description": "Qonto is the organization that applies and documents these MMM techniques in their measurement series."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Resident",
+      "label": "RELATED_TO",
+      "description": "Resident adopted Marketing Mix Modeling to enable better marketing spend decisions and optimize monthly budget allocations."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Revenue Growth",
+      "label": "SUPPORTS",
+      "description": "Using Marketing Mix Modeling helped Resident drive a 20% quarter-over-quarter jump in US revenue growth."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Cost per Acquisition",
+      "label": "SUPPORTS",
+      "description": "Using MMM allowed Resident to maintain the same blended cost per acquisition while shifting measurement approaches."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Conversion Duplication",
+      "label": "OPPOSES",
+      "description": "MMM helped avoid the conversion duplication issue that occurred with Resident's current attribution model counting conversions multiple times."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Incrementality Test Scheduling",
+      "label": "RELATED_TO",
+      "description": "MMM provides a framework for calibrating and validating incrementality test results over time"
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Internal Validity",
+      "label": "SUPPORTS",
+      "description": "Internally valid experiments provide reliable directional signals that can inform MMM priors without fixing them"
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "External Validity",
+      "label": "RELATED_TO",
+      "description": "MMM helps address external validity concerns by providing broader contextual understanding beyond single experiments"
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Dimension reduction",
+      "label": "RELATED_TO",
+      "description": "Dimension reduction is a pre-processing technique related to Marketing Mix Modeling that helps with correlated variables and sparse datasets."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Google MMM paper",
+      "label": "REFERENCES",
+      "description": "The Google MMM paper outlines approaches for applying transformations like saturation and adstock in Marketing Mix Modeling."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Bayesian statistics",
+      "label": "RELATED_TO",
+      "description": "MMM can be approached using a Bayesian framework to handle uncertainty in channel coefficients."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Marketing Measurement series",
+      "label": "PART_OF",
+      "description": "Marketing Mix Modeling is a core topic within the broader Marketing Measurement series by Qonto."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Project Robyn",
+      "label": "REFERENCES",
+      "description": "The dataset provided by Project Robyn is used to demonstrate the MMM methodology in this article."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Train Set",
+      "label": "PART_OF",
+      "description": "The train set is a fundamental component of data preparation for building the MMM model."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Test Set",
+      "label": "RELATED_TO",
+      "description": "The test set is used to evaluate the generalizability and validity of the Marketing Mix Model."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Overfitting",
+      "label": "OPPOSES",
+      "description": "Overfitting is a risk that must be managed when building MMM models, often mitigated by test sets."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Bayesian Model",
+      "label": "RELATED_TO",
+      "description": "Bayesian Model is a specific type of Marketing Mix Modeling approach discussed in the series."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "MinMaxScaler",
+      "label": "RELATED_TO",
+      "description": "MinMaxScaler is used in data preparation for exogenous features within an MMM workflow."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "MaxAbsScaler",
+      "label": "RELATED_TO",
+      "description": "MaxAbsScaler is used for endogenous variables to ensure proper rescaling of channel contributions."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Causal DAG",
+      "label": "SUPPORTS",
+      "description": "Understanding causal relationships via a Causal DAG is advised to ensure valid input data for MMM."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "MLOps",
+      "label": "SUPPORTS",
+      "description": "MLOps provides the necessary practices and tools to manage the complexity of MMM projects, including data management and model deployment."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "PyMC",
+      "label": "REFERENCES",
+      "description": "PyMC is a technology used for specifying a Bayesian model with inputs for a Bayesian model in MMM."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Stakeholders",
+      "label": "RELATED_TO",
+      "description": "Stakeholders contribute prior beliefs, expert knowledge, and business logic that are encoded into MMM models."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Marketing Measurement Stack",
+      "label": "PART_OF",
+      "description": "MMMs work best as a component of a broader marketing measurement stack, complementing other tools."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Linear Regression",
+      "label": "RELATED_TO",
+      "description": "It is possible to do MMM with simple linear regression, though it is not recommended compared to Bayesian methods."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Aggregated Data",
+      "label": "RELATED_TO",
+      "description": "MMMs rely on aggregated data rather than consumer-level data and require no PII to be run."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Offline Marketing Channels",
+      "label": "SUPPORTS",
+      "description": "These models can be used to give insights into the efficiencies of offline marketing channels like TV or Radio."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Google",
+      "label": "REFERENCES",
+      "description": "Qonto references Google articles and tools like AMSS for parameter recovery exercises in MMM."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Open Source",
+      "label": "RELATED_TO",
+      "description": "Open-source MMM is a rapidly developing field where Qonto has experimented with several solutions."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Measurement 360",
+      "label": "RELATED_TO",
+      "description": "Measurement 360 is part of the broader measurement landscape that includes methods like Marketing Mix Modeling which advertisers are reevaluating."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Campaign performance",
+      "label": "RELATED_TO",
+      "description": "Marketing Mix Modeling is a methodology used to analyze and understand campaign performance within the broader measurement landscape."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Randomized Controlled Trials (RCT)",
+      "label": "RELATED_TO",
+      "description": "MMM should be calibrated with causal experiments like RCTs given reasonable signal quality and study confidence."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Robyn v3.8",
+      "label": "SUPPORTS",
+      "description": "Robyn v3.8 offers an edge over na\u00efve calibration methods by providing contextual calibration features for MMM."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Last Dollar Impact",
+      "label": "REFERENCES",
+      "description": "MMM measures the average dollar impact, whereas experiments typically measure the last dollar impact."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Average Dollar Impact",
+      "label": "REFERENCES",
+      "description": "MMM measures the long(er) term average impact of ads on all outcomes within the modeling window."
+    },
+    {
+      "source": "Marketing Mix Modeling",
+      "target": "Na\u00efve Calibration",
+      "label": "OPPOSES",
+      "description": "Na\u00efve calibration drives MMM's total effect towards experimental results that are a subset of MMM, leading to underestimation."
+    },
+    {
+      "source": "Calibration",
+      "target": "Randomized Controlled Trials (RCT)",
+      "label": "RELATED_TO",
+      "description": "Calibration relies on RCT results reflecting the true effect from the simulation to constrain predicted response."
+    },
+    {
+      "source": "Calibration",
+      "target": "Mean Absolute Percentage Error (MAPE)",
+      "label": "RELATED_TO",
+      "description": "Calibration error (MAPE.LIFT) is used as an objective function within Robyn's multi-objective optimisation capacity."
+    },
+    {
+      "source": "siMMMulator",
+      "target": "Meta Marketing Science",
+      "label": "CREATED_BY",
+      "description": "The data simulation package siMMMulator is an open source project from Meta used to generate datasets."
+    },
+    {
+      "source": "GeoLift",
+      "target": "Geographical Test",
+      "label": "RELATED_TO",
+      "description": "The GeoLift package is used by Qonto for conducting geo-based incrementality experiments, refining understanding of parameters."
+    },
+    {
+      "source": "GeoLift",
+      "target": "Synthetic Control Methods",
+      "label": "REFERENCES",
+      "description": "The GeoLift library in R was used to implement the solution, leveraging Synthetic Control Methods."
+    },
+    {
+      "source": "Randomized Controlled Trials (RCT)",
+      "target": "Conversions",
+      "label": "RELATED_TO",
+      "description": "RCT results are created using true conversions directly to reflect the true effect for calibration use cases."
+    },
+    {
+      "source": "Randomized Controlled Trials (RCT)",
+      "target": "Holistic Calibration",
+      "label": "SUPPORTS",
+      "description": "Randomised Controlled Trials support Holistic Calibration by providing ground truth data for effect size adjustment."
+    },
+    {
+      "source": "Meta Marketing Science",
+      "target": "Robyn v3.8",
+      "label": "CREATED_BY",
+      "description": "Meta Marketing Science is the organization that developed and open-sourced the Robyn package."
+    },
+    {
+      "source": "Statistical Fit",
+      "target": "Business Logic",
+      "label": "OPPOSES",
+      "description": "In terms of priority, business logic is often weighted above statistical fit in the decision-making process of MMM providers."
+    },
+    {
+      "source": "Business Logic",
+      "target": "Plausibility",
+      "label": "RELATED_TO",
+      "description": "Plausibility is a core aspect of business logic used to evaluate MMM decomposition and model outcomes."
+    },
+    {
+      "source": "Heuristics",
+      "target": "Expertise and Experience",
+      "label": "RELATED_TO",
+      "description": "Heuristics are often applied in conjunction with or as an alternative to general expertise and experience for evaluation."
+    },
+    {
+      "source": "Formulas",
+      "target": "Expertise and Experience",
+      "label": "OPPOSES",
+      "description": "There is a distinction in methodology where some use specific formulas while others rely on a blend of expertise and experience."
+    },
+    {
+      "source": "Experiments",
+      "target": "Last Dollar Impact",
+      "label": "REFERENCES",
+      "description": "Experimental estimates are usually the short-term last dollar impact of ads on some matchable outcomes."
+    },
+    {
+      "source": "Experiments",
+      "target": "Average Dollar Impact",
+      "label": "OPPOSES",
+      "description": "Experiments generally measure last dollar impact which is less than the average impact measured by MMM, creating a discrepancy."
+    },
+    {
+      "source": "Marketing Science",
+      "target": "Decision-Making Processes in Marketing Mix Modelling: A Survey of MMM Providers",
+      "label": "PART_OF",
+      "description": "The survey article is a document published within the journal Marketing Science."
+    },
+    {
+      "source": "Attribution Model",
+      "target": "Incrementality tests",
+      "label": "RELATED_TO",
+      "description": "Both are used to understand channel efficiency, with experiments being the gold standard for measurement."
+    },
+    {
+      "source": "Attribution Model",
+      "target": "Qonto",
+      "label": "RELATED_TO",
+      "description": "Qonto's marketing model relies on measuring acquisition channels, where attribution models are used but have limitations."
+    },
+    {
+      "source": "Attribution Model",
+      "target": "Conversion Lift Tests (CLT)",
+      "label": "RELATED_TO",
+      "description": "Results from CLTs are used to challenge and refine the Attribution Model, which often undervalues certain channels."
+    },
+    {
+      "source": "Attribution Model",
+      "target": "First Click",
+      "label": "PART_OF",
+      "description": "The First Click model was used by Resident for prospecting activity within their attribution strategy."
+    },
+    {
+      "source": "Attribution Model",
+      "target": "Last Click",
+      "label": "PART_OF",
+      "description": "The Last Click model was used by Resident for retargeting activity within their attribution strategy."
+    },
+    {
+      "source": "Attribution Model",
+      "target": "Incrementality",
+      "label": "OPPOSES",
+      "description": "Attribution models are limited by their descriptive nature and cannot explain causality or incrementality effectively."
+    },
+    {
+      "source": "Incrementality tests",
+      "target": "Geographical Test",
+      "label": "PART_OF",
+      "description": "Geo-based experiments are a specific type of incrementality test where groups are created based on geography."
+    },
+    {
+      "source": "Incrementality tests",
+      "target": "Conversion Lift Tests (CLT)",
+      "label": "PART_OF",
+      "description": "Conversion Lift Tests are a specific type of incrementality test where randomization is based on individual users."
+    },
+    {
+      "source": "Incrementality tests",
+      "target": "Internal Validity",
+      "label": "RELATED_TO",
+      "description": "Internal validity refers to the causal relationship between ad exposure and conversion within the specific context of an incrementality test."
+    },
+    {
+      "source": "Incrementality tests",
+      "target": "External Validity",
+      "label": "RELATED_TO",
+      "description": "External validity concerns the applicability of incrementality test results over time, affected by changes in the business environment."
+    },
+    {
+      "source": "Conversion Lift Tests (CLT)",
+      "target": "Meta Pixel",
+      "label": "RELATED_TO",
+      "description": "Meta Pixel is used in Meta Conversion Lift Tests to track conversions between control and treated groups."
+    },
+    {
+      "source": "Conversion Lift Tests (CLT)",
+      "target": "Cost per Incremental Conversion (CPIC)",
+      "label": "CREATED_BY",
+      "description": "The CLT process allows for the computation of Cost per Incremental Conversion, used to adjust marketing budget allocation."
+    },
+    {
+      "source": "Conversion Lift Tests (CLT)",
+      "target": "Geographical Test",
+      "label": "OPPOSES",
+      "description": "Running CLTs and geo tests simultaneously introduces contamination threats that threaten external validity"
+    },
+    {
+      "source": "Conversion Lift Tests (CLT)",
+      "target": "Cookie Contamination",
+      "label": "RELATED_TO",
+      "description": "Running simultaneous CLTs across platforms introduces cookie contamination as a threat to external validity"
+    },
+    {
+      "source": "Cost per Incremental Conversion (CPIC)",
+      "target": "Budget adaptation",
+      "label": "RELATED_TO",
+      "description": "The Cost per Incremental Conversion metric is used to establish bounds for budget allocation adjustments based on test results."
+    },
+    {
+      "source": "Marketing Measurement series",
+      "target": "Getting the best of both worlds in marketing incrementality tests...",
+      "label": "PART_OF",
+      "description": "The article 'Getting the best of both worlds...' is part of the Marketing Measurement series published by Qonto."
+    },
+    {
+      "source": "Marketing Measurement series",
+      "target": "Qonto",
+      "label": "CREATED_BY",
+      "description": "Qonto created and publishes the Marketing Measurement series which includes articles on Marketing Mix Modeling."
+    },
+    {
+      "source": "Qonto",
+      "target": "Online Paid Acquisition",
+      "label": "PART_OF",
+      "description": "Online paid acquisition is a category within Qonto's marketing model that relies heavily on investments."
+    },
+    {
+      "source": "Qonto",
+      "target": "Incrementality Test Scheduling",
+      "label": "CREATED_BY",
+      "description": "Qonto developed the Marketing Measurement series including this article on incrementality test scheduling methodology"
+    },
+    {
+      "source": "Qonto",
+      "target": "Ruari Walker",
+      "label": "RELATED_TO",
+      "description": "Ruari Walker authored the article for Qonto as part of their Marketing Measurement series."
+    },
+    {
+      "source": "Qonto",
+      "target": "Alexandre Prot",
+      "label": "CREATED_BY",
+      "description": "Alexandre Prot is one of the co-founders who created Qonto in 2016."
+    },
+    {
+      "source": "Qonto",
+      "target": "Steve Anavi",
+      "label": "CREATED_BY",
+      "description": "Steve Anavi is one of the co-founders who created Qonto in 2016."
+    },
+    {
+      "source": "France",
+      "target": "Geographical Test",
+      "label": "LOCATED_IN",
+      "description": "Qonto conducted geo-based incrementality experiments in France, splitting regions into treated and control areas."
+    },
+    {
+      "source": "France",
+      "target": "Regions",
+      "label": "PART_OF",
+      "description": "The administrative regions are part of the country France where the experiment took place."
+    },
+    {
+      "source": "Bernardo Lares",
+      "target": "Hitting ROAS target using Robyn's budget allocator",
+      "label": "CREATED_BY",
+      "description": "Bernardo Lares co-authored this technical note on the budget allocator."
+    },
+    {
+      "source": "Target Efficiency",
+      "target": "Cost per Acquisition",
+      "label": "RELATED_TO",
+      "description": "CPA is the alternative metric used for targeting in the Target Efficiency scenario when optimizing for conversion."
+    },
+    {
+      "source": "SLSQP",
+      "target": "nloptr",
+      "label": "SUPPORTS",
+      "description": "The nloptr library provides the implementation of the SLSQP algorithm used in Robyn."
+    },
+    {
+      "source": "BARK",
+      "target": "Michoel Snow",
+      "label": "PART_OF",
+      "description": "Michoel Snow serves as the Lead Data Scientist at BARK."
+    },
+    {
+      "source": "BARK",
+      "target": "New York",
+      "label": "LOCATED_IN",
+      "description": "BARK is headquartered in New York."
+    },
+    {
+      "source": "BARK",
+      "target": "BarkBox",
+      "label": "PART_OF",
+      "description": "BarkBox is one of the monthly subscription services offered by BARK."
+    },
+    {
+      "source": "BARK",
+      "target": "Super Chewer",
+      "label": "PART_OF",
+      "description": "Super Chewer is one of the subscription services offered by BARK."
+    },
+    {
+      "source": "BARK",
+      "target": "BARK Bright",
+      "label": "PART_OF",
+      "description": "BARK Bright is one of the subscription services offered by BARK."
+    },
+    {
+      "source": "BARK",
+      "target": "BARK Eats",
+      "label": "PART_OF",
+      "description": "BARK Eats is one of the subscription services offered by BARK."
+    },
+    {
+      "source": "BARK",
+      "target": "Google",
+      "label": "RELATED_TO",
+      "description": "BARK evaluated customer acquisition costs across channels including Google."
+    },
+    {
+      "source": "BARK",
+      "target": "Amazon",
+      "label": "RELATED_TO",
+      "description": "BARK evaluated customer acquisition costs across channels including Amazon."
+    },
+    {
+      "source": "BARK",
+      "target": "Email",
+      "label": "RELATED_TO",
+      "description": "BARK evaluated customer acquisition costs across channels including Email."
+    },
+    {
+      "source": "BARK",
+      "target": "Linear TV",
+      "label": "RELATED_TO",
+      "description": "BARK evaluated customer acquisition costs across channels including Linear TV."
+    },
+    {
+      "source": "Resident",
+      "target": "In-house Model",
+      "label": "RELATED_TO",
+      "description": "Resident initially built an in-house attribution model using first click and last click methods before integrating MMM."
+    },
+    {
+      "source": "Resident",
+      "target": "Offline Media",
+      "label": "RELATED_TO",
+      "description": "Resident planned on increasing its spending in offline media, requiring a robust measurement solution that handles both channels."
+    },
+    {
+      "source": "Resident",
+      "target": "Online Advertising",
+      "label": "RELATED_TO",
+      "description": "Resident is a pure direct response company that judges marketing dollars spent based on return across its complex online marketing mix."
+    },
+    {
+      "source": "Resident",
+      "target": "Avi Shenshakir",
+      "label": "PART_OF",
+      "description": "Avi Shenshakir serves as the Vice President of Data at Resident and commented on the project success."
+    },
+    {
+      "source": "Privacy Changes",
+      "target": "Online Advertising",
+      "label": "OPPOSES",
+      "description": "Privacy changes in the online advertising ecosystem negatively impacted the quality and quantity of marketing measurement signals."
+    },
+    {
+      "source": "Incrementality",
+      "target": "Geographical Test",
+      "label": "SUPPORTS",
+      "description": "The geographical test is used to measure incrementality or causality following a change in marketing strategy."
+    },
+    {
+      "source": "Incrementality",
+      "target": "Sign-ups",
+      "label": "RELATED_TO",
+      "description": "Sign-ups are the metric used to measure the impact of budget reduction on customer acquisition."
+    },
+    {
+      "source": "Incrementality",
+      "target": "Test-and-learn approach",
+      "label": "SUPPORTS",
+      "description": "The test-and-learn approach is used to validate best practices and gain insight into incrementality within marketing strategies."
+    },
+    {
+      "source": "A/B Testing",
+      "target": "Geographical Test",
+      "label": "OPPOSES",
+      "description": "A/B testing was considered but deemed unsuitable, leading the team to turn to a geographical test instead."
+    },
+    {
+      "source": "Geographical Test",
+      "target": "Synthetic Control Methods",
+      "label": "SUPPORTS",
+      "description": "Synthetic Control Methods were leveraged to implement the geographical test by constructing a synthetic control group."
+    },
+    {
+      "source": "Geographical Test",
+      "target": "Counterfactual Group",
+      "label": "PART_OF",
+      "description": "The counterfactual group is a component of the geographical test design, serving as the control group."
+    },
+    {
+      "source": "Geographical Test",
+      "target": "Experiment Protocol",
+      "label": "PART_OF",
+      "description": "The experiment protocol ensures causal relationships in the sentence 'if we cut Channel X then we lose N sign ups'."
+    },
+    {
+      "source": "Geographical Test",
+      "target": "Multi-cell Tests",
+      "label": "PART_OF",
+      "description": "Multi-cell tests represent an advanced form of geo testing that addresses randomization and contamination concerns"
+    },
+    {
+      "source": "NRMSE",
+      "target": "Holistic Calibration",
+      "label": "RELATED_TO",
+      "description": "Holistic calibration is related to NRMSE as it integrates prediction error metrics with causal experiment data."
+    },
+    {
+      "source": "Project Halo",
+      "target": "Holistic Calibration",
+      "label": "RELATED_TO",
+      "description": "Project Halo provides reach and frequency data that is related to and used for holistic calibration in Robyn."
+    },
+    {
+      "source": "Incrementality Test Scheduling",
+      "target": "Velocity vs. Validity Trade-off",
+      "label": "PART_OF",
+      "description": "Incrementality test scheduling fundamentally involves managing the trade-off between velocity and validity"
+    },
+    {
+      "source": "Velocity vs. Validity Trade-off",
+      "target": "Marketing Experiments (XPs)",
+      "label": "RELATED_TO",
+      "description": "The trade-off directly influences how frequently and simultaneously marketing experiments should be scheduled"
+    },
+    {
+      "source": "Velocity vs. Validity Trade-off",
+      "target": "Bayesian Marketing Mix Modeling",
+      "label": "SUPPORTS",
+      "description": "Bayesian MMM enables accepting directional results from high-velocity testing while maintaining model integrity"
+    },
+    {
+      "source": "Internal Validity",
+      "target": "External Validity",
+      "label": "RELATED_TO",
+      "description": "These two concepts are complementary dimensions of causal inference that must both be considered when evaluating marketing experiments"
+    },
+    {
+      "source": "Internal Validity",
+      "target": "Marketing Experiments (XPs)",
+      "label": "SUPPORTS",
+      "description": "Well-designed marketing experiments aim to achieve internal validity through proper experimental design and randomization"
+    },
+    {
+      "source": "External Validity",
+      "target": "Marketing Experiments (XPs)",
+      "label": "OPPOSES",
+      "description": "Marketing experiments face inherent limitations in external validity due to changing contexts, products, and market conditions over time"
+    },
+    {
+      "source": "External Validity",
+      "target": "Cookie Contamination",
+      "label": "OPPOSES",
+      "description": "Cookie contamination reduces the external validity of incrementality test results by introducing measurement error"
+    },
+    {
+      "source": "External Validity",
+      "target": "Multi-cell Tests",
+      "label": "SUPPORTS",
+      "description": "Multi-cell tests are designed to maintain external validity when running simultaneous geo experiments"
+    },
+    {
+      "source": "Marketing Experiments (XPs)",
+      "target": "Bayesian Marketing Mix Modeling",
+      "label": "SUPPORTS",
+      "description": "Bayesian MMM can incorporate XP results as directional evidence while maintaining model flexibility to disagree with them"
+    },
+    {
+      "source": "Marketing Experiments (XPs)",
+      "target": "Minimum Detectable Effect (MDE)",
+      "label": "RELATED_TO",
+      "description": "MDE determines the statistical power and sample size requirements for marketing experiments"
+    },
+    {
+      "source": "Multi-cell Tests",
+      "target": "Minimum Detectable Effect (MDE)",
+      "label": "RELATED_TO",
+      "description": "MDE requirements influence whether multi-cell tests are feasible given available data volume and business constraints"
+    },
+    {
+      "source": "Time delay",
+      "target": "Lag effect",
+      "label": "RELATED_TO",
+      "description": "Lag effect is an alternative name used to describe the Time delay concept in advertising impact."
+    },
+    {
+      "source": "Time decay",
+      "target": "Memory effect",
+      "label": "RELATED_TO",
+      "description": "Memory effect is an alternative name used to describe the Time decay concept regarding ad recall."
+    },
+    {
+      "source": "Concave saturation",
+      "target": "Logistic function",
+      "label": "RELATED_TO",
+      "description": "The Logistic function is used in MMM to represent concave response curves for advertising channels."
+    },
+    {
+      "source": "Dimension reduction",
+      "target": "Model parsimony",
+      "label": "SUPPORTS",
+      "description": "Dimension reduction supports model parsimony by reducing the number of control features fed into an MMM."
+    },
+    {
+      "source": "Bayesian statistics",
+      "target": "Bayes' Theorem",
+      "label": "SUPPORTS",
+      "description": "It is the fundamental theorem underlying the Bayesian statistical philosophy."
+    },
+    {
+      "source": "Bayes' Theorem",
+      "target": "Marginal likelihood",
+      "label": "PART_OF",
+      "description": "It is the denominator in Bayes' Theorem, acting as a normalizing factor."
+    },
+    {
+      "source": "Prior distributions",
+      "target": "Uncertainty",
+      "label": "RELATED_TO",
+      "description": "Priors encode uncertainty about parameter values through their distribution shape and standard deviation."
+    },
+    {
+      "source": "Prior distributions",
+      "target": "Delphi Method",
+      "label": "SUPPORTS",
+      "description": "It helps define priors by leveraging expert opinions from stakeholders to mitigate bias."
+    },
+    {
+      "source": "Prior distributions",
+      "target": "Customer Acquisition Cost (CAC)",
+      "label": "RELATED_TO",
+      "description": "CAC constraints can be encoded into prior distributions for referral coefficients in the model."
+    },
+    {
+      "source": "Prior distributions",
+      "target": "Bayesian Model",
+      "label": "PART_OF",
+      "description": "Prior distributions are defined for unknown parameters as part of a Bayesian Model specification."
+    },
+    {
+      "source": "Prior distributions",
+      "target": "Half Normal distribution",
+      "label": "PART_OF",
+      "description": "Half Normal is a specific type of prior distribution used for certain parameters in the model."
+    },
+    {
+      "source": "Likelihood",
+      "target": "Bayesian Model",
+      "label": "PART_OF",
+      "description": "The likelihood function bridges modeled data and true data within a Bayesian Model specification."
+    },
+    {
+      "source": "Likelihood",
+      "target": "Normal distribution",
+      "label": "PART_OF",
+      "description": "The normal distribution defines the likelihood function connecting modeled and observed data."
+    },
+    {
+      "source": "Likelihood",
+      "target": "Student-T distribution",
+      "label": "RELATED_TO",
+      "description": "Student-T distribution may also be an appropriate choice for likelihood when residuals are not evenly distributed."
+    },
+    {
+      "source": "PyMC",
+      "target": "Probabilistic programming language",
+      "label": "RELATED_TO",
+      "description": "PyMC is a probabilistic programming language written in Python designed to build and test Bayesian models."
+    },
+    {
+      "source": "PyMC",
+      "target": "PyMC-Marketing",
+      "label": "PART_OF",
+      "description": "PyMC-Marketing is an open-source package built on top of PyMC allowing for CLV and MMM models."
+    },
+    {
+      "source": "PyMC",
+      "target": "Data containers",
+      "label": "SUPPORTS",
+      "description": "PyMC allows users to group and organize input data into dimensions and coordinates using data containers."
+    },
+    {
+      "source": "PyMC",
+      "target": "Bayesian Model",
+      "label": "SUPPORTS",
+      "description": "PyMC is the technology used to specify and sample from Bayesian models in this context."
+    },
+    {
+      "source": "Streamlit app",
+      "target": "Probability distributions",
+      "label": "REFERENCES",
+      "description": "The app allows users to explore different types of distributions and their parameters defined in the article."
+    },
+    {
+      "source": "Customer Lifetime Value",
+      "target": "PyMC-Marketing",
+      "label": "RELATED_TO",
+      "description": "PyMC-Marketing allows users to build Customer Lifetime Value models in addition to Marketing Mix Models."
+    },
+    {
+      "source": "Deterministic variables",
+      "target": "Stochastic variables",
+      "label": "RELATED_TO",
+      "description": "Both deterministic and stochastic variables are components of a PyMC model expressed as variables with specific types."
+    },
+    {
+      "source": "MinMaxScaler",
+      "target": "Exogenous Features",
+      "label": "RELATED_TO",
+      "description": "MinMaxScaler is applied to exogenous input variables to scale them appropriately for modeling."
+    },
+    {
+      "source": "MaxAbsScaler",
+      "target": "Endogenous Variable",
+      "label": "RELATED_TO",
+      "description": "MaxAbsScaler is used for the endogenous target variable to preserve interpretability of revenue values."
+    },
+    {
+      "source": "Overfitting",
+      "target": "RD-D2 shrinkage prior",
+      "label": "SUPPORTS",
+      "description": "The RD-D2 shrinkage prior is a technique used to prevent overfitting when using many input variables."
+    },
+    {
+      "source": "Overfitting",
+      "target": "Out-of-sample Validation",
+      "label": "OPPOSES",
+      "description": "Test-set validation mitigates the risk of overfitting which is high due to the ratio of features-to-data."
+    },
+    {
+      "source": "Fourier modes",
+      "target": "Seasonality",
+      "label": "RELATED_TO",
+      "description": "Fourier modes are used in the model specification to capture seasonality components."
+    },
+    {
+      "source": "Linear feature",
+      "target": "Trend",
+      "label": "RELATED_TO",
+      "description": "A linear feature is used to model the trend component of the target variable."
+    },
+    {
+      "source": "MLOps",
+      "target": "DVC",
+      "label": "RELATED_TO",
+      "description": "DVC is a specific tool used within an MLOps framework to handle data versioning and storage management."
+    },
+    {
+      "source": "MLOps",
+      "target": "MLFlow",
+      "label": "RELATED_TO",
+      "description": "MLFlow is a versatile platform used within an MLOps framework for managing workflows, experiment tracking, and model registry."
+    },
+    {
+      "source": "MLOps",
+      "target": "Kibana",
+      "label": "RELATED_TO",
+      "description": "Kibana is utilized within the MLOps architecture for logging and visualization of MLFlow deployments."
+    },
+    {
+      "source": "MLOps",
+      "target": "Prometheus",
+      "label": "RELATED_TO",
+      "description": "Prometheus is utilized within the MLOps architecture for monitoring the performance and health of ML systems."
+    },
+    {
+      "source": "MLOps",
+      "target": "Data Scientists",
+      "label": "SUPPORTS",
+      "description": "Data scientists are key users of MLOps tools like DVC and MLFlow to manage their modeling workflows."
+    },
+    {
+      "source": "MLOps",
+      "target": "Site Reliability Engineers",
+      "label": "SUPPORTS",
+      "description": "SREs assist in deploying MLOps tools as hosted solutions and ensuring the infrastructure supports data science needs."
+    },
+    {
+      "source": "MLOps",
+      "target": "MLFlow Experiment Tracking",
+      "label": "PART_OF",
+      "description": "Experiment tracking is one of the two most important components of MLFlow within an MLOps workflow."
+    },
+    {
+      "source": "MLOps",
+      "target": "MLFlow Model Registry",
+      "label": "PART_OF",
+      "description": "The Model Registry is a central repository component of MLFlow used for managing and versioning models in MLOps."
+    },
+    {
+      "source": "DVC",
+      "target": "Git",
+      "label": "RELATED_TO",
+      "description": "Git tracks metadata for DVC projects while DVC handles versioning of data and artifacts themselves."
+    },
+    {
+      "source": "DVC",
+      "target": "AWS S3",
+      "label": "RELATED_TO",
+      "description": "AWS S3 is used as a remote storage backend for DVC to manage large datasets in multi-person projects."
+    },
+    {
+      "source": "Root-Mean-Square-Error (RMSE)",
+      "target": "R-Squared",
+      "label": "RELATED_TO",
+      "description": "R-Squared should be viewed alongside genuine error metrics such as Root-Mean-Square-Error for evaluation."
+    },
+    {
+      "source": "Root-Mean-Square-Error (RMSE)",
+      "target": "Confidence Intervals",
+      "label": "SUPPORTS",
+      "description": "Demanding confidence intervals provides indispensable insight into uncertainty alongside error metrics like RMSE."
+    },
+    {
+      "source": "Consultancy Route",
+      "target": "In-house Route",
+      "label": "RELATED_TO",
+      "description": "These are two alternative options for producing MMMs, one via external vendors and one internally."
+    },
+    {
+      "source": "Measurement 360",
+      "target": "Deloitte",
+      "label": "CREATED_BY",
+      "description": "The Measurement 360 framework was developed by Deloitte in collaboration with Meta."
+    },
+    {
+      "source": "Measurement 360",
+      "target": "Campaign performance",
+      "label": "SUPPORTS",
+      "description": "The framework is designed to deliver a holistic view of campaign performance across a wider range of channels."
+    },
+    {
+      "source": "Measurement 360",
+      "target": "First-party data",
+      "label": "RELATED_TO",
+      "description": "The framework encourages building more advanced analytics through first-party data as part of its future-proof strategy."
+    },
+    {
+      "source": "Measurement 360",
+      "target": "Data privacy",
+      "label": "RELATED_TO",
+      "description": "The framework aligns with the increasing consumer value placed on data privacy and security in the advertising landscape."
+    },
+    {
+      "source": "Measurement 360",
+      "target": "Customer journey",
+      "label": "RELATED_TO",
+      "description": "Through Measurement 360, marketers can gain a holistic view of the customer journey in an agile, privacy-safe way."
+    },
+    {
+      "source": "First-party data",
+      "target": "Data privacy",
+      "label": "SUPPORTS",
+      "description": "Relying on first-party data wherever possible enables privacy by design in the measurement strategy."
+    },
+    {
+      "source": "Robyn v3.8",
+      "target": "Contextual Calibration",
+      "label": "PART_OF",
+      "description": "Contextual calibration is a specific feature launched in the Robyn v3.8 release to tackle differences in scope."
+    },
+    {
+      "source": "Correlation",
+      "target": "Causation",
+      "label": "OPPOSES",
+      "description": "Correlation does not equal causation, which is a fundamental distinction between MMM and experimental methods."
+    },
+    {
+      "source": "Immediate Effect",
+      "target": "Contextual Calibration",
+      "label": "PART_OF",
+      "description": "The new robyn_calibrate function in Robyn v3.8 separates the immediate effect from carryover effect for calibration."
+    },
+    {
+      "source": "Na\u00efve Calibration",
+      "target": "Contextual Calibration",
+      "label": "OPPOSES",
+      "description": "Contextual calibration in Robyn v3.8 offers an improvement over common na\u00efve calibration methods that underestimate media."
+    }
+  ],
+  "communities": 0
+}

@@ -11,15 +11,13 @@ venv/
 
 # Generated graph data (user-specific, can be large)
 # Keep the MMM example so visitors can explore it immediately
-graphs/
-!graphs/marketing mix modeling/
-!graphs/marketing mix modeling/**
+graphs/*
+!graphs/marketing mix modeling
 
 # Raw source documents (user-specific)
 # Keep the MMM example source files
-raw/
-!raw/marketing mix modeling/
-!raw/marketing mix modeling/**
+raw/*
+!raw/marketing mix modeling
 
 # Blog / content drafts (local only)
 BLOG_NOTES.md
