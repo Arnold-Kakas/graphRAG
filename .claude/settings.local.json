@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(gh pr *)",
-      "Bash(git -C \"C:\\\\Users\\\\Arnold\\\\Documents\\\\GitHub\\\\graphRAG\" diff --stat HEAD)"
+      "Bash(git -C \"C:\\\\Users\\\\Arnold\\\\Documents\\\\GitHub\\\\graphRAG\" diff --stat HEAD)",
+      "Bash(python -c ' *)",
+      "Bash(pip show *)",
+      "Bash(ls .venv/)",
+      "Bash(ls venv/)",
+      "Bash(ls env/)",
+      "Bash(xargs -I{} sh -c '\"{}\" -c \"import llama_index\" 2>/dev/null && echo \"FOUND: {}\"')",
+      "Bash(docker exec graphrag-graphrag-1 *)",
+      "Bash(docker cp *)",
+      "Bash(python *)"
     ]
   }
 }
