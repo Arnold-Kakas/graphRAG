@@ -66,15 +66,27 @@ Extract up to {{max_knowledge_triplets}} entity-relation triplets.
 -Allowed Relationship Types-
 {relation_types_str}
 
+-Naming Rules (critical — prevents duplicates across chunks)-
+- Use the FULL name for every entity, not an acronym or abbreviation alone.
+  Good: "Marketing Mix Modeling", Bad: "MMM"
+- If the text uses an abbreviation (e.g. "MMM"), expand it to the full name.
+  Exception: the abbreviation IS the commonly known name (e.g. "MCMC" is acceptable
+  alongside "Markov Chain Monte Carlo (MCMC)").
+- Use American English spelling consistently (e.g. "Modeling", not "Modelling").
+- Use title case for proper nouns and concepts (e.g. "Bayesian Model", "Prior Distribution").
+- Do NOT append acronyms in parentheses to an entity name — use the clean full name
+  (e.g. "Marketing Mix Modeling", not "Marketing Mix Modeling (MMM)").
+- Two names that refer to the same concept must be written identically every time.
+
 -Steps-
 1. Identify ALL entities. For each entity extract:
-   - name: Name of the entity, capitalized
+   - name: Name of the entity (follow Naming Rules above)
    - type: One of the allowed entity types above (use the closest match; default to the most general type if unsure)
    - description: A brief description of the entity and its significance in this document
 
 2. Identify relationships between entities. For each pair extract:
-   - source: name of the source entity
-   - target: name of the target entity
+   - source: name of the source entity (must match the entity name exactly)
+   - target: name of the target entity (must match the entity name exactly)
    - relation: one of the allowed relationship types above
    - description: a sentence explaining why and how these entities are related
 
@@ -379,6 +391,15 @@ async def build_topic_graph(
             show_progress=True,
         ),
     )
+
+    _p("Resolving duplicate entities...")
+    llm_merge_map = graph_store.resolve_entities(llm=community_llm, topic_name=topic)
+    merged_aliases = {**(ontology.aliases or {}), **llm_merge_map}
+
+    _p("Deduplicating nodes...")
+    removed = graph_store.deduplicate_nodes(aliases=merged_aliases or None)
+    if removed:
+        _p(f"Merged {removed} duplicate node(s)")
 
     _p("Running community detection and generating summaries...")
     graph_store.build_communities(

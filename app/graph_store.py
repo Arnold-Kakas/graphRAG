@@ -11,6 +11,8 @@ from __future__ import annotations
 import json
 import logging
 import pickle
+import re
+from collections import defaultdict
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -173,6 +175,148 @@ Briefing:"""
         return self.community_summaries
 
     # ── Export for D3.js ───────────────────────────────────────────────────────
+
+    # ── Deduplication ──────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _normalize_name(name: str) -> str:
+        """Canonical key used to detect duplicate entity names."""
+        n = re.sub(r"\s*\(.*?\)", "", name)        # strip "(MMM)", "(MCMC)" etc.
+        n = n.replace("odelling", "odeling")        # British → American spelling
+        n = n.replace("odels", "odeling")           # "Models" → treat as "Modeling" group? No.
+        # Trailing 'Model' vs 'Modeling': treat both as same root
+        n = re.sub(r"\bmodel\b", "modeling", n, flags=re.IGNORECASE)
+        return n.strip().lower()
+
+    def resolve_entities(self, llm, topic_name: str = "", batch_size: int = 60) -> dict[str, str]:
+        """
+        Ask the LLM to identify synonymous entity groups and return a merge map.
+        Processes entities in batches to stay within context limits.
+        Returns {alias: canonical} for every pair the LLM wants to merge.
+        """
+        graph = self.graph
+        entities = [
+            node for node in graph.nodes.values()
+            if isinstance(node, EntityNode)
+        ]
+        if not entities:
+            return {}
+
+        edge_count: dict[str, int] = defaultdict(int)
+        for rel in graph.relations.values():
+            edge_count[rel.source_id] += 1
+            edge_count[rel.target_id] += 1
+
+        # Sort by type then name for stable batching
+        entities.sort(key=lambda n: (n.label or "", n.name))
+
+        merge_map: dict[str, str] = {}
+
+        for i in range(0, len(entities), batch_size):
+            batch = entities[i: i + batch_size]
+            entity_lines = "\n".join(
+                f"- \"{e.name}\" ({e.label}): {e.properties.get('entity_description', '')[:120]}"
+                for e in batch
+            )
+            prompt = f"""You are reviewing a knowledge graph about "{topic_name or 'the given topic'}".
+Below is a list of extracted entities. Identify any groups of entities that refer to the SAME real-world thing (same concept, company, technology, or person), but have been extracted with slightly different names — for example due to abbreviations, singular/plural, British/American spelling, acronyms, or company rebrands.
+
+Rules:
+- Only merge entities that are truly the same thing in this domain.
+- Do NOT merge entities that are related but distinct (e.g. "Saturation" and "Saturation Curve" are different).
+- Do NOT merge a general concept with a specific subtype (e.g. "Bayesian Methods" and "Bayesian Model" are different levels).
+- Pick the most complete, descriptive name as the canonical name.
+- If nothing should be merged, return an empty list.
+
+Entities:
+{entity_lines}
+
+Return ONLY a raw JSON array of merge groups. Each group is a list of names where the FIRST element is the canonical name to keep:
+[["canonical name", "alias 1", "alias 2"], ...]
+
+If no merges are needed return: []"""
+
+            try:
+                response = llm.complete(prompt)
+                raw = response.text.strip()
+                raw = re.sub(r"^```(?:json)?\s*", "", raw)
+                raw = re.sub(r"\s*```$", "", raw)
+                match = re.search(r"\[.*\]", raw, re.DOTALL)
+                if not match:
+                    continue
+                groups = json.loads(match.group())
+                for group in groups:
+                    if len(group) < 2:
+                        continue
+                    canonical = group[0]
+                    for alias in group[1:]:
+                        if alias != canonical and alias in graph.nodes:
+                            merge_map[alias] = canonical
+            except Exception as exc:
+                logger.warning("Entity resolution batch %d failed: %s", i // batch_size, exc)
+
+        logger.info("resolve_entities: %d merges identified by LLM", len(merge_map))
+        return merge_map
+
+    def deduplicate_nodes(self, aliases: dict[str, str] | None = None) -> int:
+        """
+        Merge entity nodes whose names normalize to the same string, plus any
+        explicit alias mappings (e.g. {"Facebook": "Meta"}).
+        Returns number of nodes removed. Modifies self.graph in place.
+        """
+        graph = self.graph
+
+        edge_count: dict[str, int] = defaultdict(int)
+        for rel in graph.relations.values():
+            edge_count[rel.source_id] += 1
+            edge_count[rel.target_id] += 1
+
+        # Normalisation-based duplicates
+        norm_groups: dict[str, list[str]] = defaultdict(list)
+        for node_id, node in graph.nodes.items():
+            if not isinstance(node, EntityNode):
+                continue
+            norm_groups[self._normalize_name(node.name)].append(node_id)
+
+        merge_map: dict[str, str] = {}
+        for ids in norm_groups.values():
+            if len(ids) < 2:
+                continue
+            canonical = max(
+                ids,
+                key=lambda nid: (
+                    edge_count[nid],
+                    len(graph.nodes[nid].name),
+                    graph.nodes[nid].name,
+                ),
+            )
+            for nid in ids:
+                if nid != canonical:
+                    merge_map[nid] = canonical
+
+        # Explicit alias overrides (rebrands, known synonyms)
+        if aliases:
+            for alias, canonical in aliases.items():
+                if alias in graph.nodes and alias not in merge_map:
+                    merge_map[alias] = canonical
+
+        if not merge_map:
+            return 0
+
+        for rel_key, rel in list(graph.relations.items()):
+            new_src = merge_map.get(rel.source_id, rel.source_id)
+            new_tgt = merge_map.get(rel.target_id, rel.target_id)
+            if new_src == new_tgt:
+                del graph.relations[rel_key]
+                continue
+            rel.source_id = new_src
+            rel.target_id = new_tgt
+
+        for old_id in merge_map:
+            graph.nodes.pop(old_id, None)
+
+        logger.info("deduplicate_nodes: removed %d duplicate entity nodes", len(merge_map))
+        return len(merge_map)
 
     def export_graph_data(self) -> dict:
         """

@@ -35,6 +35,15 @@ class OntologyConfig(BaseModel):
             "REGULATES",
         ]
     )
+    aliases: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Explicit merge map: {alias: canonical}. "
+            "Any node whose name matches an alias key is merged into the canonical node. "
+            "Use this for rebrands, abbreviations, or known synonyms that the LLM may emit. "
+            "Example: {\"Facebook\": \"Meta\", \"FB\": \"Meta\"}"
+        ),
+    )
 
 
 # ── Extraction models (used by pipeline + LLM structured predict) ──────────────
