@@ -30,7 +30,6 @@ class GraphRAGStore(SimplePropertyGraphStore):
 
     Usage:
         store = GraphRAGStore()
-        # ... build index via PropertyGraphIndex ...
         store.build_communities(llm=extraction_llm, topic_name="climate_change")
         store.save(Path("graphs/climate_change"))
 
@@ -39,6 +38,24 @@ class GraphRAGStore(SimplePropertyGraphStore):
     """
 
     community_summaries: dict = {}
+    entity_wikis: dict = {}
+    node_community: dict = {}  # node_id → community_id (int)
+
+    # ── Node upsert ────────────────────────────────────────────────────────────
+
+    def upsert_nodes_merge(self, nodes: list) -> None:
+        """Upsert nodes, merging entity_description if a node already exists."""
+        for node in nodes:
+            existing = self.graph.nodes.get(node.id)
+            if existing and isinstance(existing, EntityNode):
+                new_desc = node.properties.get("entity_description", "")
+                existing_desc = existing.properties.get("entity_description", "")
+                if new_desc and new_desc not in existing_desc:
+                    existing.properties["entity_description"] = (
+                        existing_desc + " " + new_desc if existing_desc else new_desc
+                    ).strip()
+            else:
+                self.graph.nodes[node.id] = node
 
     # ── Community detection ────────────────────────────────────────────────────
 
@@ -69,6 +86,9 @@ class GraphRAGStore(SimplePropertyGraphStore):
         clusters = hierarchical_leiden(nx_graph, max_cluster_size=max_cluster_size)
         num_communities = len(set(c.cluster for c in clusters))
         _progress(f"Found {num_communities} communities — generating summaries...")
+
+        # Build node→community mapping for wiki generation
+        self.node_community = {item.node: item.cluster for item in clusters}
 
         community_info = self._collect_community_info(nx_graph, clusters)
         self._generate_summaries(community_info, llm, topic_name, progress_callback)
@@ -173,6 +193,67 @@ Briefing:"""
 
     def get_community_summaries(self) -> dict:
         return self.community_summaries
+
+    # ── Wiki article generation ────────────────────────────────────────────────
+
+    async def generate_entity_wiki(self, node_id: str, llm, topic_name: str = "") -> str:
+        """Generate a Wikipedia-style article for a node and cache it."""
+        if node_id in self.entity_wikis:
+            return self.entity_wikis[node_id]
+
+        node = self.graph.nodes.get(node_id)
+        if not node or not isinstance(node, EntityNode):
+            return ""
+
+        outgoing_lines, incoming_lines = [], []
+        for rel in self.graph.relations.values():
+            desc = rel.properties.get("relationship_description", "")
+            if rel.source_id == node_id:
+                tgt = self.graph.nodes.get(rel.target_id)
+                tgt_name = tgt.name if tgt and isinstance(tgt, EntityNode) else rel.target_id
+                outgoing_lines.append(f"- [{rel.label}] → {tgt_name}: {desc}")
+            elif rel.target_id == node_id:
+                src = self.graph.nodes.get(rel.source_id)
+                src_name = src.name if src and isinstance(src, EntityNode) else rel.source_id
+                incoming_lines.append(f"- {src_name} → [{rel.label}]: {desc}")
+
+        community_ctx = ""
+        cid = self.node_community.get(node_id)
+        if cid is not None:
+            summary = self.community_summaries.get(cid) or self.community_summaries.get(str(cid), "")
+            if summary:
+                community_ctx = f"\nCluster context:\n{summary}\n"
+
+        rel_block = ""
+        if outgoing_lines:
+            rel_block += "Outgoing relationships:\n" + "\n".join(outgoing_lines[:25]) + "\n"
+        if incoming_lines:
+            rel_block += "Incoming relationships:\n" + "\n".join(incoming_lines[:25]) + "\n"
+
+        prompt = (
+            f'Write a Wikipedia-style encyclopedic article about "{node.name}" '
+            f"in the context of {topic_name or 'the given domain'}.\n\n"
+            f"Entity type: {node.label}\n"
+            f"Description: {node.properties.get('entity_description', 'No description available')}\n"
+            f"{community_ctx}\n"
+            f"{rel_block}\n"
+            "Write 3–5 flowing paragraphs (no markdown headers, no bullet lists):\n"
+            "1. What this entity is and why it matters\n"
+            "2. Its key relationships and how they connect to other entities\n"
+            "3. Its role and significance in the broader domain\n\n"
+            "Article:"
+        )
+
+        try:
+            response = await llm.acomplete(prompt)
+            article = response.text.strip()
+            if "</think>" in article:
+                article = article.split("</think>")[-1].strip()
+            self.entity_wikis[node_id] = article
+            return article
+        except Exception as exc:
+            logger.error("Wiki generation failed for %s: %s", node.name, exc)
+            return ""
 
     # ── Export for D3.js ───────────────────────────────────────────────────────
 
@@ -370,6 +451,12 @@ If no merges are needed return: []"""
             json.dumps(self.community_summaries, indent=2), encoding="utf-8"
         )
 
+        # Cached wiki articles
+        if self.entity_wikis:
+            (directory / "entity_wikis.json").write_text(
+                json.dumps(self.entity_wikis, indent=2), encoding="utf-8"
+            )
+
         # Full store pickle (for fast query engine reload)
         with open(directory / "store.pkl", "wb") as fh:
             pickle.dump(self, fh)
@@ -387,18 +474,41 @@ If no merges are needed return: []"""
         directory = Path(directory)
         pkl_path = directory / "store.pkl"
 
+        communities_path = directory / "communities.json"
+
         # Fast path: pickle
         if pkl_path.exists():
             try:
                 with open(pkl_path, "rb") as fh:
                     store = pickle.load(fh)
                 logger.info("Loaded graph store from pickle: %s", pkl_path)
+                # Patch: pickle may have been saved before communities were built
+                if not store.community_summaries and communities_path.exists():
+                    store.community_summaries = json.loads(
+                        communities_path.read_text(encoding="utf-8")
+                    )
+                    logger.info("Patched community summaries from JSON: %s", communities_path)
+                    # Regenerate graph_data.json so the UI stats are consistent
+                    graph_data_path = directory / "graph_data.json"
+                    try:
+                        graph_data_path.write_text(
+                            json.dumps(store.export_graph_data(), indent=2), encoding="utf-8"
+                        )
+                        logger.info("Regenerated graph_data.json with corrected community count")
+                    except Exception as exc:
+                        logger.warning("Could not regenerate graph_data.json: %s", exc)
+                # Load cached wiki articles (may not exist for older graphs)
+                wikis_path = directory / "entity_wikis.json"
+                if not store.entity_wikis and wikis_path.exists():
+                    try:
+                        store.entity_wikis = json.loads(wikis_path.read_text(encoding="utf-8"))
+                    except Exception:
+                        pass
                 return store
             except Exception as exc:
                 logger.warning("Pickle load failed (%s) — falling back to JSON", exc)
 
         # Fallback: rebuild from communities.json (no re-extraction needed)
-        communities_path = directory / "communities.json"
         if communities_path.exists():
             store = cls()
             store.community_summaries = json.loads(

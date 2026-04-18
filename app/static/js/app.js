@@ -183,6 +183,16 @@ function updateProviderFields() {
     baseUrlGroup.style.display = "none";
     extractionInput.placeholder = "gpt-4o-mini";
     queryInput.placeholder      = "gpt-4o";
+  } else if (provider === "anthropic") {
+    apiKeyGroup.style.display  = "block";
+    baseUrlGroup.style.display = "none";
+    extractionInput.placeholder = "claude-haiku-4-5-20251001";
+    queryInput.placeholder      = "claude-sonnet-4-6";
+  } else if (provider === "gemini") {
+    apiKeyGroup.style.display  = "block";
+    baseUrlGroup.style.display = "none";
+    extractionInput.placeholder = "gemini-2.0-flash";
+    queryInput.placeholder      = "gemini-2.5-pro-preview-05-06";
   } else if (provider === "lmstudio") {
     apiKeyGroup.style.display  = "none";
     baseUrlGroup.style.display = "none";
@@ -288,11 +298,11 @@ async function fetchTopicStatus(topic) {
 
 function applyStatus(status) {
   if (status.build_status === "building") {
-    setStatus("building", status.build_progress || "Building...");
-    if (status.nodes_extracted != null) {
-      document.getElementById("stat-nodes").textContent = status.nodes_extracted;
-      document.getElementById("stat-edges").textContent = status.edges_extracted;
-    }
+    const prog = status.build_progress || "Building...";
+    const live = status.nodes_extracted != null
+      ? ` · ${status.nodes_extracted} nodes · ${status.edges_extracted} edges`
+      : "";
+    setStatus("building", prog + live);
     startPolling(status.topic);
   } else if (status.build_status === "complete") {
     setStatus("complete", `${status.node_count || "?"} nodes · ${status.edge_count || "?"} edges · ${status.community_count || "?"} communities`);
@@ -358,9 +368,6 @@ async function submitBuild(llm, force, build_context) {
       return;
     } else {
       setStatus("building", "Starting...");
-      document.getElementById("stat-nodes").textContent = "—";
-      document.getElementById("stat-edges").textContent = "—";
-      document.getElementById("stat-communities").textContent = "—";
     }
 
     startPolling(currentTopic);

@@ -23,9 +23,6 @@ function clearGraph() {
   if (legend) legend.innerHTML = "";
   const detail = document.getElementById("detail-panel");
   if (detail) detail.classList.remove("visible");
-  document.getElementById("stat-nodes").textContent = "—";
-  document.getElementById("stat-edges").textContent = "—";
-  document.getElementById("stat-communities").textContent = "—";
 }
 
 function initGraph(GRAPH_DATA) {
@@ -134,6 +131,7 @@ function initGraph(GRAPH_DATA) {
 
   // ── Tooltip & selection ───────────────────────────────────────────────────
   let selectedNode = null;
+  let _clickTimer = null;
 
   node
     .on("mouseover", (e, d) => {
@@ -152,12 +150,24 @@ function initGraph(GRAPH_DATA) {
     .on("mouseleave", () => tooltip.classList.remove("visible"))
     .on("click", (e, d) => {
       e.stopPropagation();
-      if (selectedNode === d.id) {
-        clearSelection();
-        hideDetailPanel();
+      tooltip.classList.remove("visible");
+      if (_clickTimer) {
+        // Second click within 280ms → treat as double-click
+        clearTimeout(_clickTimer);
+        _clickTimer = null;
+        showNodeModal(d, links, nodes, nodeColor);
       } else {
-        selectNode(d);
-        showNodeDetail(d, links, nodes, nodeColor);
+        const captured = d;
+        _clickTimer = setTimeout(() => {
+          _clickTimer = null;
+          if (selectedNode === captured.id) {
+            clearSelection();
+            hideDetailPanel();
+          } else {
+            selectNode(captured);
+            showNodeDetail(captured, links, nodes, nodeColor);
+          }
+        }, 280);
       }
     });
 
@@ -280,9 +290,9 @@ function initGraph(GRAPH_DATA) {
 
   const labelThreshEl = document.getElementById("label-threshold");
   if (labelThreshEl) {
-    labelThreshEl.value = 3;
+    labelThreshEl.value = 7;
     labelThreshEl.oninput = e => {
-      const threshold = +e.target.value;
+      const threshold = 10 - +e.target.value;
       edgeLabel.classed("visible", d => {
         const minD = Math.min(d.source.degree || 1, d.target.degree || 1);
         return minD >= threshold;
@@ -303,12 +313,6 @@ function initGraph(GRAPH_DATA) {
     clearSelection();
     hideDetailPanel();
   };
-
-  // ── Stats ─────────────────────────────────────────────────────────────────
-  document.getElementById("stat-nodes").textContent = nodes.length;
-  document.getElementById("stat-edges").textContent = links.length;
-  document.getElementById("stat-communities").textContent =
-    GRAPH_DATA.communities !== undefined ? GRAPH_DATA.communities : "—";
 
   // ── Resize ────────────────────────────────────────────────────────────────
   window.onresize = () => {
@@ -399,3 +403,185 @@ function hideDetailPanel() {
   const panel = document.getElementById("detail-panel");
   if (panel) panel.classList.remove("visible");
 }
+
+
+// ── Node detail modal (Wikipedia-style) ───────────────────────────────────────
+
+function showNodeModal(d, links, nodes, nodeColor) {
+  const color = nodeColor ? nodeColor(d.type) : "#94a3b8";
+  const content = document.getElementById("node-modal-content");
+
+  // Show loading state immediately
+  content.innerHTML = `
+    <div class="nm-type" style="color:${color}">${d.type || "ENTITY"}</div>
+    <div class="nm-title">${d.label}</div>
+    <div class="nm-loading">
+      <div class="nm-spinner"></div>
+      <span>Generating article…</span>
+    </div>
+  `;
+  document.getElementById("node-modal-backdrop").classList.add("open");
+
+  // currentTopic is a global set by app.js
+  const topic = (typeof currentTopic !== "undefined") ? currentTopic : null;
+  if (!topic) {
+    _renderModalFromLocal(d, links, nodes, nodeColor, content);
+    return;
+  }
+
+  fetch(`/api/topics/${encodeURIComponent(topic)}/nodes/${encodeURIComponent(d.id)}?generate=true`)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) { _renderModalFromLocal(d, links, nodes, nodeColor, content); return; }
+      _renderModalFromAPI(data, d, links, nodes, nodeColor, content);
+    })
+    .catch(() => _renderModalFromLocal(d, links, nodes, nodeColor, content));
+}
+
+function _renderModalFromAPI(data, d, links, nodes, nodeColor, content) {
+  const color = nodeColor ? nodeColor(data.type) : "#94a3b8";
+  const totalConnections = (data.outgoing || []).length + (data.incoming || []).length;
+
+  function relCard(rel, isOutgoing) {
+    const otherColor = nodeColor ? nodeColor(rel.node_type) : "#94a3b8";
+    return `
+      <div class="nm-rel-item" data-node-id="${rel.node_id}">
+        <div class="nm-rel-direction" style="color:${isOutgoing ? color : otherColor}">
+          ${isOutgoing ? "→ " + (data.type || "") : "← " + (rel.node_type || "")}
+        </div>
+        <div class="nm-rel-verb">${rel.relation || (isOutgoing ? "relates to" : "related from")}</div>
+        <div class="nm-rel-name" style="color:${otherColor}">${rel.node_label}</div>
+        ${rel.description ? `<div class="nm-rel-desc">${rel.description}</div>` : ""}
+      </div>`;
+  }
+
+  const allRels = [
+    ...(data.outgoing || []).map(r => relCard(r, true)),
+    ...(data.incoming || []).map(r => relCard(r, false)),
+  ];
+
+  // Format wiki article paragraphs
+  const wikiHTML = data.wiki_article
+    ? data.wiki_article.split(/\n\n+/).map(p => `<p>${p.trim()}</p>`).join("")
+    : "";
+
+  content.innerHTML = `
+    <div class="nm-type" style="color:${color}">${data.type || "ENTITY"}</div>
+    <div class="nm-title">${data.label}</div>
+    <div class="nm-meta">
+      <span>${totalConnections}</span> connection${totalConnections !== 1 ? "s" : ""}
+      &nbsp;·&nbsp;
+      <span>${(data.outgoing || []).length}</span> outgoing
+      &nbsp;·&nbsp;
+      <span>${(data.incoming || []).length}</span> incoming
+    </div>
+    ${wikiHTML ? `
+      <hr class="nm-divider">
+      <div class="nm-wiki-article">${wikiHTML}</div>
+    ` : data.description ? `
+      <hr class="nm-divider">
+      <div class="nm-section-title">Description</div>
+      <div class="nm-description">${data.description}</div>
+    ` : ""}
+    ${data.community_summary ? `
+      <hr class="nm-divider">
+      <div class="nm-section-title">Cluster Context</div>
+      <div class="nm-community-summary">${data.community_summary}</div>
+    ` : ""}
+    ${allRels.length ? `
+      <hr class="nm-divider">
+      <div class="nm-section-title">Relationships (${allRels.length})</div>
+      <div class="nm-relations">${allRels.join("")}</div>
+    ` : ""}
+  `;
+
+  content.querySelectorAll(".nm-rel-item[data-node-id]").forEach(el => {
+    el.addEventListener("click", () => {
+      const targetId = el.dataset.nodeId;
+      const targetNode = nodes.find(n => n.id === targetId);
+      hideNodeModal();
+      if (targetNode) setTimeout(() => showNodeModal(targetNode, links, nodes, nodeColor), 180);
+    });
+  });
+}
+
+function _renderModalFromLocal(d, links, nodes, nodeColor, content) {
+  const nodeIndex = {};
+  nodes.forEach(n => { nodeIndex[n.id] = n; });
+  const outgoing = links.filter(l => l.source.id === d.id);
+  const incoming = links.filter(l => l.target.id === d.id);
+  const totalConnections = outgoing.length + incoming.length;
+  const color = nodeColor ? nodeColor(d.type) : "#94a3b8";
+
+  function relCard(l, isOutgoing) {
+    const other = isOutgoing
+      ? (nodeIndex[l.target.id] || { id: l.target.id, label: l.target.id, type: "OTHER" })
+      : (nodeIndex[l.source.id] || { id: l.source.id, label: l.source.id, type: "OTHER" });
+    const otherColor = nodeColor ? nodeColor(other.type) : "#94a3b8";
+    return `
+      <div class="nm-rel-item" data-node-id="${other.id}">
+        <div class="nm-rel-direction" style="color:${isOutgoing ? color : otherColor}">
+          ${isOutgoing ? "→ " + (d.type || "") : "← " + (other.type || "")}
+        </div>
+        <div class="nm-rel-verb">${l.label || (isOutgoing ? "relates to" : "related from")}</div>
+        <div class="nm-rel-name" style="color:${otherColor}">${other.label || other.id}</div>
+        ${l.description ? `<div class="nm-rel-desc">${l.description}</div>` : ""}
+      </div>`;
+  }
+
+  const allRels = [
+    ...outgoing.map(l => relCard(l, true)),
+    ...incoming.map(l => relCard(l, false)),
+  ];
+
+  content.innerHTML = `
+    <div class="nm-type" style="color:${color}">${d.type || "ENTITY"}</div>
+    <div class="nm-title">${d.label}</div>
+    <div class="nm-meta">
+      <span>${totalConnections}</span> connection${totalConnections !== 1 ? "s" : ""}
+      &nbsp;·&nbsp;
+      <span>${outgoing.length}</span> outgoing
+      &nbsp;·&nbsp;
+      <span>${incoming.length}</span> incoming
+    </div>
+    ${d.description ? `
+      <hr class="nm-divider">
+      <div class="nm-section-title">Description</div>
+      <div class="nm-description">${d.description}</div>
+    ` : ""}
+    ${allRels.length ? `
+      <hr class="nm-divider">
+      <div class="nm-section-title">Relationships (${allRels.length})</div>
+      <div class="nm-relations">${allRels.join("")}</div>
+    ` : ""}
+  `;
+
+  content.querySelectorAll(".nm-rel-item[data-node-id]").forEach(el => {
+    el.addEventListener("click", () => {
+      const targetId = el.dataset.nodeId;
+      const targetNode = nodes.find(n => n.id === targetId);
+      hideNodeModal();
+      if (targetNode) setTimeout(() => showNodeModal(targetNode, links, nodes, nodeColor), 180);
+    });
+  });
+}
+
+function hideNodeModal() {
+  document.getElementById("node-modal-backdrop").classList.remove("open");
+}
+
+// Close on backdrop click or ESC
+document.addEventListener("DOMContentLoaded", () => {
+  const backdrop = document.getElementById("node-modal-backdrop");
+  if (!backdrop) return;
+
+  document.getElementById("node-modal-close").addEventListener("click", hideNodeModal);
+
+  backdrop.addEventListener("click", e => {
+    if (e.target === backdrop) hideNodeModal();
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") hideNodeModal();
+  });
+});

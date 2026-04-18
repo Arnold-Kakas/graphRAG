@@ -15,6 +15,12 @@ from typing import Optional
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.openai_like import OpenAILike
 
+try:
+    from llama_index.llms.anthropic import Anthropic as AnthropicLLM
+    _ANTHROPIC_AVAILABLE = True
+except ImportError:
+    _ANTHROPIC_AVAILABLE = False
+
 from .config import Settings
 from .graph_store import GraphRAGStore
 from .models import LLMConfig, OntologyConfig, TaskState
@@ -23,10 +29,11 @@ from .pipeline import build_topic_graph
 
 logger = logging.getLogger(__name__)
 
-# Known provider base URLs
+# Known provider base URLs (Gemini uses OpenAI-compatible endpoint)
 _PROVIDER_URLS = {
     "lmstudio": "http://localhost:1234/v1",
-    "ollama": "http://localhost:11434/v1",
+    "ollama":   "http://localhost:11434/v1",
+    "gemini":   "https://generativelanguage.googleapis.com/v1beta/openai/",
 }
 
 
@@ -38,8 +45,22 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
     Never persists the API key — it's only used for this single client instance.
     """
     if llm_config:
-        base_url = llm_config.base_url or (fallback.llm_base_url if fallback else None) or _PROVIDER_URLS.get(llm_config.provider or "")
-        if llm_config.provider != "openai" and base_url:
+        provider = llm_config.provider or "openai"
+
+        # Anthropic (Claude)
+        if provider == "anthropic":
+            if not _ANTHROPIC_AVAILABLE:
+                raise RuntimeError(
+                    "llama-index-llms-anthropic is not installed. "
+                    "Add it to requirements.txt and rebuild the Docker image."
+                )
+            kwargs: dict = {"model": model}
+            if llm_config.api_key:
+                kwargs["api_key"] = llm_config.api_key
+            return AnthropicLLM(**kwargs)
+
+        base_url = llm_config.base_url or (fallback.llm_base_url if fallback else None) or _PROVIDER_URLS.get(provider)
+        if provider != "openai" and base_url:
             return OpenAILike(
                 model=model,
                 api_base=base_url,
