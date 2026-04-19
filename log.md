@@ -61,6 +61,10 @@
 
 ## 2026-04-19
 
+### Feat: Search with dropdown and graph pan
+**Purpose:** The existing search only found the first matching node with no visual feedback. Users wanted to search by name or description and navigate to the result on the graph.
+**Technical implementation:** Replaced the single-match `nodes.find()` with a scored list of up to 10 results searching both `label` and `description`. Exact/prefix matches rank first. Results render in a `#search-dropdown` div with type badge, name, and description snippet. Keyboard navigation: ↑/↓ to move, Enter to select, Escape to close. On selection: highlights the node, opens the detail panel, and smoothly pans/zooms the graph to centre on the node (`panToNode()` via `d3.zoomIdentity`). (`app/static/js/graph.js`, `app/templates/index.html`, `app/static/css/style.css`)
+
 ### Fix: Wiki article generation ignoring session LLM config
 **Purpose:** Double-click wiki generation always used the server `.env` LLM even when the user had switched to a different provider (e.g. Claude API) in the UI settings modal.
 **Technical implementation:** Changed `GET /api/topics/{topic}/nodes/{node_id}` to `POST`, accepting an optional `NodeRequest` body with `generate: bool` and `llm: Optional[LLMConfig]`. `make_llm()` now receives the per-request config, falling back to server settings when absent. JS `showNodeModal()` sends a POST with `{ generate: true, llm: getLLMConfig() }` so the session's provider/key is forwarded. (`app/main.py`, `app/static/js/graph.js`)

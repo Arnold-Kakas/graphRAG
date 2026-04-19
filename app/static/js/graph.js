@@ -259,14 +259,99 @@ function initGraph(GRAPH_DATA) {
 
   // ── Search ────────────────────────────────────────────────────────────────
   const searchEl = document.getElementById("search");
+  const searchDrop = document.getElementById("search-dropdown");
+
+  function closeSearchDrop() {
+    if (searchDrop) searchDrop.innerHTML = "", searchDrop.classList.remove("open");
+  }
+
+  function panToNode(d) {
+    const container = document.getElementById("graph-container");
+    const W = container.clientWidth;
+    const H = container.clientHeight;
+    const scale = 1.6;
+    svg.transition().duration(500).call(
+      zoom.transform,
+      d3.zoomIdentity.translate(W / 2 - scale * d.x, H / 2 - scale * d.y).scale(scale)
+    );
+  }
+
+  function pickSearchResult(match) {
+    closeSearchDrop();
+    if (searchEl) searchEl.value = match.label;
+    selectNode(match);
+    showNodeDetail(match, links, nodes, nodeColor);
+    panToNode(match);
+  }
+
   if (searchEl) {
     searchEl.value = "";
     searchEl.oninput = e => {
       const q = e.target.value.toLowerCase().trim();
-      if (!q) { clearSelection(); hideDetailPanel(); return; }
-      const match = nodes.find(n => n.label.toLowerCase().includes(q));
-      if (match) { selectNode(match); showNodeDetail(match, links, nodes, nodeColor); }
+      if (!q) { closeSearchDrop(); clearSelection(); hideDetailPanel(); return; }
+
+      const results = nodes
+        .filter(n =>
+          n.label.toLowerCase().includes(q) ||
+          (n.description || "").toLowerCase().includes(q)
+        )
+        .sort((a, b) => {
+          // Exact / prefix matches first
+          const aLabel = a.label.toLowerCase();
+          const bLabel = b.label.toLowerCase();
+          const aStarts = aLabel.startsWith(q) ? 0 : 1;
+          const bStarts = bLabel.startsWith(q) ? 0 : 1;
+          return aStarts - bStarts || aLabel.localeCompare(bLabel);
+        })
+        .slice(0, 10);
+
+      if (!searchDrop) {
+        if (results[0]) pickSearchResult(results[0]);
+        return;
+      }
+
+      searchDrop.innerHTML = "";
+      if (!results.length) { closeSearchDrop(); return; }
+
+      results.forEach(n => {
+        const item = document.createElement("div");
+        item.className = "search-result-item";
+        const descSnippet = n.description
+          ? n.description.slice(0, 80) + (n.description.length > 80 ? "…" : "")
+          : "";
+        item.innerHTML = `
+          <span class="sri-type" style="color:${nodeColor(n.type)}">${n.type}</span>
+          <span class="sri-label">${n.label}</span>
+          ${descSnippet ? `<span class="sri-desc">${descSnippet}</span>` : ""}
+        `;
+        item.addEventListener("mousedown", e => { e.preventDefault(); pickSearchResult(n); });
+        searchDrop.appendChild(item);
+      });
+      searchDrop.classList.add("open");
     };
+
+    searchEl.addEventListener("keydown", e => {
+      if (!searchDrop || !searchDrop.classList.contains("open")) return;
+      const items = searchDrop.querySelectorAll(".search-result-item");
+      const active = searchDrop.querySelector(".search-result-item.active");
+      let idx = active ? [...items].indexOf(active) : -1;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (active) active.classList.remove("active");
+        items[Math.min(idx + 1, items.length - 1)].classList.add("active");
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (active) active.classList.remove("active");
+        items[Math.max(idx - 1, 0)].classList.add("active");
+      } else if (e.key === "Enter") {
+        const picked = searchDrop.querySelector(".search-result-item.active") || items[0];
+        if (picked) picked.dispatchEvent(new MouseEvent("mousedown"));
+      } else if (e.key === "Escape") {
+        closeSearchDrop();
+      }
+    });
+
+    searchEl.addEventListener("blur", () => setTimeout(closeSearchDrop, 150));
   }
 
   // ── Controls ──────────────────────────────────────────────────────────────
