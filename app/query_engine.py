@@ -159,8 +159,11 @@ class GraphRAGQueryEngine(CustomQueryEngine):
         combined = "\n\n---\n\n".join(answers)
         if mode == "extended":
             grounding = (
-                "You may also draw on your own knowledge to fill gaps, add context, "
-                "or clarify concepts — but clearly prioritise the graph evidence above."
+                "You may also draw on your own knowledge to fill gaps or add context. "
+                "Structure your answer in two clearly labelled sections:\n"
+                "1. Start with '**From the knowledge graph:**' and write what the graph evidence covers.\n"
+                "2. Then add '**From AI knowledge:**' and write only what you are adding beyond the graph — "
+                "skip this section entirely if the graph already covers the question fully."
             )
         else:
             grounding = (
