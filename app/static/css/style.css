@@ -526,11 +526,13 @@ select#topic-select:focus { border-color: var(--brand-primary); }
 }
 .mode-toggle-wrap input { display: none; }
 .mode-toggle-track {
+  display: inline-block;
   position: relative;
   width: 34px; height: 18px;
   background: var(--border);
   border-radius: 9px;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 .mode-toggle-wrap input:checked + .mode-toggle-track { background: var(--accent); }
 .mode-toggle-thumb {
@@ -1094,17 +1096,22 @@ svg { width: 100%; height: 100%; }
 
 /* Recreate button — matches app secondary action style */
 .nm-recreate-btn {
+  -webkit-appearance: none;
+  appearance: none;
   background: none;
   border: none;
+  outline: none;
   color: var(--text-muted);
   font-size: 11px;
-  font-family: 'Maven Pro', sans-serif;
+  font-family: inherit;
   font-weight: 500;
   padding: 0;
+  margin: 0;
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color 0.15s;
+  vertical-align: baseline;
 }
 .nm-recreate-btn:hover { color: var(--accent); }
 
