@@ -144,6 +144,11 @@
           <input type="text" id="llm-query-model" class="form-input" placeholder="gpt-4o">
         </div>
       </div>
+
+      <div class="form-group">
+        <label class="form-label" for="llm-max-tokens">Max output tokens <span class="form-hint">(overrides server default)</span></label>
+        <input type="number" id="llm-max-tokens" class="form-input" placeholder="4096" min="256" max="32768" step="256">
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" id="btn-save-settings">Save to session</button>

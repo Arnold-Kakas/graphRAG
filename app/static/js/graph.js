@@ -506,6 +506,8 @@ function showNodeModal(d, links, nodes, nodeColor) {
     </div>
   `;
   document.getElementById("node-modal-backdrop").classList.add("open");
+  // Store node on backdrop so Recreate can re-fetch
+  document.getElementById("node-modal-backdrop")._modalNode = { d, links, nodes, nodeColor };
 
   // currentTopic is a global set by app.js
   const topic = (typeof currentTopic !== "undefined") ? currentTopic : null;
@@ -565,6 +567,7 @@ function _renderModalFromAPI(data, d, links, nodes, nodeColor, content) {
       <span>${(data.outgoing || []).length}</span> outgoing
       &nbsp;·&nbsp;
       <span>${(data.incoming || []).length}</span> incoming
+      ${data.has_wiki ? `&nbsp;·&nbsp;<button class="nm-recreate-btn" id="nm-recreate">↺ Recreate</button>` : ""}
     </div>
     ${wikiHTML ? `
       <hr class="nm-divider">
@@ -594,6 +597,34 @@ function _renderModalFromAPI(data, d, links, nodes, nodeColor, content) {
       if (targetNode) setTimeout(() => showNodeModal(targetNode, links, nodes, nodeColor), 180);
     });
   });
+
+  const recreateBtn = content.querySelector("#nm-recreate");
+  if (recreateBtn) {
+    recreateBtn.addEventListener("click", () => {
+      const ctx = document.getElementById("node-modal-backdrop")._modalNode;
+      if (!ctx) return;
+      // Show spinner, then re-fetch with force=true
+      content.innerHTML = `
+        <div class="nm-type" style="color:${color}">${data.type || "ENTITY"}</div>
+        <div class="nm-title">${data.label}</div>
+        <div class="nm-loading"><div class="nm-spinner"></div><span>Regenerating article…</span></div>
+      `;
+      const topic = (typeof currentTopic !== "undefined") ? currentTopic : null;
+      if (!topic) return;
+      const llmCfg = (typeof getLLMConfig === "function") ? getLLMConfig() : null;
+      fetch(`/api/topics/${encodeURIComponent(topic)}/nodes/${encodeURIComponent(data.id)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ generate: true, force: true, llm: llmCfg }),
+      })
+        .then(r => r.ok ? r.json() : null)
+        .then(refreshed => {
+          if (refreshed) _renderModalFromAPI(refreshed, ctx.d, ctx.links, ctx.nodes, ctx.nodeColor, content);
+          else _renderModalFromLocal(ctx.d, ctx.links, ctx.nodes, ctx.nodeColor, content);
+        })
+        .catch(() => _renderModalFromLocal(ctx.d, ctx.links, ctx.nodes, ctx.nodeColor, content));
+    });
+  }
 }
 
 function _renderModalFromLocal(d, links, nodes, nodeColor, content) {

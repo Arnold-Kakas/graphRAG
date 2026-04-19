@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     # ── LLM request timeout in seconds (increase for slow local models) ─────────
     llm_request_timeout: float = 300.0
 
+    # ── Max tokens for LLM responses (increase for longer wiki articles / answers)
+    llm_max_tokens: int = 4096
+
     # ── Pipeline parameters ─────────────────────────────────────────────────────
     max_paths_per_chunk: int = 20
     num_workers: int = 4

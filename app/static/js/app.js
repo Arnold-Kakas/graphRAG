@@ -162,6 +162,7 @@ function openSettingsModal() {
   document.getElementById("llm-base-url").value          = config.base_url || "";
   document.getElementById("llm-extraction-model").value  = config.extraction_model || "";
   document.getElementById("llm-query-model").value       = config.query_model || "";
+  document.getElementById("llm-max-tokens").value        = config.max_tokens || "";
 
   updateProviderFields();
   document.getElementById("settings-backdrop").style.display = "flex";
@@ -219,6 +220,7 @@ function onSaveSettings() {
     base_url:         document.getElementById("llm-base-url").value.trim() || null,
     extraction_model: document.getElementById("llm-extraction-model").value.trim() || null,
     query_model:      document.getElementById("llm-query-model").value.trim() || null,
+    max_tokens:       parseInt(document.getElementById("llm-max-tokens").value) || null,
   };
   saveLLMConfig(config);
   closeSettingsModal();

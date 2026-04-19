@@ -196,9 +196,9 @@ Briefing:"""
 
     # ── Wiki article generation ────────────────────────────────────────────────
 
-    async def generate_entity_wiki(self, node_id: str, llm, topic_name: str = "") -> str:
+    async def generate_entity_wiki(self, node_id: str, llm, topic_name: str = "", force: bool = False) -> str:
         """Generate a Wikipedia-style article for a node and cache it."""
-        if node_id in self.entity_wikis:
+        if not force and node_id in self.entity_wikis:
             return self.entity_wikis[node_id]
 
         node = self.graph.nodes.get(node_id)
@@ -245,7 +245,7 @@ Briefing:"""
         )
 
         try:
-            response = await llm.acomplete(prompt, max_tokens=2048)
+            response = await llm.acomplete(prompt)
             article = response.text.strip()
             if "</think>" in article:
                 article = article.split("</think>")[-1].strip()

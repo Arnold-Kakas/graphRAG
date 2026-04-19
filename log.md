@@ -61,9 +61,17 @@
 
 ## 2026-04-19
 
-### Fix: Wiki articles truncated mid-sentence
-**Purpose:** Articles generated via Claude API were cut off because `acomplete()` was using the LLM client's default `max_tokens`, which is too low for a 3–5 paragraph article.
-**Technical implementation:** Added `max_tokens=2048` to the `llm.acomplete(prompt, max_tokens=2048)` call in `generate_entity_wiki()`. To regenerate already-truncated articles, delete `entity_wikis.json` from the topic's graph folder and double-click nodes again. (`app/graph_store.py`)
+### Fix + Feat: Max tokens configurable; wiki Recreate button
+**Purpose:** Wiki articles were truncated because `max_tokens` was not set reliably. Users also needed a way to regenerate a cached (truncated) article without deleting `entity_wikis.json` manually.
+**Technical implementation:**
+- `LLM_MAX_TOKENS` added to `config.py` (default 4096) and `.env.example`
+- `max_tokens: Optional[int]` added to `LLMConfig` — users can override per-session from the settings modal
+- `make_llm()` resolves max_tokens: per-request config → server `.env` → 4096. Passed to `AnthropicLLM`, `OpenAILike`, and `OpenAI` constructors
+- `generate_entity_wiki()` accepts `force: bool` to skip cache and overwrite
+- `NodeRequest` gains `force: bool`; endpoint regenerates even if cache exists when `force=True`
+- `↺ Recreate` button in wiki modal meta row (only when `has_wiki=True`); re-fetches with `force: true` and re-renders in place
+- Settings modal gets "Max output tokens" field; saved/loaded from sessionStorage
+(`app/config.py`, `app/models.py`, `app/task_manager.py`, `app/graph_store.py`, `app/main.py`, `app/templates/index.html`, `app/static/js/app.js`, `app/static/js/graph.js`, `app/static/css/style.css`, `.env.example`)
 
 
 ### Feat: Search with dropdown and graph pan

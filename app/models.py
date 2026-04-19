@@ -79,6 +79,7 @@ class LLMConfig(BaseModel):
     base_url: Optional[str] = None  # auto-set for known providers, or custom URL
     extraction_model: str = "gpt-4o-mini"
     query_model: str = "gpt-4o"
+    max_tokens: Optional[int] = None  # overrides server LLM_MAX_TOKENS if set
 
 
 # ── API request / response models ─────────────────────────────────────────────

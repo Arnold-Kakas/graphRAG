@@ -44,6 +44,12 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
     Uses OpenAILike for non-OpenAI providers (bypasses model name validation).
     Never persists the API key — it's only used for this single client instance.
     """
+    # Resolve max_tokens: per-request config > server .env default
+    max_tokens = (
+        (llm_config.max_tokens if llm_config and llm_config.max_tokens else None)
+        or (fallback.llm_max_tokens if fallback else 4096)
+    )
+
     if llm_config:
         provider = llm_config.provider or "openai"
 
@@ -54,7 +60,7 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
                     "llama-index-llms-anthropic is not installed. "
                     "Add it to requirements.txt and rebuild the Docker image."
                 )
-            kwargs: dict = {"model": model}
+            kwargs: dict = {"model": model, "max_tokens": max_tokens}
             if llm_config.api_key:
                 kwargs["api_key"] = llm_config.api_key
             return AnthropicLLM(**kwargs)
@@ -70,9 +76,10 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
                 context_window=fallback.llm_context_window if fallback else 8192,
                 temperature=0,
                 timeout=fallback.llm_request_timeout if fallback else 300.0,
+                max_tokens=max_tokens,
             )
         # OpenAI provider
-        kwargs: dict = {"model": model, "temperature": 0}
+        kwargs: dict = {"model": model, "temperature": 0, "max_tokens": max_tokens}
         if llm_config.api_key:
             kwargs["api_key"] = llm_config.api_key
         return OpenAI(**kwargs)
@@ -89,14 +96,15 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
                 context_window=fallback.llm_context_window,
                 temperature=0,
                 timeout=fallback.llm_request_timeout,
+                max_tokens=max_tokens,
             )
         # Standard OpenAI via .env
-        kwargs = {"model": model, "temperature": 0}
+        kwargs = {"model": model, "temperature": 0, "max_tokens": max_tokens}
         if fallback.openai_api_key:
             kwargs["api_key"] = fallback.openai_api_key
         return OpenAI(**kwargs)
 
-    return OpenAI(model=model, temperature=0)
+    return OpenAI(model=model, temperature=0, max_tokens=max_tokens)
 
 
 class TaskManager:

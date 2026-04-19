@@ -225,6 +225,7 @@ async def get_graph(topic: str):
 
 class NodeRequest(BaseModel):
     generate: bool = False
+    force: bool = False
     llm: Optional[LLMConfig] = None
 
 
@@ -236,6 +237,7 @@ async def get_node_detail(topic: str, node_id: str, body: Optional[NodeRequest] 
     provider instead of the server .env config.
     """
     generate = body.generate if body else False
+    force = body.force if body else False
     llm_config = body.llm if body else None
     topic_dir = Path(settings.graphs_dir) / topic
     if not topic_dir.exists():
@@ -277,11 +279,11 @@ async def get_node_detail(topic: str, node_id: str, body: Optional[NodeRequest] 
         community_summary = store.community_summaries.get(cid) or store.community_summaries.get(str(cid), "")
 
     wiki_article = store.entity_wikis.get(node_id, "")
-    if generate and not wiki_article:
+    if (generate and not wiki_article) or force:
         try:
             query_model = (llm_config.query_model if llm_config else None) or settings.query_model
             llm = make_llm(query_model, llm_config, settings)
-            wiki_article = await store.generate_entity_wiki(node_id, llm, topic_name=topic)
+            wiki_article = await store.generate_entity_wiki(node_id, llm, topic_name=topic, force=force)
             # Persist the newly generated wiki
             wikis_path = topic_dir / "entity_wikis.json"
             wikis_path.write_text(json.dumps(store.entity_wikis, indent=2), encoding="utf-8")
