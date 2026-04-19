@@ -57,6 +57,16 @@
 **Purpose:** Double-click modal showed only the extracted description (one sentence). Wanted a full encyclopedic article synthesised from all available context — inspired by Karpathy's LLM Wiki pattern.
 **Technical implementation:** Added `generate_entity_wiki()` async method to `GraphRAGStore`: builds a prompt from the node's description, all outgoing/incoming relationships with their context, and the community summary for the node's cluster; calls LLM to write 3–5 flowing paragraphs; caches result in `entity_wikis` dict. Added `entity_wikis: dict` and `node_community: dict` class attributes. `build_communities()` now populates `node_community` (node_id → cluster_id) from Leiden output. `save()` writes `entity_wikis.json`; `load()` reads it back. New `GET /api/topics/{topic}/nodes/{node_id}?generate=true` endpoint generates and persists the article on first call, returns cached version after. `showNodeModal()` in JS fetches from this endpoint with a loading spinner, falls back to local D3 data on error. (`app/graph_store.py`, `app/main.py`, `app/static/js/graph.js`, `app/static/css/style.css`)
 
+---
+
+## 2026-04-19
+
+### Fix: Wiki article generation ignoring session LLM config
+**Purpose:** Double-click wiki generation always used the server `.env` LLM even when the user had switched to a different provider (e.g. Claude API) in the UI settings modal.
+**Technical implementation:** Changed `GET /api/topics/{topic}/nodes/{node_id}` to `POST`, accepting an optional `NodeRequest` body with `generate: bool` and `llm: Optional[LLMConfig]`. `make_llm()` now receives the per-request config, falling back to server settings when absent. JS `showNodeModal()` sends a POST with `{ generate: true, llm: getLLMConfig() }` so the session's provider/key is forwarded. (`app/main.py`, `app/static/js/graph.js`)
+
+---
+
 ### Chore: CLAUDE.md, log.md, karpathy gist.md added
 **Purpose:** Establish session memory, change tracking, and reference material for the Karpathy LLM Wiki pattern that inspired the wiki article feature.
 **Technical implementation:** `CLAUDE.md` documents run commands, architecture, key constraints. `log.md` tracks changes per session. `karpathy gist.md` is the source reference. All committed to repo.

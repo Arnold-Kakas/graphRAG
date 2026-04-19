@@ -429,7 +429,13 @@ function showNodeModal(d, links, nodes, nodeColor) {
     return;
   }
 
-  fetch(`/api/topics/${encodeURIComponent(topic)}/nodes/${encodeURIComponent(d.id)}?generate=true`)
+  // Include session LLM config so wiki generation uses the user's chosen provider
+  const llmCfg = (typeof getLLMConfig === "function") ? getLLMConfig() : null;
+  fetch(`/api/topics/${encodeURIComponent(topic)}/nodes/${encodeURIComponent(d.id)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ generate: true, llm: llmCfg }),
+  })
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (!data) { _renderModalFromLocal(d, links, nodes, nodeColor, content); return; }

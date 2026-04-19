@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request, Response
+from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -222,12 +223,20 @@ async def get_graph(topic: str):
     return Response(content=raw, media_type="application/json")
 
 
-@app.get("/api/topics/{topic}/nodes/{node_id}")
-async def get_node_detail(topic: str, node_id: str, generate: bool = False):
+class NodeRequest(BaseModel):
+    generate: bool = False
+    llm: Optional[LLMConfig] = None
+
+
+@app.post("/api/topics/{topic}/nodes/{node_id}")
+async def get_node_detail(topic: str, node_id: str, body: Optional[NodeRequest] = None):
     """
     Return rich detail for a single node. If generate=true, creates and caches a
-    Wikipedia-style wiki article on first call (requires a configured LLM).
+    Wikipedia-style wiki article on first call. Pass llm to use the session's
+    provider instead of the server .env config.
     """
+    generate = body.generate if body else False
+    llm_config = body.llm if body else None
     topic_dir = Path(settings.graphs_dir) / topic
     if not topic_dir.exists():
         raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
@@ -270,7 +279,8 @@ async def get_node_detail(topic: str, node_id: str, generate: bool = False):
     wiki_article = store.entity_wikis.get(node_id, "")
     if generate and not wiki_article:
         try:
-            llm = make_llm(settings.query_model, fallback=settings)
+            query_model = (llm_config.query_model if llm_config else None) or settings.query_model
+            llm = make_llm(query_model, llm_config, settings)
             wiki_article = await store.generate_entity_wiki(node_id, llm, topic_name=topic)
             # Persist the newly generated wiki
             wikis_path = topic_dir / "entity_wikis.json"
