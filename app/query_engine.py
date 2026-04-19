@@ -47,17 +47,18 @@ class GraphRAGQueryEngine(CustomQueryEngine):
     community_timeout: float = 120.0
     max_communities: int = 15
 
-    def custom_query(self, query_str: str) -> tuple[str, int, int]:
+    def custom_query(self, query_str: str, mode: str = "graph") -> tuple[str, int, int, list]:
         """
-        Returns (answer, communities_checked, relevant_communities).
+        Returns (answer, communities_checked, relevant_communities, sources).
+        sources is a list of (community_id, summary) for communities that contributed.
+        mode: "graph" = strictly graph-grounded; "extended" = graph + LLM training knowledge.
         """
         summaries = self.graph_store.get_community_summaries()
 
         if not summaries:
             return (
                 "No community summaries found. Please build the graph first.",
-                0,
-                0,
+                0, 0, [],
             )
 
         # Pre-filter by keyword overlap, then cap to max_communities
@@ -68,32 +69,38 @@ class GraphRAGQueryEngine(CustomQueryEngine):
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as pool:
             futures = {
-                pool.submit(self._answer_from_community, summary, query_str): cid
+                pool.submit(self._answer_from_community, summary, query_str): (cid, summary)
                 for cid, summary in candidates.items()
             }
-            community_answers = []
+            community_answers = []  # list of (cid, summary, answer_text)
             try:
                 for future in as_completed(futures, timeout=self.community_timeout):
+                    cid, summary = futures[future]
                     try:
-                        community_answers.append(future.result())
+                        answer_text = future.result()
+                        community_answers.append((cid, summary, answer_text))
                     except Exception as exc:
                         logger.error("Community future error: %s", exc)
             except TimeoutError:
                 logger.warning("Community phase timed out after %.0fs — using %d answers so far",
                                self.community_timeout, len(community_answers))
 
-        relevant_answers = [a for a in community_answers if a.strip()]
-        relevant_communities = len(relevant_answers)
+        relevant = [(cid, s, a) for cid, s, a in community_answers if a.strip()]
+        relevant_communities = len(relevant)
 
-        if not relevant_answers:
+        if not relevant:
+            if mode == "extended":
+                answer = self._aggregate_extended([], query_str)
+                return answer, communities_checked, 0, []
             return (
                 "I don't have enough information in the knowledge graph to answer that question.",
-                communities_checked,
-                0,
+                communities_checked, 0, [],
             )
 
-        answer = self._aggregate(relevant_answers, query_str)
-        return answer, communities_checked, relevant_communities
+        relevant_answers = [a for _, _, a in relevant]
+        sources = [(cid, s) for cid, s, _ in relevant]
+        answer = self._aggregate(relevant_answers, query_str, mode=mode)
+        return answer, communities_checked, relevant_communities, sources
 
     def _extract_keywords(self, query: str) -> set[str]:
         words = re.findall(r"[a-zA-Z]{3,}", query.lower())
@@ -148,15 +155,25 @@ class GraphRAGQueryEngine(CustomQueryEngine):
             logger.error("Community answer error: %s", exc)
             return ""
 
-    def _aggregate(self, answers: list[str], query: str) -> str:
+    def _aggregate(self, answers: list[str], query: str, mode: str = "graph") -> str:
         combined = "\n\n---\n\n".join(answers)
+        if mode == "extended":
+            grounding = (
+                "You may also draw on your own knowledge to fill gaps, add context, "
+                "or clarify concepts — but clearly prioritise the graph evidence above."
+            )
+        else:
+            grounding = (
+                "Base your answer strictly on the community evidence provided. "
+                "Do not add information from outside these summaries."
+            )
         prompt = (
             f"You have received answers from multiple knowledge graph communities about this question:\n\n"
             f"Question: {query}\n\n"
             f"Community answers:\n{combined}\n\n"
             f"Synthesise these into a single, clear, well-structured final answer. "
             f"Remove redundancy, keep all important details, and ensure the answer "
-            f"directly addresses the question.\n\n"
+            f"directly addresses the question. {grounding}\n\n"
             f"Final Answer:"
         )
         try:
@@ -164,3 +181,16 @@ class GraphRAGQueryEngine(CustomQueryEngine):
         except Exception as exc:
             logger.error("Aggregation error: %s", exc)
             return "\n\n".join(answers)
+
+    def _aggregate_extended(self, answers: list[str], query: str) -> str:
+        """Used when graph has no relevant communities but mode=extended."""
+        prompt = (
+            f"The knowledge graph does not contain relevant information for this question.\n\n"
+            f"Question: {query}\n\n"
+            f"Answer using your own knowledge. Be clear and concise.\n\nAnswer:"
+        )
+        try:
+            return self.llm.complete(prompt).text
+        except Exception as exc:
+            logger.error("Extended aggregation error: %s", exc)
+            return "I could not find relevant information to answer this question."

@@ -74,6 +74,21 @@
 (`app/config.py`, `app/models.py`, `app/task_manager.py`, `app/graph_store.py`, `app/main.py`, `app/templates/index.html`, `app/static/js/app.js`, `app/static/js/graph.js`, `app/static/css/style.css`, `.env.example`)
 
 
+### Feat: Chat sources panel + knowledge mode toggle
+**Purpose:** Users couldn't see which community summaries contributed to an answer, and wanted an option to let the LLM supplement graph knowledge with its own training data when the graph has gaps.
+**Technical implementation:**
+- `custom_query()` now returns `sources: list[(cid, summary)]` alongside the answer — tracks which community futures produced non-empty answers via `futures dict → (cid, summary)` mapping
+- `QueryResponse` gains `sources: list[SourceCommunity]`; `QueryRequest` gains `mode: str` ("graph" | "extended")
+- `_aggregate()` receives `mode` param: "graph" constrains answer to graph evidence only; "extended" allows LLM to supplement with training knowledge
+- `_aggregate_extended()` added for the edge case where graph has zero relevant communities but mode=extended
+- Chat UI: "Knowledge source" toggle row above input — "Graph only" / "Graph + AI knowledge" pill buttons; active mode sent with each query
+- Sources collapsible below each assistant message: "Sources (N) ▸" expands to list of cluster IDs, each individually expandable to show full community summary
+(`app/models.py`, `app/query_engine.py`, `app/main.py`, `app/templates/index.html`, `app/static/js/app.js`, `app/static/css/style.css`)
+
+### Fix: Wiki articles prompt bounded to one-pager
+**Purpose:** With high max_tokens, articles could sprawl indefinitely. Constrained the prompt to exactly 3 paragraphs of 3–5 sentences each so output is always a tight one-pager regardless of token budget.
+**Technical implementation:** Prompt in `generate_entity_wiki()` now specifies "exactly 3 tight paragraphs — no more, no less" with explicit per-paragraph instructions and "Stop after the third paragraph." (`app/graph_store.py`)
+
 ### Feat: Search with dropdown and graph pan
 **Purpose:** The existing search only found the first matching node with no visual feedback. Users wanted to search by name or description and navigate to the result on the graph.
 **Technical implementation:** Replaced the single-match `nodes.find()` with a scored list of up to 10 results searching both `label` and `description`. Exact/prefix matches rank first. Results render in a `#search-dropdown` div with type badge, name, and description snippet. Keyboard navigation: ↑/↓ to move, Enter to select, Escape to close. On selection: highlights the node, opens the detail panel, and smoothly pans/zooms the graph to centre on the node (`panToNode()` via `d3.zoomIdentity`). (`app/static/js/graph.js`, `app/templates/index.html`, `app/static/css/style.css`)

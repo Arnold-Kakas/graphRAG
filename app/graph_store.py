@@ -231,16 +231,17 @@ Briefing:"""
             rel_block += "Incoming relationships:\n" + "\n".join(incoming_lines[:25]) + "\n"
 
         prompt = (
-            f'Write a Wikipedia-style encyclopedic article about "{node.name}" '
+            f'Write a concise Wikipedia-style encyclopedic article about "{node.name}" '
             f"in the context of {topic_name or 'the given domain'}.\n\n"
             f"Entity type: {node.label}\n"
             f"Description: {node.properties.get('entity_description', 'No description available')}\n"
             f"{community_ctx}\n"
             f"{rel_block}\n"
-            "Write 3–5 flowing paragraphs (no markdown headers, no bullet lists):\n"
-            "1. What this entity is and why it matters\n"
-            "2. Its key relationships and how they connect to other entities\n"
-            "3. Its role and significance in the broader domain\n\n"
+            "Write exactly 3 tight paragraphs — no more, no less. No markdown headers, no bullet lists.\n"
+            "Paragraph 1: What this entity is and why it matters.\n"
+            "Paragraph 2: Its key relationships and how they connect to other entities.\n"
+            "Paragraph 3: Its role and significance in the broader domain.\n"
+            "Each paragraph should be 3–5 sentences. Stop after the third paragraph.\n\n"
             "Article:"
         )
 

@@ -95,12 +95,19 @@ class BuildRequest(BaseModel):
 class QueryRequest(BaseModel):
     query: str
     llm: Optional[LLMConfig] = None
+    mode: str = "graph"  # "graph" | "extended" (graph + LLM knowledge)
+
+
+class SourceCommunity(BaseModel):
+    id: str
+    summary: str
 
 
 class QueryResponse(BaseModel):
     answer: str
     communities_checked: int
     relevant_communities: int
+    sources: list[SourceCommunity] = []
 
 
 class TopicStatus(BaseModel):

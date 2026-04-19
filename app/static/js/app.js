@@ -24,6 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
   document.getElementById("btn-send").addEventListener("click", sendMessage);
+
+  // Mode toggle
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
 });
 
 
@@ -490,10 +498,11 @@ async function sendMessage() {
   const loadingId = appendMessage("assistant", null, true);
 
   try {
+    const mode = document.querySelector(".mode-btn.active")?.dataset.mode || "graph";
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/query`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, llm }),
+      body: JSON.stringify({ query, llm, mode }),
     });
 
     const data = await res.json();
@@ -505,6 +514,8 @@ async function sendMessage() {
       appendMessage("assistant", data.answer, false, {
         communities_checked: data.communities_checked,
         relevant_communities: data.relevant_communities,
+        mode,
+        sources: data.sources || [],
       });
     }
   } catch (err) {
@@ -533,11 +544,29 @@ function appendMessage(role, content, loading = false, meta = null) {
     div.innerHTML = `<div class="chat-bubble">${html}</div>`;
 
     if (meta && role === "assistant") {
+      const modeLabel = meta.mode === "extended" ? " · Graph + AI knowledge" : "";
+      let sourcesHTML = "";
+      if (meta.sources && meta.sources.length > 0) {
+        const items = meta.sources.map((s, i) => `
+          <div class="source-item">
+            <div class="source-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="source-num">Cluster ${s.id}</span>
+              <span class="source-arrow">▸</span>
+            </div>
+            <div class="source-body">${s.summary.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>")}</div>
+          </div>`).join("");
+        sourcesHTML = `
+          <div class="chat-sources">
+            <div class="sources-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+              Sources (${meta.sources.length}) ▸
+            </div>
+            <div class="sources-list">${items}</div>
+          </div>`;
+      }
       div.innerHTML += `
         <div class="chat-meta">
-          Checked ${meta.communities_checked} communities ·
-          ${meta.relevant_communities} relevant
-        </div>`;
+          Checked ${meta.communities_checked} communities · ${meta.relevant_communities} relevant${modeLabel}
+        </div>${sourcesHTML}`;
     }
   }
 

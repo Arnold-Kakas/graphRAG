@@ -310,11 +310,15 @@ async def query_topic(topic: str, body: QueryRequest) -> QueryResponse:
     if task and task.status == "building":
         raise HTTPException(status_code=409, detail="Graph is still being built. Please wait.")
 
+    from .models import SourceCommunity
     engine = _get_query_engine(topic, llm_config=body.llm)
-    answer, communities_checked, relevant_communities = engine.custom_query(body.query)
+    answer, communities_checked, relevant_communities, sources = engine.custom_query(
+        body.query, mode=body.mode
+    )
 
     return QueryResponse(
         answer=answer,
         communities_checked=communities_checked,
         relevant_communities=relevant_communities,
+        sources=[SourceCommunity(id=str(cid), summary=s) for cid, s in sources],
     )
