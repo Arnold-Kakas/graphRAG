@@ -109,6 +109,14 @@
 **Purpose:** Double-click wiki generation always used the server `.env` LLM even when the user had switched to a different provider (e.g. Claude API) in the UI settings modal.
 **Technical implementation:** Changed `GET /api/topics/{topic}/nodes/{node_id}` to `POST`, accepting an optional `NodeRequest` body with `generate: bool` and `llm: Optional[LLMConfig]`. `make_llm()` now receives the per-request config, falling back to server settings when absent. JS `showNodeModal()` sends a POST with `{ generate: true, llm: getLLMConfig() }` so the session's provider/key is forwarded. (`app/main.py`, `app/static/js/graph.js`)
 
+### Feat: Markdown table rendering in chat
+**Purpose:** LLM responses containing pipe-table syntax (`| col | col |`) rendered as raw text with no formatting.
+**Technical implementation:** `renderMarkdown()` in `app.js` now buffers consecutive `|`-prefixed lines into a `tableLines` array, identifies the separator row (`|---|---|`), and emits `<table class="chat-table">` with `<thead>` and `<tbody>`. Fallback to plain `<p>` if no valid separator found. CSS `.chat-table` added: collapsed borders, header background, row hover accent. (`app/static/js/app.js`, `app/static/css/style.css`)
+
+### Fix: Regenerate article button — renamed, moved, and resized
+**Purpose:** The "↺ Recreate" button in the node modal meta row was confusingly named (sounded like the node would be recreated), too small, and visually detached from the article it regenerates.
+**Technical implementation:** Button renamed to "↺ Regenerate article", moved from `.nm-meta` row to immediately after `.nm-wiki-article` div. Font-size increased 11px → 13px, `display: block` with `margin-top: 8px` so it flows naturally below the article text. (`app/static/js/graph.js`, `app/static/css/style.css`)
+
 ---
 
 ### Chore: CLAUDE.md, log.md, karpathy gist.md added
