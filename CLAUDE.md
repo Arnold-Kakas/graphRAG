@@ -3,6 +3,13 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > **Always read `log.md` at the start of each session** to understand what was recently changed before making further modifications.
+>
+> **When adding entries to `log.md`**, always use this structured format:
+> ```
+> ### [Type]: [Short name]
+> **Purpose:** Why this change was made — the problem it solves or goal it achieves.
+> **Technical implementation:** What was changed and how — files, methods, key decisions.
+> ```
 
 ---
 
