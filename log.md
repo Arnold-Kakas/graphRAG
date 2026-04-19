@@ -74,6 +74,10 @@
 (`app/config.py`, `app/models.py`, `app/task_manager.py`, `app/graph_store.py`, `app/main.py`, `app/templates/index.html`, `app/static/js/app.js`, `app/static/js/graph.js`, `app/static/css/style.css`, `.env.example`)
 
 
+### Feat: Extended mode separates graph vs AI knowledge in answer
+**Purpose:** When "+ AI knowledge" toggle is on, the answer blended graph and AI content with no way to tell which was which.
+**Technical implementation:** Updated `_aggregate()` prompt in extended mode to instruct the LLM to structure the answer in two labelled sections: "**From the knowledge graph:**" (always present) and "**From AI knowledge:**" (only included if Claude adds something beyond the graph). The second section is skipped entirely when the graph fully covers the question. Both labels render as bold via `renderMarkdown()`. (`app/query_engine.py`)
+
 ### Fix: Mode toggle redesign, Recreate button style, chat markdown rendering
 **Purpose:** Knowledge mode buttons had unclear active state; Recreate button didn't match app style; chat output rendered raw markdown syntax instead of formatted HTML.
 **Technical implementation:**
