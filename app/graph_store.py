@@ -245,7 +245,7 @@ Briefing:"""
         )
 
         try:
-            response = await llm.acomplete(prompt)
+            response = await llm.acomplete(prompt, max_tokens=2048)
             article = response.text.strip()
             if "</think>" in article:
                 article = article.split("</think>")[-1].strip()

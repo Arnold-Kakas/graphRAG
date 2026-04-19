@@ -61,6 +61,11 @@
 
 ## 2026-04-19
 
+### Fix: Wiki articles truncated mid-sentence
+**Purpose:** Articles generated via Claude API were cut off because `acomplete()` was using the LLM client's default `max_tokens`, which is too low for a 3–5 paragraph article.
+**Technical implementation:** Added `max_tokens=2048` to the `llm.acomplete(prompt, max_tokens=2048)` call in `generate_entity_wiki()`. To regenerate already-truncated articles, delete `entity_wikis.json` from the topic's graph folder and double-click nodes again. (`app/graph_store.py`)
+
+
 ### Feat: Search with dropdown and graph pan
 **Purpose:** The existing search only found the first matching node with no visual feedback. Users wanted to search by name or description and navigate to the result on the graph.
 **Technical implementation:** Replaced the single-match `nodes.find()` with a scored list of up to 10 results searching both `label` and `description`. Exact/prefix matches rank first. Results render in a `#search-dropdown` div with type badge, name, and description snippet. Keyboard navigation: ↑/↓ to move, Enter to select, Escape to close. On selection: highlights the node, opens the detail panel, and smoothly pans/zooms the graph to centre on the node (`panToNode()` via `d3.zoomIdentity`). (`app/static/js/graph.js`, `app/templates/index.html`, `app/static/css/style.css`)
