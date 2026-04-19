@@ -26,12 +26,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("btn-send").addEventListener("click", sendMessage);
 
   // Mode toggle
-  document.querySelectorAll(".mode-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+  const modeToggle = document.getElementById("mode-toggle");
+  const modeLabelOn = document.getElementById("mode-label-on");
+  if (modeToggle) {
+    modeToggle.addEventListener("change", () => {
+      modeLabelOn.classList.toggle("mode-label-active", modeToggle.checked);
     });
-  });
+  }
 });
 
 
@@ -498,7 +499,8 @@ async function sendMessage() {
   const loadingId = appendMessage("assistant", null, true);
 
   try {
-    const mode = document.querySelector(".mode-btn.active")?.dataset.mode || "graph";
+    const modeToggleEl = document.getElementById("mode-toggle");
+    const mode = modeToggleEl && modeToggleEl.checked ? "extended" : "graph";
     const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/query`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -526,6 +528,51 @@ async function sendMessage() {
 
 let _msgId = 0;
 
+function renderMarkdown(text) {
+  const lines = text.split('\n');
+  let html = '';
+  let inUl = false, inOl = false;
+
+  function closeLists() {
+    if (inUl) { html += '</ul>'; inUl = false; }
+    if (inOl) { html += '</ol>'; inOl = false; }
+  }
+
+  function inline(s) {
+    return s
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+  }
+
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+    if (/^## /.test(line)) {
+      closeLists();
+      html += `<h2 class="chat-h2">${inline(line.slice(3))}</h2>`;
+    } else if (/^### /.test(line)) {
+      closeLists();
+      html += `<h3 class="chat-h3">${inline(line.slice(4))}</h3>`;
+    } else if (/^- /.test(line)) {
+      if (inOl) { html += '</ol>'; inOl = false; }
+      if (!inUl) { html += '<ul class="chat-ul">'; inUl = true; }
+      html += `<li>${inline(line.slice(2))}</li>`;
+    } else if (/^\d+\. /.test(line)) {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      if (!inOl) { html += '<ol class="chat-ol">'; inOl = true; }
+      html += `<li>${inline(line.replace(/^\d+\. /, ''))}</li>`;
+    } else if (line.trim() === '') {
+      closeLists();
+      html += '<br>';
+    } else {
+      closeLists();
+      html += `<p>${inline(line)}</p>`;
+    }
+  }
+  closeLists();
+  return html;
+}
+
 function appendMessage(role, content, loading = false, meta = null) {
   const id = "msg-" + (++_msgId);
   const messages = document.getElementById("chat-messages");
@@ -537,11 +584,7 @@ function appendMessage(role, content, loading = false, meta = null) {
   if (loading) {
     div.innerHTML = `<div class="chat-loading"><span></span><span></span><span></span></div>`;
   } else {
-    const html = (content || "")
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n/g, "<br>");
-    div.innerHTML = `<div class="chat-bubble">${html}</div>`;
+    div.innerHTML = `<div class="chat-bubble">${renderMarkdown(content || "")}</div>`;
 
     if (meta && role === "assistant") {
       const modeLabel = meta.mode === "extended" ? " · Graph + AI knowledge" : "";

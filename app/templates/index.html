@@ -168,11 +168,12 @@
       </div>
     </div>
     <div class="chat-mode-row">
-      <label class="chat-mode-label">Knowledge source:</label>
-      <div class="chat-mode-toggle">
-        <button class="mode-btn active" data-mode="graph">Graph only</button>
-        <button class="mode-btn" data-mode="extended">Graph + AI knowledge</button>
-      </div>
+      <span class="chat-mode-label">Graph only</span>
+      <label class="mode-toggle-wrap" title="Off: answer strictly from graph. On: LLM may fill gaps with its own knowledge.">
+        <input type="checkbox" id="mode-toggle">
+        <span class="mode-toggle-track"><span class="mode-toggle-thumb"></span></span>
+      </label>
+      <span class="chat-mode-label" id="mode-label-on">+ AI knowledge</span>
     </div>
     <div class="chat-input-row">
       <textarea id="chat-input" placeholder="Ask a question about this topic…" rows="1"></textarea>

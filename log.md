@@ -74,6 +74,14 @@
 (`app/config.py`, `app/models.py`, `app/task_manager.py`, `app/graph_store.py`, `app/main.py`, `app/templates/index.html`, `app/static/js/app.js`, `app/static/js/graph.js`, `app/static/css/style.css`, `.env.example`)
 
 
+### Fix: Mode toggle redesign, Recreate button style, chat markdown rendering
+**Purpose:** Knowledge mode buttons had unclear active state; Recreate button didn't match app style; chat output rendered raw markdown syntax instead of formatted HTML.
+**Technical implementation:**
+- Mode buttons replaced with an iOS-style toggle switch (`<input type=checkbox>` + CSS track/thumb). Left label = "Graph only", right label = "+ AI knowledge" turns yellow (`.mode-label-active`) when toggled on. JS reads `modeToggle.checked` instead of `querySelector(".mode-btn.active")`
+- Recreate button restyled as underlined text link — no border/background, uses `var(--text-muted)` → `var(--accent)` on hover, matching secondary action pattern in the app
+- `renderMarkdown()` function added to `app.js`: processes text line-by-line, emits `<h2>`, `<h3>`, `<ul>/<li>`, `<ol>/<li>`, `<p>`, `<strong>`, `<em>` — replaces the old single-pass regex approach that only handled bold and newlines. CSS added for `.chat-h2`, `.chat-h3`, `.chat-ul`, `.chat-ol` inside `.chat-bubble`
+(`app/templates/index.html`, `app/static/js/app.js`, `app/static/css/style.css`)
+
 ### Feat: Chat sources panel + knowledge mode toggle
 **Purpose:** Users couldn't see which community summaries contributed to an answer, and wanted an option to let the LLM supplement graph knowledge with its own training data when the graph has gaps.
 **Technical implementation:**
