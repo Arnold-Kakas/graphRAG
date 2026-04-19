@@ -567,11 +567,11 @@ function _renderModalFromAPI(data, d, links, nodes, nodeColor, content) {
       <span>${(data.outgoing || []).length}</span> outgoing
       &nbsp;·&nbsp;
       <span>${(data.incoming || []).length}</span> incoming
-      ${data.has_wiki ? `&nbsp;·&nbsp;<button class="nm-recreate-btn" id="nm-recreate">↺ Recreate</button>` : ""}
     </div>
     ${wikiHTML ? `
       <hr class="nm-divider">
       <div class="nm-wiki-article">${wikiHTML}</div>
+      ${data.has_wiki ? `<button class="nm-recreate-btn" id="nm-recreate">↺ Regenerate article</button>` : ""}
     ` : data.description ? `
       <hr class="nm-divider">
       <div class="nm-section-title">Description</div>

@@ -532,10 +532,38 @@ function renderMarkdown(text) {
   const lines = text.split('\n');
   let html = '';
   let inUl = false, inOl = false;
+  let tableLines = [];
 
   function closeLists() {
     if (inUl) { html += '</ul>'; inUl = false; }
     if (inOl) { html += '</ol>'; inOl = false; }
+  }
+
+  function flushTable() {
+    if (tableLines.length < 2) {
+      tableLines.forEach(l => { html += `<p>${inline(l)}</p>`; });
+      tableLines = [];
+      return;
+    }
+    // Find separator row index (|---|---|)
+    const sepIdx = tableLines.findIndex(l => /^\|[\s\-|:]+\|$/.test(l.trim()));
+    if (sepIdx < 1) {
+      tableLines.forEach(l => { html += `<p>${inline(l)}</p>`; });
+      tableLines = [];
+      return;
+    }
+    const parseRow = l => l.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+    let t = '<table class="chat-table"><thead><tr>';
+    parseRow(tableLines[sepIdx - 1]).forEach(h => { t += `<th>${inline(h)}</th>`; });
+    t += '</tr></thead><tbody>';
+    tableLines.slice(sepIdx + 1).forEach(l => {
+      t += '<tr>';
+      parseRow(l).forEach(c => { t += `<td>${inline(c)}</td>`; });
+      t += '</tr>';
+    });
+    t += '</tbody></table>';
+    html += t;
+    tableLines = [];
   }
 
   function inline(s) {
@@ -547,28 +575,35 @@ function renderMarkdown(text) {
 
   for (const raw of lines) {
     const line = raw.trimEnd();
-    if (/^## /.test(line)) {
+    if (/^\|/.test(line)) {
       closeLists();
-      html += `<h2 class="chat-h2">${inline(line.slice(3))}</h2>`;
-    } else if (/^### /.test(line)) {
-      closeLists();
-      html += `<h3 class="chat-h3">${inline(line.slice(4))}</h3>`;
-    } else if (/^- /.test(line)) {
-      if (inOl) { html += '</ol>'; inOl = false; }
-      if (!inUl) { html += '<ul class="chat-ul">'; inUl = true; }
-      html += `<li>${inline(line.slice(2))}</li>`;
-    } else if (/^\d+\. /.test(line)) {
-      if (inUl) { html += '</ul>'; inUl = false; }
-      if (!inOl) { html += '<ol class="chat-ol">'; inOl = true; }
-      html += `<li>${inline(line.replace(/^\d+\. /, ''))}</li>`;
-    } else if (line.trim() === '') {
-      closeLists();
-      html += '<br>';
+      tableLines.push(line);
     } else {
-      closeLists();
-      html += `<p>${inline(line)}</p>`;
+      if (tableLines.length) flushTable();
+      if (/^## /.test(line)) {
+        closeLists();
+        html += `<h2 class="chat-h2">${inline(line.slice(3))}</h2>`;
+      } else if (/^### /.test(line)) {
+        closeLists();
+        html += `<h3 class="chat-h3">${inline(line.slice(4))}</h3>`;
+      } else if (/^- /.test(line)) {
+        if (inOl) { html += '</ol>'; inOl = false; }
+        if (!inUl) { html += '<ul class="chat-ul">'; inUl = true; }
+        html += `<li>${inline(line.slice(2))}</li>`;
+      } else if (/^\d+\. /.test(line)) {
+        if (inUl) { html += '</ul>'; inUl = false; }
+        if (!inOl) { html += '<ol class="chat-ol">'; inOl = true; }
+        html += `<li>${inline(line.replace(/^\d+\. /, ''))}</li>`;
+      } else if (line.trim() === '') {
+        closeLists();
+        html += '<br>';
+      } else {
+        closeLists();
+        html += `<p>${inline(line)}</p>`;
+      }
     }
   }
+  if (tableLines.length) flushTable();
   closeLists();
   return html;
 }
