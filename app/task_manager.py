@@ -78,10 +78,14 @@ def make_llm(model: str, llm_config: Optional[LLMConfig] = None, fallback: Optio
                 timeout=fallback.llm_request_timeout if fallback else 300.0,
                 max_tokens=max_tokens,
             )
-        # OpenAI provider
+        # OpenAI provider — honour api_base when the user points at a proxy
+        # (e.g. LiteLLM, Azure OpenAI-compatible gateway). Without this,
+        # setting base_url in the UI silently falls back to api.openai.com.
         kwargs: dict = {"model": model, "temperature": 0, "max_tokens": max_tokens}
         if llm_config.api_key:
             kwargs["api_key"] = llm_config.api_key
+        if base_url:
+            kwargs["api_base"] = base_url
         return OpenAI(**kwargs)
 
     elif fallback:

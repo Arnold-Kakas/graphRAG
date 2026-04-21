@@ -25,7 +25,7 @@ function clearGraph() {
   if (detail) detail.classList.remove("visible");
 }
 
-function initGraph(GRAPH_DATA) {
+function initGraph(GRAPH_DATA, INDEX_DATA) {
   clearGraph();
 
   if (!GRAPH_DATA || !GRAPH_DATA.nodes || GRAPH_DATA.nodes.length === 0) {
@@ -33,6 +33,11 @@ function initGraph(GRAPH_DATA) {
     return;
   }
   document.getElementById("graph-empty").style.display = "none";
+
+  // Index lookup for richer search (degree, community, sources). Built from
+  // INDEX_DATA when supplied; otherwise an empty map and search falls back to
+  // label/description on the loaded nodes.
+  const INDEX_BY_ID = (INDEX_DATA && INDEX_DATA.entities) ? INDEX_DATA.entities : {};
 
   // ── Dynamic COLOR_MAP ─────────────────────────────────────────────────────
   const uniqueTypes = [...new Set(GRAPH_DATA.nodes.map(n => n.type).filter(Boolean))];
@@ -290,38 +295,56 @@ function initGraph(GRAPH_DATA) {
       const q = e.target.value.toLowerCase().trim();
       if (!q) { closeSearchDrop(); clearSelection(); hideDetailPanel(); return; }
 
-      const results = nodes
-        .filter(n =>
-          n.label.toLowerCase().includes(q) ||
-          (n.description || "").toLowerCase().includes(q)
-        )
-        .sort((a, b) => {
-          // Exact / prefix matches first
-          const aLabel = a.label.toLowerCase();
-          const bLabel = b.label.toLowerCase();
-          const aStarts = aLabel.startsWith(q) ? 0 : 1;
-          const bStarts = bLabel.startsWith(q) ? 0 : 1;
-          return aStarts - bStarts || aLabel.localeCompare(bLabel);
-        })
-        .slice(0, 10);
+      // Score each node by where the match appears (label > type > description),
+      // with degree from the entity index as a tiebreaker so well-connected hubs
+      // surface first when many nodes share a substring.
+      const scored = [];
+      for (const n of nodes) {
+        const label = (n.label || "").toLowerCase();
+        const type  = (n.type  || "").toLowerCase();
+        const desc  = (n.description || "").toLowerCase();
+        let s = 0;
+        if (label === q)              s = 100;
+        else if (label.startsWith(q)) s = 80;
+        else if (label.includes(q))   s = 60;
+        else if (type.includes(q))    s = 40;
+        else if (desc.includes(q))    s = 20;
+        if (!s) continue;
+        const idxEntry = INDEX_BY_ID[n.id] || {};
+        scored.push({ node: n, score: s, degree: idxEntry.degree || 0, community: idxEntry.community });
+      }
+      scored.sort((a, b) =>
+        b.score - a.score ||
+        b.degree - a.degree ||
+        a.node.label.localeCompare(b.node.label)
+      );
+      const results = scored.slice(0, 10);
 
       if (!searchDrop) {
-        if (results[0]) pickSearchResult(results[0]);
+        if (results[0]) pickSearchResult(results[0].node);
         return;
       }
 
       searchDrop.innerHTML = "";
       if (!results.length) { closeSearchDrop(); return; }
 
-      results.forEach(n => {
+      results.forEach(r => {
+        const n = r.node;
         const item = document.createElement("div");
         item.className = "search-result-item";
         const descSnippet = n.description
           ? n.description.slice(0, 80) + (n.description.length > 80 ? "…" : "")
           : "";
+        const meta = [];
+        if (r.degree)            meta.push(`${r.degree} links`);
+        if (r.community != null) meta.push(`cluster ${r.community}`);
+        const metaHTML = meta.length
+          ? `<span class="sri-meta">${meta.join(" · ")}</span>`
+          : "";
         item.innerHTML = `
           <span class="sri-type" style="color:${nodeColor(n.type)}">${n.type}</span>
           <span class="sri-label">${n.label}</span>
+          ${metaHTML}
           ${descSnippet ? `<span class="sri-desc">${descSnippet}</span>` : ""}
         `;
         item.addEventListener("mousedown", e => { e.preventDefault(); pickSearchResult(n); });
@@ -397,6 +420,21 @@ function initGraph(GRAPH_DATA) {
     applyTypeFilter();
     clearSelection();
     hideDetailPanel();
+  };
+
+  // ── Public selection API (used by chat citation chips) ──────────────────
+  window.graphSelectByLabel = function(label) {
+    if (!label) return false;
+    const needle = String(label).trim().toLowerCase();
+    let match = nodes.find(n => (n.label || "").toLowerCase() === needle);
+    if (!match) match = nodes.find(n => (n.label || "").toLowerCase().includes(needle));
+    if (!match) return false;
+    closeSearchDrop();
+    if (searchEl) searchEl.value = match.label;
+    selectNode(match);
+    showNodeDetail(match, links, nodes, nodeColor);
+    panToNode(match);
+    return true;
   };
 
   // ── Resize ────────────────────────────────────────────────────────────────
@@ -581,6 +619,13 @@ function _renderModalFromAPI(data, d, links, nodes, nodeColor, content) {
       <hr class="nm-divider">
       <div class="nm-section-title">Cluster Context</div>
       <div class="nm-community-summary">${data.community_summary}</div>
+    ` : ""}
+    ${(data.sources && data.sources.length) ? `
+      <hr class="nm-divider">
+      <div class="nm-section-title">Sources (${data.sources.length})</div>
+      <div class="nm-sources">
+        ${data.sources.map(s => `<span class="nm-source-chip">${String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</span>`).join("")}
+      </div>
     ` : ""}
     ${allRels.length ? `
       <hr class="nm-divider">

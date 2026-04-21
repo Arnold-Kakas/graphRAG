@@ -123,20 +123,79 @@ class DocumentParser:
 
     def _parse_csv(self, path: Path) -> tuple[str, dict]:
         """
-        CSV handling:
-        - If a 'full_text' or 'text' column exists, treat each row as a separate document
-          and concatenate them (backward-compatible with the original ai_copyright_dataset.csv).
-        - Otherwise, stringify the entire CSV as a table.
+        CSV handling, three modes:
+
+        1. Narrative — a column named full_text/text/content/body/article exists.
+           Each row's narrative is concatenated, separated by ---.
+        2. Entity-per-row — a name/title column AND a type/category/kind column exist.
+           Each row is emitted as a labelled entity block with schema-anchored fields.
+           This gives the LLM strong extraction signal for tabular reference data
+           (lists of tools, products, organisations, glossary terms, etc.).
+        3. Generic table — neither pattern matches. The CSV is rendered as a schema
+           preamble plus row-by-row key=value list, much easier for an LLM to parse
+           than the full `df.to_string()` block (which truncates wide tables).
         """
         import pandas as pd
 
         df = pd.read_csv(str(path))
-        text_col = next((c for c in df.columns if c.lower() in ("full_text", "text", "content")), None)
+        if df.empty:
+            return "", {"row_count": 0, "csv_mode": "empty"}
 
+        cols_lower = {c.lower(): c for c in df.columns}
+
+        # Mode 1: narrative column wins outright
+        narrative_keys = ("full_text", "text", "content", "body", "article", "description")
+        text_col = next((cols_lower[k] for k in narrative_keys if k in cols_lower), None)
         if text_col:
             rows = df[text_col].dropna().astype(str).tolist()
-            text = "\n\n---\n\n".join(rows)
-        else:
-            text = df.to_string(index=False)
+            return "\n\n---\n\n".join(rows), {"row_count": len(df), "csv_mode": "narrative"}
 
-        return text, {"row_count": len(df)}
+        # Mode 2: entity-per-row
+        name_keys = ("name", "title", "entity", "label", "term")
+        type_keys = ("type", "category", "kind", "class", "group")
+        name_col = next((cols_lower[k] for k in name_keys if k in cols_lower), None)
+        type_col = next((cols_lower[k] for k in type_keys if k in cols_lower), None)
+
+        if name_col and type_col:
+            blocks: list[str] = []
+            other_cols = [c for c in df.columns if c not in (name_col, type_col)]
+            for _, row in df.iterrows():
+                name = self._csv_cell(row[name_col])
+                kind = self._csv_cell(row[type_col])
+                if not name:
+                    continue
+                lines = [f"## {name}", f"- **Type:** {kind or 'unspecified'}"]
+                for c in other_cols:
+                    val = self._csv_cell(row[c])
+                    if val:
+                        lines.append(f"- **{c}:** {val}")
+                blocks.append("\n".join(lines))
+            text = "\n\n".join(blocks)
+            return text, {"row_count": len(df), "csv_mode": "entity_per_row"}
+
+        # Mode 3: generic structured table — emit schema then row list
+        schema = ", ".join(f"{c} ({df[c].dtype})" for c in df.columns)
+        row_lines: list[str] = []
+        # Cap rows to keep the LLM prompt bounded; warn in metadata if truncated.
+        cap = 200
+        for _, row in df.head(cap).iterrows():
+            kvs = [f"{c}={self._csv_cell(row[c])}" for c in df.columns if self._csv_cell(row[c])]
+            if kvs:
+                row_lines.append("- " + "; ".join(kvs))
+        text = (
+            f"Schema: {schema}\n\n"
+            f"Rows ({min(cap, len(df))} of {len(df)}):\n" + "\n".join(row_lines)
+        )
+        meta = {"row_count": len(df), "csv_mode": "table"}
+        if len(df) > cap:
+            meta["truncated_to"] = cap
+        return text, meta
+
+    @staticmethod
+    def _csv_cell(value) -> str:
+        """Stringify a CSV cell, dropping NaN/None and normalising whitespace."""
+        import pandas as pd  # local — keeps import cost off cold start
+        if value is None or (isinstance(value, float) and pd.isna(value)):
+            return ""
+        s = str(value).strip()
+        return " ".join(s.split())

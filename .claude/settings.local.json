@@ -11,7 +11,19 @@
       "Bash(xargs -I{} sh -c '\"{}\" -c \"import llama_index\" 2>/dev/null && echo \"FOUND: {}\"')",
       "Bash(docker exec graphrag-graphrag-1 *)",
       "Bash(docker cp *)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(.venv/Scripts/python -c \"import pickle; s = pickle.load\\(open\\('graphs/marketing mix modeling/store.pkl', 'rb'\\)\\); print\\(type\\(s\\)\\); print\\('community_summaries len:', len\\(s.community_summaries\\)\\)\")",
+      "Bash(curl -s http://localhost:8000/api/topics)",
+      "Bash(curl -s \"http://localhost:8000/api/topics/marketing%20mix%20modeling/graph\")",
+      "Bash(git add *)",
+      "Bash(git rm *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(node -e \"require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\); new Function\\(require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\)\\); console.log\\('js-ok'\\)\")",
+      "Bash(node -e \"new Function\\(require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\)\\); console.log\\('js-ok'\\)\")"
     ]
   }
 }

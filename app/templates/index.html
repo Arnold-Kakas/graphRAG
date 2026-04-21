@@ -42,6 +42,7 @@
 
 
   <div class="header-right">
+    <div class="llm-indicator" id="llm-indicator" title="Active LLM — click the gear to change">—</div>
     <button class="btn-settings" id="btn-theme" title="Toggle light / dark mode">
       <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
@@ -215,6 +216,23 @@
           <div class="btn-row">
             <button class="ctrl-btn" id="btn-reset">Reset zoom</button>
             <button class="ctrl-btn" id="btn-all">Show all</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Pinned answers</div>
+        <div id="pinned-list" class="pinned-list"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Export</div>
+        <div class="controls">
+          <div class="btn-row">
+            <button class="ctrl-btn" id="btn-export-obsidian"
+                    title="Download a zip of one .md per entity with [[wiki links]] — drop the unzipped folder into an Obsidian vault.">
+              Obsidian vault (.zip)
+            </button>
           </div>
         </div>
       </div>

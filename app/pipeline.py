@@ -26,7 +26,7 @@ from llama_index.core.prompts import PromptTemplate
 from pydantic import Field, PrivateAttr, field_validator
 
 from .config import Settings as AppSettings
-from .graph_store import GraphRAGStore
+from .graph_store import GraphRAGStore, extract_json_object
 from .models import ExtractionResult, OntologyConfig
 
 logger = logging.getLogger(__name__)
@@ -66,10 +66,10 @@ def build_extraction_prompt(
 ) -> str:
     entity_types_str = ", ".join(ontology.entity_types)
     relation_types_str = ", ".join(ontology.relation_types)
-    context_text = (
-        ((build_context.strip() + " ") if build_context and build_context.strip() else "")
-        + _DEFAULT_CONTEXT
-    )
+    # Escape any curly braces in user-supplied context so PromptTemplate's
+    # .format() call doesn't mistake them for unknown placeholders.
+    safe_context = (build_context or "").strip().replace("{", "{{").replace("}", "}}")
+    context_text = ((safe_context + " ") if safe_context else "") + _DEFAULT_CONTEXT
 
     base = f"""Given a document summary, identify all entities mentioned and their relationships.
 
@@ -113,10 +113,9 @@ text: {{text}}
 ######################
 """
 
-    if thinking:
-        return base
-    else:
-        return "/no_think\n" + base
+    # Do NOT prepend /no_think — LM Studio ignores it and thinking models
+    # produce longer, more confused output when they see it (verified 2026-04-18).
+    return base
 
 
 # ── Extractor ──────────────────────────────────────────────────────────────────
@@ -156,14 +155,10 @@ class GraphRAGExtractor:
     )
 
     def _parse_json_result(self, text: str) -> Optional[ExtractionResult]:
-        text = text.strip()
-        text = re.sub(r"^```(?:json)?\s*", "", text)
-        text = re.sub(r"\s*```$", "", text)
-        match = re.search(r"\{.*\}", text, re.DOTALL)
-        if not match:
+        data = extract_json_object(text)
+        if data is None:
             return None
         try:
-            data = json.loads(match.group())
             return ExtractionResult.model_validate(data)
         except Exception as exc:
             logger.error("JSON parse error: %s", exc)
@@ -182,7 +177,13 @@ class GraphRAGExtractor:
             result = self._parse_json_result(raw) if raw else None
             if result:
                 return result.entities, result.relationships
-            logger.warning("Plain-text extraction returned no parseable JSON")
+            preview = (raw[:300] + "…") if len(raw) > 300 else raw
+            tail = raw[-200:] if len(raw) > 500 else ""
+            logger.warning(
+                "Plain-text extraction returned no parseable JSON (len=%d)\n"
+                "--- head ---\n%s\n--- tail ---\n%s",
+                len(raw), preview, tail or "(same as head)",
+            )
         except Exception as exc:
             logger.error("Plain-text extraction error: %s", exc)
         return [], []
@@ -315,13 +316,28 @@ async def build_topic_graph(
             if current_mtimes[doc["filename"]] > stored_mtimes.get(doc["filename"], 0.0)
         ]
         skipped = len(documents) - len(docs_to_process)
+        removed_files: set[str] = set(stored_mtimes.keys()) - set(current_mtimes.keys())
 
-        if not docs_to_process:
+        if not docs_to_process and not removed_files:
             _p(f"Graph is already up to date — all {len(documents)} file(s) unchanged")
             return GraphRAGStore.load(topic_dir)
 
-        _p(f"Incremental build: {len(docs_to_process)} new/modified, {skipped} unchanged")
+        if removed_files:
+            _p(f"Incremental build: {len(docs_to_process)} new/modified, {skipped} unchanged, {len(removed_files)} removed")
+        else:
+            _p(f"Incremental build: {len(docs_to_process)} new/modified, {skipped} unchanged")
         graph_store = GraphRAGStore.load(topic_dir)
+
+        # Prune nodes / edges that came from files the user deleted since last build.
+        if removed_files:
+            _p(f"Cleaning up references to removed files: {', '.join(sorted(removed_files))}")
+            stats = graph_store.remove_source_references(removed_files)
+            if stats["nodes_removed"] or stats["edges_removed"] or stats["nodes_trimmed"]:
+                _p(
+                    f"Pruned {stats['nodes_removed']} orphaned node(s), "
+                    f"{stats['edges_removed']} edge(s); "
+                    f"{stats['nodes_trimmed']} node(s) trimmed (kept with fewer sources)"
+                )
     else:
         docs_to_process = documents[: config.max_documents]
         _p(f"{'Forced full' if force and pkl_exists else 'Full'} build: {len(docs_to_process)} file(s)")
@@ -383,9 +399,40 @@ async def build_topic_graph(
     _p(f"Extraction done — {extractor._nodes_extracted} raw nodes, {extractor._edges_extracted} raw edges")
 
     # ── Deduplication ──────────────────────────────────────────────────────────
-    _p("Resolving duplicate entities...")
-    llm_merge_map = graph_store.resolve_entities(llm=community_llm, topic_name=topic)
-    merged_aliases = {**(ontology.aliases or {}), **llm_merge_map}
+    # Load any merges previously learned by the LLM so we don't pay for them
+    # again on every incremental build. These are applied as ordinary aliases.
+    learned_path = topic_dir / "learned_aliases.json"
+    learned_aliases: dict[str, str] = {}
+    if learned_path.exists():
+        try:
+            learned_aliases = json.loads(learned_path.read_text(encoding="utf-8"))
+            if not isinstance(learned_aliases, dict):
+                learned_aliases = {}
+        except Exception:
+            learned_aliases = {}
+
+    # Skip the LLM-based resolver when no new documents were extracted (removal-only
+    # build) — no new entities can match, so it would only waste tokens.
+    if docs_to_process:
+        _p("Resolving duplicate entities...")
+        llm_merge_map = graph_store.resolve_entities(llm=community_llm, topic_name=topic)
+    else:
+        _p("Skipping entity resolver — no new entities in this build")
+        llm_merge_map = {}
+
+    # Update the learned-aliases cache. Newer merges override older ones so
+    # canonical-name drift over time stays converged on the latest decision.
+    if llm_merge_map:
+        learned_aliases.update(llm_merge_map)
+        try:
+            topic_dir.mkdir(parents=True, exist_ok=True)
+            learned_path.write_text(json.dumps(learned_aliases, indent=2), encoding="utf-8")
+        except Exception as exc:
+            logger.warning("Could not persist learned_aliases.json: %s", exc)
+
+    # Precedence: ontology aliases (user-curated) > learned (LLM-discovered)
+    # > current-pass LLM merges (already inside learned_aliases above).
+    merged_aliases = {**learned_aliases, **(ontology.aliases or {})}
 
     _p("Deduplicating nodes...")
     removed = graph_store.deduplicate_nodes(aliases=merged_aliases or None)
@@ -401,6 +448,10 @@ async def build_topic_graph(
         progress_callback=progress_callback,
     )
 
+    # ── Build navigation index ─────────────────────────────────────────────────
+    _p("Building graph index...")
+    graph_store.build_index()
+
     # ── Save ───────────────────────────────────────────────────────────────────
     _p("Saving graph artifacts...")
     graph_store.save(topic_dir)
@@ -408,6 +459,14 @@ async def build_topic_graph(
     (topic_dir / "ontology.json").write_text(
         json.dumps(ontology.model_dump(), indent=2), encoding="utf-8"
     )
+
+    # Persist build_context so the UI can prefill it on the next build — a
+    # user who once described their topic shouldn't have to retype it every
+    # time they add a file.
+    if build_context is not None:
+        (topic_dir / "build_context.txt").write_text(
+            (build_context or "").strip(), encoding="utf-8"
+        )
 
     graph_data = graph_store.export_graph_data()
     meta = {

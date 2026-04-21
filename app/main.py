@@ -11,7 +11,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -120,6 +120,7 @@ def _get_query_engine(topic: str, llm_config: Optional[LLMConfig] = None) -> Gra
             graph_store=store,
             llm=make_llm(query_model, llm_config),
             community_llm=make_llm(extraction_model, llm_config),
+            embedding_cache_path=topic_dir / "community_embeddings.json",
         )
 
     # Fallback to cached engine using server-level .env config
@@ -136,6 +137,7 @@ def _get_query_engine(topic: str, llm_config: Optional[LLMConfig] = None) -> Gra
             graph_store=store,
             llm=make_llm(settings.query_model, fallback=settings),
             community_llm=make_llm(settings.extraction_model, fallback=settings),
+            embedding_cache_path=topic_dir / "community_embeddings.json",
         )
     return _query_engines[topic]
 
@@ -152,14 +154,32 @@ async def index(request: Request):
     )
 
 
+def _infer_provider(base_url: Optional[str]) -> str:
+    if not base_url:
+        return "openai"
+    low = base_url.lower()
+    if "1234" in low or "lmstudio" in low:
+        return "lmstudio"
+    if "11434" in low or "ollama" in low:
+        return "ollama"
+    if "googleapis.com" in low:
+        return "gemini"
+    if "anthropic" in low:
+        return "anthropic"
+    return "custom"
+
+
 @app.get("/api/config")
 async def get_config():
     """Return server-side LLM config status (no secrets exposed)."""
+    base = settings.llm_base_url
     return {
         "has_server_config": bool(settings.openai_api_key or settings.llm_base_url),
+        "provider": _infer_provider(base),
         "extraction_model": settings.extraction_model,
         "query_model": settings.query_model,
-        "has_base_url": bool(settings.llm_base_url),
+        "base_url": base or None,
+        "has_base_url": bool(base),
     }
 
 
@@ -196,6 +216,37 @@ async def topic_status(topic: str) -> TopicStatus:
     if topic not in topics:
         raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
     return topics[topic]
+
+
+@app.get("/api/topics/{topic}/index")
+async def get_graph_index(topic: str):
+    """
+    Return the navigation index for the topic's graph.
+    Lazily regenerates it from the pickle if the graph was built before the
+    index feature was added, so pre-existing graphs don't need a full rebuild.
+    """
+    topic_dir = Path(settings.graphs_dir) / topic
+    index_path = topic_dir / "graph_index.json"
+    if index_path.exists():
+        return Response(
+            content=index_path.read_text(encoding="utf-8"),
+            media_type="application/json",
+        )
+    # Fallback: rebuild index on the fly from the loaded store.
+    try:
+        store = GraphRAGStore.load(topic_dir)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    index = store.build_index()
+    try:
+        index_path.write_text(json.dumps(index, indent=2), encoding="utf-8")
+        topic_label = topic.replace("_", " ")
+        (topic_dir / "index.md").write_text(
+            store.render_index_markdown(topic=topic_label), encoding="utf-8"
+        )
+    except Exception as exc:
+        logger.warning("Could not persist regenerated index: %s", exc)
+    return index
 
 
 @app.get("/api/topics/{topic}/graph")
@@ -276,7 +327,7 @@ async def get_node_detail(topic: str, node_id: str, body: Optional[NodeRequest] 
     cid = store.node_community.get(node_id)
     community_summary = ""
     if cid is not None:
-        community_summary = store.community_summaries.get(cid) or store.community_summaries.get(str(cid), "")
+        community_summary = store.community_summaries.get(str(cid), "")
 
     wiki_article = store.entity_wikis.get(node_id, "")
     if (generate and not wiki_article) or force:
@@ -299,8 +350,184 @@ async def get_node_detail(topic: str, node_id: str, body: Optional[NodeRequest] 
         "has_wiki": bool(wiki_article),
         "community_id": str(cid) if cid is not None else None,
         "community_summary": community_summary,
+        "sources": node.properties.get("sources", []),
         "outgoing": outgoing,
         "incoming": incoming,
+    }
+
+
+@app.get("/api/topics/{topic}/export/obsidian")
+async def export_obsidian(topic: str):
+    """
+    Export the topic's graph as a zipped Obsidian vault.
+
+    One markdown file per entity with YAML frontmatter and inline `[[wiki links]]`
+    to neighbours. Drop the unzipped folder into an Obsidian vault and the graph
+    view + backlinks light up automatically.
+    """
+    import io
+    import tempfile
+    import zipfile
+
+    topic_dir = Path(settings.graphs_dir) / topic
+    if not topic_dir.exists():
+        raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
+    try:
+        store = GraphRAGStore.load(topic_dir)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+    with tempfile.TemporaryDirectory(prefix=f"graphrag_obsidian_{topic}_") as tmp:
+        export_root = Path(tmp) / topic
+        store.export_obsidian(export_root, topic=topic)
+
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            for path in export_root.rglob("*"):
+                if path.is_file():
+                    zf.write(path, arcname=path.relative_to(export_root.parent))
+        buf.seek(0)
+        return Response(
+            content=buf.getvalue(),
+            media_type="application/zip",
+            headers={"Content-Disposition": f'attachment; filename="{topic}_obsidian.zip"'},
+        )
+
+
+# ── Pinned answers ─────────────────────────────────────────────────────────────
+
+class PinnedAnswerRequest(BaseModel):
+    question: str
+    answer: str
+    mode: Optional[str] = None
+    sources: Optional[list] = None
+
+
+def _pinned_path(topic: str) -> Path:
+    return Path(settings.graphs_dir) / topic / "pinned_answers.json"
+
+
+def _read_pinned(topic: str) -> list[dict]:
+    path = _pinned_path(topic)
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+
+def _write_pinned(topic: str, items: list[dict]) -> None:
+    path = _pinned_path(topic)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(items, indent=2), encoding="utf-8")
+
+
+@app.get("/api/topics/{topic}/pinned")
+async def list_pinned(topic: str):
+    topic_dir = Path(settings.graphs_dir) / topic
+    if not topic_dir.exists():
+        raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
+    return _read_pinned(topic)
+
+
+@app.post("/api/topics/{topic}/pinned", status_code=201)
+async def add_pinned(topic: str, body: PinnedAnswerRequest):
+    import time
+    import uuid
+
+    topic_dir = Path(settings.graphs_dir) / topic
+    if not topic_dir.exists():
+        raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
+    question = (body.question or "").strip()
+    answer = (body.answer or "").strip()
+    if not question or not answer:
+        raise HTTPException(status_code=400, detail="question and answer are required")
+
+    items = _read_pinned(topic)
+    item = {
+        "id": uuid.uuid4().hex[:12],
+        "question": question,
+        "answer": answer,
+        "mode": body.mode or "graph",
+        "sources": body.sources or [],
+        "created_at": int(time.time()),
+    }
+    items.insert(0, item)
+    _write_pinned(topic, items)
+    return item
+
+
+@app.delete("/api/topics/{topic}/pinned/{pin_id}", status_code=204)
+async def delete_pinned(topic: str, pin_id: str):
+    topic_dir = Path(settings.graphs_dir) / topic
+    if not topic_dir.exists():
+        raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
+    items = _read_pinned(topic)
+    new_items = [i for i in items if i.get("id") != pin_id]
+    if len(new_items) == len(items):
+        raise HTTPException(status_code=404, detail="Pinned answer not found")
+    _write_pinned(topic, new_items)
+    return Response(status_code=204)
+
+
+@app.get("/api/topics/{topic}/build_context")
+async def get_build_context(topic: str):
+    """Return the last build_context used for this topic so the UI can prefill it."""
+    path = Path(settings.graphs_dir) / topic / "build_context.txt"
+    if not path.exists():
+        return {"build_context": ""}
+    try:
+        return {"build_context": path.read_text(encoding="utf-8")}
+    except Exception:
+        return {"build_context": ""}
+
+
+@app.get("/api/topics/{topic}/health")
+async def topic_health(topic: str):
+    """
+    Lightweight structural health check for a topic's graph.
+    Reports orphan nodes, missing-endpoint relations, and type coverage — cheap
+    to compute, no LLM calls, useful for spotting extraction drift over time.
+    """
+    topic_dir = Path(settings.graphs_dir) / topic
+    try:
+        store = GraphRAGStore.load(topic_dir)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+    node_ids = set(store.graph.nodes.keys())
+    connected: set[str] = set()
+    dangling = 0
+    for rel in store.graph.relations.values():
+        if rel.source_id in node_ids and rel.target_id in node_ids:
+            connected.add(rel.source_id)
+            connected.add(rel.target_id)
+        else:
+            dangling += 1
+
+    orphans = [
+        nid for nid, node in store.graph.nodes.items()
+        if isinstance(node, EntityNode) and nid not in connected
+    ]
+    typed = sum(
+        1 for node in store.graph.nodes.values()
+        if isinstance(node, EntityNode) and node.label and node.label != "OTHER"
+    )
+    total = sum(1 for n in store.graph.nodes.values() if isinstance(n, EntityNode))
+
+    return {
+        "topic": topic,
+        "node_count": total,
+        "edge_count": len(store.graph.relations),
+        "community_count": len(store.community_summaries),
+        "orphan_count": len(orphans),
+        "orphans_preview": orphans[:20],
+        "dangling_relations": dangling,
+        "typed_ratio": round(typed / total, 3) if total else 0.0,
+        "has_index": bool(store.entity_index),
+        "has_wikis": bool(store.entity_wikis),
     }
 
 
@@ -321,4 +548,35 @@ async def query_topic(topic: str, body: QueryRequest) -> QueryResponse:
         communities_checked=communities_checked,
         relevant_communities=relevant_communities,
         sources=[SourceCommunity(id=str(cid), summary=s) for cid, s in sources],
+    )
+
+
+@app.post("/api/topics/{topic}/query/stream")
+async def query_topic_stream(topic: str, body: QueryRequest):
+    """
+    NDJSON-streaming variant of /query. Each line is a JSON object with a
+    'type' field: 'status' | 'meta' | 'token' | 'done' | 'error'.
+    Phase 1 (community relevance fan-out) is still synchronous and blocks for a
+    few seconds before the first 'meta' event; Phase 2 (synthesis) streams
+    token-by-token.
+    """
+    task = task_manager.get_status(topic)
+    if task and task.status == "building":
+        raise HTTPException(status_code=409, detail="Graph is still being built. Please wait.")
+
+    engine = _get_query_engine(topic, llm_config=body.llm)
+
+    async def event_gen():
+        try:
+            async for event in engine.astream_query(body.query, mode=body.mode):
+                yield json.dumps(event) + "\n"
+        except Exception as exc:
+            logger.exception("Stream query failed")
+            yield json.dumps({"type": "error", "message": str(exc)}) + "\n"
+
+    return StreamingResponse(
+        event_gen(),
+        media_type="application/x-ndjson",
+        # Hint to any reverse proxy (e.g. nginx) not to buffer the response.
+        headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"},
     )
