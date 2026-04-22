@@ -20,7 +20,7 @@
 
 ---
 
-## 2026-04-20 (session 3)
+## 2026-04-20
 
 ### Feat: Search inside the graph index
 **Purpose:** Sidebar search matched only on label and description in the loaded graph. It missed type-name searches ("which methods are PROCESS entities?"), and ranked alphabetically — central hubs sank below obscure same-named nodes when many entities share a substring. No way to see at a glance which cluster a result belonged to.
@@ -64,7 +64,7 @@
 
 ---
 
-## 2026-04-18 (session 1)
+## 2026-04-18
 
 ### Fix: Communities not loading in chat
 **Purpose:** Graph showed 0 communities in the UI and chat returned "No community summaries found" despite `communities.json` existing on disk.
@@ -100,7 +100,7 @@
 
 ---
 
-## 2026-04-18 (session 2)
+## 2026-04-18
 
 ### Feat: Hybrid extraction pipeline
 **Purpose:** Ingestion was slow because the old pipeline made one LLM call per chunk (N_chunks × 1 call per document). Goal was 4–6× speedup.
