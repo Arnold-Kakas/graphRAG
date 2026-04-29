@@ -852,21 +852,25 @@ svg { width: 100%; height: 100%; }
 
 /* ── Detail panel ────────────────────────────────────────────────────────────── */
 #detail-panel {
-  width: 260px;
-  min-width: 220px;
+  width: 0;
+  min-width: 0;
   background: var(--surface);
-  border-left: 1px solid var(--border);
-  border-top: none;
-  padding: 16px 14px;
-  overflow-y: auto;
-  transform: translateX(100%);
-  transition: transform 0.22s ease;
+  border-left: none;
+  padding: 0;
+  overflow: hidden;
+  transition: width 0.22s ease, padding 0.22s ease;
   flex-shrink: 0;
   position: relative;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
-#detail-panel.visible { transform: translateX(0); }
+#detail-panel.visible {
+  width: 260px;
+  min-width: 220px;
+  border-left: 1px solid var(--border);
+  padding: 16px 14px;
+  overflow-y: auto;
+}
 
 .dp-close {
   position: absolute;

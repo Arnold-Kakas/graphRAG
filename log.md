@@ -7,6 +7,14 @@
 
 ---
 
+## 2026-04-29
+
+### Fix: Detail panel reserves space even when hidden
+**Purpose:** When a graph is loaded but no node or edge is selected, the right-side detail panel was always occupying 260 px of horizontal space, leaving a blank strip beside the graph canvas.
+**Technical implementation:** The panel previously used `transform: translateX(100%)` to slide off-screen while still participating in flex layout at full width. Switched to `width: 0; padding: 0; overflow: hidden` as the collapsed default, with `width: 260px; padding: 16px 14px; overflow-y: auto` restored on `.visible`. Added `transition: width 0.22s ease, padding 0.22s ease` to keep the slide-in animation smooth. No JS changes — the existing `.visible` class toggle already drives the state. (`app/static/css/style.css`)
+
+---
+
 ## 2026-04-27
 
 ### Fix: Merge task running forever — no timeout on resolve_entities LLM calls
