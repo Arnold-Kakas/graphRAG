@@ -19,7 +19,7 @@ from llama_index.core.graph_stores.types import EntityNode
 
 from .config import settings
 from .graph_store import GraphRAGStore
-from .models import BuildRequest, LLMConfig, QueryRequest, QueryResponse, TopicStatus
+from .models import BlogRequest, BuildRequest, LLMConfig, MergeRequest, QueryRequest, QueryResponse, TopicStatus
 from .query_engine import GraphRAGQueryEngine
 from .task_manager import TaskManager, make_llm
 
@@ -208,6 +208,23 @@ async def build_topic(topic: str, body: Optional[BuildRequest] = None):
         raise HTTPException(status_code=409, detail=str(exc))
 
     return {"status": "building", "topic": topic}
+
+
+@app.post("/api/topics/{topic}/merge", status_code=202)
+async def merge_topic(topic: str, body: Optional[MergeRequest] = None):
+    topic_dir = Path(settings.graphs_dir) / topic
+    if not (topic_dir / "store.pkl").exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"No graph found for topic '{topic}'. Build it first.",
+        )
+    llm_config = body.llm if body else None
+    thinking = body.thinking if body else False
+    try:
+        await task_manager.start_merge(topic, llm_config, _query_engines, thinking)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    return {"status": "merging", "topic": topic}
 
 
 @app.get("/api/topics/{topic}/status")
@@ -551,6 +568,136 @@ async def query_topic(topic: str, body: QueryRequest) -> QueryResponse:
     )
 
 
+# ── Blog generation helpers ────────────────────────────────────────────────────
+
+def _build_blog_context(store: "GraphRAGStore", topic: str) -> dict:
+    """Extract community summaries, top entities, relationships, and source files for blog context."""
+    from llama_index.core.graph_stores.types import EntityNode
+
+    if not store.entity_index:
+        try:
+            store.build_index()
+        except Exception:
+            pass
+
+    idx = store.entity_index or {}
+    entities_data = idx.get("entities", {}) if isinstance(idx.get("entities"), dict) else {}
+
+    community_parts: list[str] = []
+    for i, (cid, summary) in enumerate(sorted(
+        store.community_summaries.items(),
+        key=lambda x: int(x[0]) if str(x[0]).isdigit() else 999,
+    )[:20], 1):
+        community_parts.append(f"Community {i}: {str(summary)[:500]}")
+
+    entity_parts: list[str] = []
+    source_map: dict[str, list[str]] = {}  # filename → entity names
+
+    if entities_data:
+        top_items = sorted(entities_data.items(), key=lambda x: x[1].get("degree", 0), reverse=True)[:30]
+        for node_id, info in top_items:
+            name = info.get("name", node_id)
+            etype = info.get("type", "ENTITY")
+            degree = info.get("degree", 0)
+            desc = (info.get("description") or "")[:220]
+            entity_parts.append(f"- {name} ({etype}, {degree} connections): {desc}")
+            for src in info.get("sources", []):
+                source_map.setdefault(src, []).append(name)
+    else:
+        degree_count: dict[str, int] = {}
+        for rel in store.graph.relations.values():
+            degree_count[rel.source_id] = degree_count.get(rel.source_id, 0) + 1
+            degree_count[rel.target_id] = degree_count.get(rel.target_id, 0) + 1
+        for nid in sorted(degree_count, key=lambda k: degree_count[k], reverse=True)[:30]:
+            node = store.graph.nodes.get(nid)
+            if node and isinstance(node, EntityNode):
+                desc = (node.properties.get("entity_description") or "")[:220]
+                entity_parts.append(
+                    f"- {node.name} ({node.label or 'ENTITY'}, {degree_count[nid]} connections): {desc}"
+                )
+                for src in node.properties.get("sources", []):
+                    source_map.setdefault(src, []).append(node.name)
+
+    rel_parts: list[str] = []
+    for rel in list(store.graph.relations.values()):
+        src_node = store.graph.nodes.get(rel.source_id)
+        tgt_node = store.graph.nodes.get(rel.target_id)
+        if not src_node or not tgt_node:
+            continue
+        if not isinstance(src_node, EntityNode) or not isinstance(tgt_node, EntityNode):
+            continue
+        desc = (rel.properties.get("relationship_description") or "")[:150]
+        rel_parts.append(f"- {src_node.name} → [{rel.label}] → {tgt_node.name}: {desc}")
+        if len(rel_parts) >= 40:
+            break
+
+    source_parts: list[str] = []
+    for i, (filename, ent_names) in enumerate(sorted(source_map.items()), 1):
+        ents_str = ", ".join(ent_names[:8])
+        if len(ent_names) > 8:
+            ents_str += f" (+{len(ent_names) - 8} more)"
+        source_parts.append(f"[{i}] {filename} — contributes to: {ents_str}")
+
+    return {
+        "communities": "\n".join(community_parts) or "No community summaries available.",
+        "entities": "\n".join(entity_parts) or "No entity data available.",
+        "relationships": "\n".join(rel_parts) or "No relationship data available.",
+        "sources": "\n".join(source_parts),
+        "source_count": len(source_parts),
+    }
+
+
+def _build_blog_prompt(
+    topic: str,
+    ideas: str,
+    outline: Optional[str],
+    length_label: str,
+    word_count: int,
+    ctx: dict,
+) -> str:
+    outline_section = f"\nAUTHOR'S STRUCTURE:\n{outline}\n" if outline else ""
+    chart_example = (
+        '{"type":"bar","data":{"labels":["A","B","C"],'
+        '"datasets":[{"label":"Value","data":[10,20,15],'
+        '"backgroundColor":["#F4D03F","#2C3E50","#1B4F72"]}]},'
+        '"options":{"responsive":true,"plugins":{"title":{"display":true,"text":"Chart Title"}}}}'
+    )
+    refs_section = ""
+    if ctx.get("sources"):
+        refs_section = (
+            f"\n=== SOURCE DOCUMENTS (reference numbers 1–{ctx['source_count']}) ===\n{ctx['sources']}\n\n"
+            f"REFERENCING: Use footnotes ONLY for the {ctx['source_count']} source documents listed above. "
+            f"Valid reference numbers are [^1] through [^{ctx['source_count']}]. "
+            "Do NOT use any other numbers — community/theme numbers are NOT sources. "
+            "When making a specific factual claim traceable to a source document, add [^N] "
+            "immediately after the relevant sentence. Only cite sources you are genuinely drawing on. "
+            "At the end of the post, include a ## References section listing every source you cited, "
+            "formatted as:\n"
+            "[^N]: filename — brief description of what was cited\n"
+        )
+    return (
+        f'You are a professional content writer and subject-matter expert. '
+        f'Write a {length_label} blog post about "{topic}" using the knowledge graph data below.\n\n'
+        f"AUTHOR'S DIRECTION:\n{ideas}{outline_section}\n\n"
+        f"KNOWLEDGE GRAPH DATA:\n\n"
+        f"=== THEMATIC COMMUNITY SUMMARIES ===\n{ctx['communities']}\n\n"
+        f"=== KEY ENTITIES (sorted by graph centrality) ===\n{ctx['entities']}\n\n"
+        f"=== KEY RELATIONSHIPS ===\n{ctx['relationships']}\n"
+        f"{refs_section}\n"
+        f"FORMATTING INSTRUCTIONS:\n"
+        f"1. First line must be the blog title as H1 markdown: # Your Blog Title\n"
+        f"2. Use ## for main sections, ### for subsections\n"
+        f"3. Where a chart adds genuine value (comparisons, rankings, distributions), "
+        f"output a ```chartjs block containing ONLY valid compact JSON — no comments, no wrappers. "
+        f"Use these colours: [\"#F4D03F\",\"#2C3E50\",\"#1B4F72\",\"#117A65\",\"#B7950B\",\"#6C3483\"]. "
+        f"Example:\n```chartjs\n{chart_example}\n```\n"
+        f"4. Write narrative prose — tell a coherent story, don't just enumerate entities\n"
+        f"5. Do NOT use [[Entity]] citation syntax\n"
+        f"6. Target approximately {word_count} words\n"
+        f"7. End with a clear ## Conclusion section\n"
+    )
+
+
 @app.post("/api/topics/{topic}/query/stream")
 async def query_topic_stream(topic: str, body: QueryRequest):
     """
@@ -578,5 +725,63 @@ async def query_topic_stream(topic: str, body: QueryRequest):
         event_gen(),
         media_type="application/x-ndjson",
         # Hint to any reverse proxy (e.g. nginx) not to buffer the response.
+        headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"},
+    )
+
+
+@app.post("/api/topics/{topic}/blog/stream")
+async def blog_stream(topic: str, body: BlogRequest):
+    """
+    NDJSON-streaming blog post generator. Loads the graph, builds context from
+    community summaries + top entities + source files, then streams an LLM-authored
+    blog post token-by-token. Each line is JSON with 'type': status|token|done|error.
+    """
+    topic_dir = Path(settings.graphs_dir) / topic
+    if not topic_dir.exists():
+        raise HTTPException(status_code=404, detail=f"Topic '{topic}' not found")
+
+    _LENGTH = {
+        "short":  ("short (~500 words)",         500),
+        "medium": ("medium-length (~1 000 words)", 1000),
+        "long":   ("long (~1 800 words)",          1800),
+    }
+    length_label, word_count = _LENGTH.get(body.length, _LENGTH["medium"])
+
+    async def event_gen():
+        yield json.dumps({"type": "status", "message": "Loading knowledge graph…"}) + "\n"
+        try:
+            store = GraphRAGStore.load(topic_dir)
+        except FileNotFoundError as exc:
+            yield json.dumps({"type": "error", "message": str(exc)}) + "\n"
+            return
+
+        yield json.dumps({"type": "status", "message": "Building context from graph…"}) + "\n"
+        ctx = _build_blog_context(store, topic)
+
+        prompt = _build_blog_prompt(topic, body.ideas, body.outline, length_label, word_count, ctx)
+
+        query_model = (body.llm.query_model if body.llm else None) or settings.query_model
+        llm = make_llm(query_model, body.llm, settings)
+
+        yield json.dumps({"type": "status", "message": "Generating blog post…"}) + "\n"
+        try:
+            stream = await llm.astream_complete(prompt)
+            async for chunk in stream:
+                if chunk.delta:
+                    yield json.dumps({"type": "token", "text": chunk.delta}) + "\n"
+        except Exception as exc:
+            logger.exception("Blog generation failed for topic '%s'", topic)
+            yield json.dumps({"type": "error", "message": str(exc)}) + "\n"
+            return
+
+        yield json.dumps({
+            "type": "done",
+            "source_count": ctx["source_count"],
+            "community_count": len(store.community_summaries),
+        }) + "\n"
+
+    return StreamingResponse(
+        event_gen(),
+        media_type="application/x-ndjson",
         headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"},
     )

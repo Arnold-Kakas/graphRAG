@@ -8,6 +8,7 @@ GraphRAGStore — extends LlamaIndex's SimplePropertyGraphStore with:
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import pickle
@@ -744,12 +745,13 @@ Briefing:"""
                 pairs[name] = expansion
         return pairs
 
-    def resolve_entities(
+    async def resolve_entities(
         self,
         llm,
         topic_name: str = "",
-        max_entities_per_batch: int = 60,
+        max_entities_per_batch: int = 25,
         char_budget: int = 6000,
+        timeout: float = 120.0,
     ) -> dict[str, str]:
         """
         Ask the LLM to identify synonymous entity groups and return a merge map.
@@ -762,7 +764,8 @@ Briefing:"""
 
         Each pass batches by both an entity count cap and a character budget
         so a single batch never overflows the context window. Pass 2 skips any
-        node already merged in pass 1.
+        node already merged in pass 1. Each LLM call is capped at `timeout`
+        seconds — timed-out batches are skipped rather than blocking forever.
 
         Returns {alias: canonical} for every pair the LLM wants to merge.
         """
@@ -779,7 +782,7 @@ Briefing:"""
         # Pass 1: stem-signature ordering pulls surface variants together
         pass1 = sorted(entities, key=lambda n: (self._token_signature(n.name), n.name))
         merge_map.update(
-            self._resolve_one_pass(pass1, llm, topic_name, max_entities_per_batch, char_budget, pass_label="signature")
+            await self._resolve_one_pass(pass1, llm, topic_name, max_entities_per_batch, char_budget, pass_label="signature", timeout=timeout)
         )
 
         # Pass 2: type → name ordering catches type-level synonyms missed in pass 1
@@ -787,8 +790,8 @@ Briefing:"""
         pass2 = [n for n in entities if n.id not in already_merged]
         pass2.sort(key=lambda n: (n.label or "", n.name))
         if pass2:
-            second = self._resolve_one_pass(
-                pass2, llm, topic_name, max_entities_per_batch, char_budget, pass_label="type"
+            second = await self._resolve_one_pass(
+                pass2, llm, topic_name, max_entities_per_batch, char_budget, pass_label="type", timeout=timeout
             )
             for alias, canonical in second.items():
                 # Don't override an earlier merge — first decision wins
@@ -798,7 +801,7 @@ Briefing:"""
         logger.info("resolve_entities: %d merges identified by LLM across 2 passes", len(merge_map))
         return merge_map
 
-    def _resolve_one_pass(
+    async def _resolve_one_pass(
         self,
         entities: list[EntityNode],
         llm,
@@ -806,6 +809,7 @@ Briefing:"""
         max_entities_per_batch: int,
         char_budget: int,
         pass_label: str,
+        timeout: float = 120.0,
     ) -> dict[str, str]:
         graph = self.graph
 
@@ -832,7 +836,9 @@ Briefing:"""
 
         for batch_idx, batch in enumerate(batches):
             entity_lines = "\n".join(_entity_line(e) for e in batch)
-            prompt = f"""You are reviewing a knowledge graph about "{topic_name or 'the given topic'}".
+            prompt = f"""Output ONLY a raw JSON array as instructed below. No commentary, no explanation, no step-by-step reasoning.
+
+You are reviewing a knowledge graph about "{topic_name or 'the given topic'}".
 Below is a list of extracted entities. Group entities that refer to the SAME real-world thing — same concept, company, technology, person, or method — even if they were extracted with slightly different names.
 
 When in doubt, MERGE. The graph was built from many documents and the same concept routinely shows up with these surface variations:
@@ -860,7 +866,7 @@ Return ONLY a raw JSON array of merge groups. Each group is a list of names wher
 If nothing should be merged, return: []"""
 
             try:
-                response = llm.complete(prompt)
+                response = await asyncio.wait_for(llm.acomplete(prompt), timeout=timeout)
                 raw = response.text
                 if "</think>" in raw:
                     raw = raw.split("</think>")[-1]
@@ -880,6 +886,8 @@ If nothing should be merged, return: []"""
                     for alias in group:
                         if alias != canonical and alias in graph.nodes:
                             merge_map[alias] = canonical
+            except asyncio.TimeoutError:
+                logger.warning("Entity resolution (%s) batch %d timed out after %.0fs — skipping", pass_label, batch_idx, timeout)
             except Exception as exc:
                 logger.warning("Entity resolution (%s) batch %d failed: %s", pass_label, batch_idx, exc)
 
@@ -942,7 +950,7 @@ If nothing should be merged, return: []"""
             "nodes_trimmed": trimmed,
         }
 
-    def deduplicate_nodes(self, aliases: dict[str, str] | None = None) -> int:
+    def deduplicate_nodes(self, aliases: dict[str, str] | None = None) -> tuple[int, set[str]]:
         """
         Merge entity nodes that look like the same thing under three signals:
           1. `_normalize_name`  — light: case + spelling + parentheticals.
@@ -1044,7 +1052,7 @@ If nothing should be merged, return: []"""
                     _record_merge(alias, canonical)
 
         if not merge_map:
-            return 0
+            return 0, set()
 
         # Final chain flattening so every loser maps directly to the terminal canonical
         for loser in list(merge_map.keys()):
@@ -1057,10 +1065,10 @@ If nothing should be merged, return: []"""
                 target = merge_map[target]
             merge_map[loser] = target
 
-        # Carry descriptions and source provenance over to the canonical node
-        # before deleting the loser. Without this, merging "Marketing Mix Model"
-        # into "Marketing Mix Modeling" would lose half the description and
-        # provenance, defeating the point of the merge.
+        # Carry descriptions and source provenance over to the canonical node.
+        # Track winners whose description was actually extended — caller can
+        # pass those IDs to resummmarize_merged_descriptions() for LLM cleanup.
+        winners_with_merged_desc: set[str] = set()
         for loser_id, winner_id in merge_map.items():
             loser = graph.nodes.get(loser_id)
             winner = graph.nodes.get(winner_id)
@@ -1072,6 +1080,7 @@ If nothing should be merged, return: []"""
                 winner.properties["entity_description"] = (
                     (winner_desc + " " + loser_desc) if winner_desc else loser_desc
                 ).strip()
+                winners_with_merged_desc.add(winner_id)
             for src in loser.properties.get("sources", []) or []:
                 winner_sources = winner.properties.setdefault("sources", [])
                 if src not in winner_sources:
@@ -1115,7 +1124,52 @@ If nothing should be merged, return: []"""
             "deduplicate_nodes: removed %d duplicate entity nodes, %d redundant relations",
             len(merge_map), dup_count,
         )
-        return len(merge_map)
+        return len(merge_map), winners_with_merged_desc
+
+    async def resummmarize_merged_descriptions(
+        self,
+        node_ids: set[str],
+        llm,
+        progress_callback: Optional[Callable[[str], None]] = None,
+    ) -> int:
+        """
+        For each node in node_ids, ask the LLM to rewrite its entity_description
+        as a single coherent paragraph, removing the redundancy left by concatenation.
+        Returns the number of descriptions successfully rewritten.
+        """
+        total = len(node_ids)
+        count = 0
+        for i, node_id in enumerate(node_ids, 1):
+            node = self.graph.nodes.get(node_id)
+            if not isinstance(node, EntityNode):
+                continue
+            desc = node.properties.get("entity_description", "").strip()
+            if not desc:
+                continue
+
+            prompt = (
+                f'The following description for the entity "{node.name}" ({node.label}) was assembled '
+                f"by merging text from multiple sources. Rewrite it as a single concise description "
+                f"(2–4 sentences), removing redundancy while preserving every unique fact.\n\n"
+                f"Combined text:\n{desc}\n\n"
+                f"Unified description:"
+            )
+            try:
+                response = await llm.acomplete(prompt)
+                text = response.text.strip()
+                if "</think>" in text:
+                    text = text.split("</think>")[-1].strip()
+                if text:
+                    node.properties["entity_description"] = text
+                    count += 1
+            except Exception as exc:
+                logger.warning("Failed to re-summarize description for %s: %s", node.name, exc)
+
+            if progress_callback:
+                progress_callback(f"Re-summarizing descriptions {i}/{total}")
+
+        logger.info("resummmarize_merged_descriptions: rewrote %d/%d descriptions", count, total)
+        return count
 
     def export_graph_data(self) -> dict:
         """

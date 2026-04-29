@@ -92,6 +92,11 @@ class BuildRequest(BaseModel):
     build_context: Optional[str] = None
 
 
+class MergeRequest(BaseModel):
+    llm: Optional[LLMConfig] = None
+    thinking: bool = False
+
+
 class QueryRequest(BaseModel):
     query: str
     llm: Optional[LLMConfig] = None
@@ -108,6 +113,13 @@ class QueryResponse(BaseModel):
     communities_checked: int
     relevant_communities: int
     sources: list[SourceCommunity] = []
+
+
+class BlogRequest(BaseModel):
+    ideas: str
+    outline: Optional[str] = None
+    length: str = "medium"  # short | medium | long
+    llm: Optional[LLMConfig] = None
 
 
 class TopicStatus(BaseModel):

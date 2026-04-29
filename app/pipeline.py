@@ -43,10 +43,10 @@ _SUMMARISE_PROMPT = (
     "Comprehensive Summary:"
 )
 
-async def _summarise_document(text: str, llm: LLM, max_chars: int = 12000) -> str:
+async def _summarise_document(text: str, llm: LLM, max_chars: int = 12000, timeout: float = 300.0) -> str:
     """Compress a document into a rich summary for entity extraction."""
     prompt = _SUMMARISE_PROMPT.format(text=text[:max_chars])
-    response = await llm.acomplete(prompt)
+    response = await asyncio.wait_for(llm.acomplete(prompt), timeout=timeout)
     return response.text.strip()
 
 
@@ -135,6 +135,7 @@ class GraphRAGExtractor:
         thinking: bool = False,
         valid_entity_types: list[str] = None,
         valid_relation_types: list[str] = None,
+        timeout: float = 300.0,
     ):
         self.llm = llm
         self.extract_prompt = PromptTemplate(extract_prompt)
@@ -143,6 +144,7 @@ class GraphRAGExtractor:
         self.thinking = thinking
         self.valid_entity_types = valid_entity_types or []
         self.valid_relation_types = valid_relation_types or []
+        self._timeout = timeout
         self._processed = 0
         self._nodes_extracted = 0
         self._edges_extracted = 0
@@ -170,7 +172,7 @@ class GraphRAGExtractor:
                 text=text,
                 max_knowledge_triplets=self.max_paths_per_chunk,
             ) + self._JSON_OUTPUT_HINT
-            response = await self.llm.acomplete(prompt_text)
+            response = await asyncio.wait_for(self.llm.acomplete(prompt_text), timeout=self._timeout)
             raw = response.text.strip()
             if "</think>" in raw:
                 raw = raw.split("</think>")[-1].strip()
@@ -353,6 +355,7 @@ async def build_topic_graph(
         thinking=thinking,
         valid_entity_types=ontology.entity_types,
         valid_relation_types=ontology.relation_types,
+        timeout=config.llm_request_timeout,
     )
 
     # ── Hybrid extraction: summarise → extract per document ───────────────────
@@ -367,7 +370,11 @@ async def build_topic_graph(
         # Step 1: summarise (skip for very short documents)
         if len(text) > 1500:
             try:
-                summary = await _summarise_document(text, extraction_llm, max_chars=config.llm_context_window * 3)
+                summary = await _summarise_document(
+                    text, extraction_llm,
+                    max_chars=config.llm_context_window * 3,
+                    timeout=config.llm_request_timeout,
+                )
             except Exception as exc:
                 logger.warning("Summarisation failed for %s (%s) — extracting from raw text", filename, exc)
                 summary = text[: config.llm_context_window * 3]
@@ -411,31 +418,11 @@ async def build_topic_graph(
         except Exception:
             learned_aliases = {}
 
-    # Skip the LLM-based resolver when no new documents were extracted (removal-only
-    # build) — no new entities can match, so it would only waste tokens.
-    if docs_to_process:
-        _p("Resolving duplicate entities...")
-        llm_merge_map = graph_store.resolve_entities(llm=community_llm, topic_name=topic)
-    else:
-        _p("Skipping entity resolver — no new entities in this build")
-        llm_merge_map = {}
-
-    # Update the learned-aliases cache. Newer merges override older ones so
-    # canonical-name drift over time stays converged on the latest decision.
-    if llm_merge_map:
-        learned_aliases.update(llm_merge_map)
-        try:
-            topic_dir.mkdir(parents=True, exist_ok=True)
-            learned_path.write_text(json.dumps(learned_aliases, indent=2), encoding="utf-8")
-        except Exception as exc:
-            logger.warning("Could not persist learned_aliases.json: %s", exc)
-
-    # Precedence: ontology aliases (user-curated) > learned (LLM-discovered)
-    # > current-pass LLM merges (already inside learned_aliases above).
+    # Precedence: ontology aliases (user-curated) > learned (LLM-discovered, persisted by merge task).
     merged_aliases = {**learned_aliases, **(ontology.aliases or {})}
 
     _p("Deduplicating nodes...")
-    removed = graph_store.deduplicate_nodes(aliases=merged_aliases or None)
+    removed, _ = graph_store.deduplicate_nodes(aliases=merged_aliases or None)
     if removed:
         _p(f"Merged {removed} duplicate node(s)")
 
@@ -484,3 +471,109 @@ async def build_topic_graph(
 
     _p(f"Build complete — {meta['node_count']} nodes, {meta['edge_count']} edges, {meta['community_count']} communities")
     return graph_store
+
+
+async def merge_topic_entities(
+    topic: str,
+    llm,
+    config: AppSettings,
+    thinking: bool = False,
+    progress_callback: Optional[Callable[[str], None]] = None,
+) -> dict:
+    """
+    Load an existing graph store, run LLM-based entity resolution and rule-based
+    deduplication, then save the updated store.
+
+    Isolated from the build pipeline so users can run it on demand without
+    triggering a full re-extraction. Learned merges are persisted to
+    learned_aliases.json and automatically applied on every subsequent build.
+    """
+    def _p(msg: str) -> None:
+        logger.info("[merge:%s] %s", topic, msg)
+        if progress_callback:
+            progress_callback(msg)
+
+    topic_dir = Path(config.graphs_dir) / topic
+
+    _p("Loading graph store...")
+    store = GraphRAGStore.load(topic_dir)
+
+    node_count = sum(1 for n in store.graph.nodes.values() if hasattr(n, "name"))
+    _p(f"Resolving duplicate entities ({node_count} nodes)...")
+    llm_merge_map = await store.resolve_entities(
+        llm=llm,
+        topic_name=topic,
+        max_entities_per_batch=15 if thinking else 25,
+        timeout=config.llm_request_timeout,
+    )
+
+    # Persist learned aliases so future builds apply them automatically
+    learned_path = topic_dir / "learned_aliases.json"
+    learned_aliases: dict[str, str] = {}
+    if learned_path.exists():
+        try:
+            learned_aliases = json.loads(learned_path.read_text(encoding="utf-8"))
+            if not isinstance(learned_aliases, dict):
+                learned_aliases = {}
+        except Exception:
+            learned_aliases = {}
+    if llm_merge_map:
+        learned_aliases.update(llm_merge_map)
+        try:
+            learned_path.write_text(json.dumps(learned_aliases, indent=2), encoding="utf-8")
+        except Exception as exc:
+            logger.warning("Could not persist learned_aliases.json: %s", exc)
+
+    # Load ontology aliases (user-curated, highest precedence)
+    ontology_aliases: dict[str, str] = {}
+    ontology_path = topic_dir / "ontology.json"
+    if ontology_path.exists():
+        try:
+            ontology_data = json.loads(ontology_path.read_text(encoding="utf-8"))
+            ontology_aliases = ontology_data.get("aliases", {})
+        except Exception:
+            pass
+
+    merged_aliases = {**learned_aliases, **ontology_aliases}
+
+    _p(f"Deduplicating nodes ({len(llm_merge_map)} LLM merges + rule-based)...")
+    removed, winners = store.deduplicate_nodes(aliases=merged_aliases or None)
+    if removed:
+        _p(f"Merged {removed} duplicate node(s)")
+
+    if winners:
+        _p(f"Re-summarizing {len(winners)} merged description(s)...")
+        await store.resummmarize_merged_descriptions(winners, llm, progress_callback=_p)
+
+    _p("Rebuilding graph index...")
+    store.build_index()
+
+    _p("Saving updated store...")
+    store.save(topic_dir)
+
+    # Update build_meta.json with fresh node/edge counts
+    graph_data = store.export_graph_data()
+    meta_path = topic_dir / "build_meta.json"
+    meta: dict = {}
+    if meta_path.exists():
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    meta.update({
+        "node_count": len(graph_data["nodes"]),
+        "edge_count": len(graph_data["links"]),
+        "community_count": graph_data["communities"],
+        "merged_at": datetime.now(timezone.utc).isoformat(),
+    })
+    meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+    _p(
+        f"Merge complete — {len(llm_merge_map)} LLM merges, {removed} nodes removed, "
+        f"{len(graph_data['nodes'])} nodes remaining"
+    )
+    return {
+        "llm_merges": len(llm_merge_map),
+        "nodes_removed": removed,
+        "nodes_remaining": len(graph_data["nodes"]),
+    }

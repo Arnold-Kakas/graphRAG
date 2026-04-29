@@ -19,8 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   initAlertModal();
   initContextModal();
+  initBlogModal();
   document.getElementById("topic-select").addEventListener("change", onTopicChange);
   document.getElementById("btn-build").addEventListener("click", onBuild);
+  document.getElementById("btn-merge")?.addEventListener("click", onMerge);
   const chatInputEl = document.getElementById("chat-input");
   chatInputEl.addEventListener("keydown", e => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -420,6 +422,7 @@ async function onTopicChange() {
   const status = await fetchTopicStatus(topic);
   currentTopicHasGraph = status.has_graph;
   applyStatus(status);
+  document.getElementById("btn-merge").disabled = !status.has_graph;
 
   if (status.has_graph) {
     await loadGraph(topic);
@@ -516,6 +519,49 @@ async function submitBuild(llm, force, build_context) {
   }
 }
 
+async function onMerge() {
+  console.log("[merge] clicked — currentTopic:", currentTopic, "hasGraph:", currentTopicHasGraph);
+  if (!currentTopic) { showAlert("Select a topic first.", "No topic"); return; }
+  if (!currentTopicHasGraph) { showAlert("Build the graph first before merging.", "No graph"); return; }
+
+  const btn = document.getElementById("btn-merge");
+  console.log("[merge] button element:", btn, "disabled:", btn?.disabled);
+  btn.disabled = true;
+  document.getElementById("btn-build").disabled = true;
+
+  const llm = llmPayload();
+  const thinking = document.getElementById("chk-thinking")?.checked || false;
+  console.log("[merge] sending request — topic:", currentTopic, "llm:", llm, "thinking:", thinking);
+
+  try {
+    const res = await fetch(`/api/topics/${encodeURIComponent(currentTopic)}/merge`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ llm, thinking }),
+    });
+    console.log("[merge] response status:", res.status);
+    if (res.status === 409) {
+      const data = await res.json();
+      setStatus("building", data.detail || "Already running...");
+    } else if (!res.ok) {
+      const data = await res.json();
+      console.log("[merge] error response:", data);
+      setStatus("error", data.detail || "Merge request failed");
+      btn.disabled = false;
+      document.getElementById("btn-build").disabled = false;
+      return;
+    } else {
+      setStatus("building", "Merging entities...");
+    }
+    startPolling(currentTopic);
+  } catch (err) {
+    console.error("[merge] fetch error:", err);
+    setStatus("error", "Network error: " + err.message);
+    btn.disabled = false;
+    document.getElementById("btn-build").disabled = false;
+  }
+}
+
 function startPolling(topic) {
   stopPolling();
   pollInterval = setInterval(async () => {
@@ -527,12 +573,14 @@ function startPolling(topic) {
         stopPolling();
         currentTopicHasGraph = true;
         document.getElementById("btn-build").disabled = false;
+        document.getElementById("btn-merge").disabled = false;
         await loadGraph(topic);
         await refreshTopics();
         if (status.up_to_date) showToast("No changes detected — graph is already up to date. Use \"Full rebuild\" to force re-extraction.");
       } else if (status.build_status === "error") {
         stopPolling();
         document.getElementById("btn-build").disabled = false;
+        document.getElementById("btn-merge").disabled = !currentTopicHasGraph;
       }
     } catch (err) {
       console.error("Poll error:", err);
@@ -1068,4 +1116,424 @@ function appendMessage(role, content, loading = false, meta = null) {
 function removeMessage(id) {
   const el = document.getElementById(id);
   if (el) el.remove();
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BLOG POST GENERATION
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _blogRawText = "";
+let _blogAbortController = null;
+window._blogCharts = [];
+
+function initBlogModal() {
+  // ── Input modal ──────────────────────────────────────────────────────────
+  const backdrop = document.getElementById("blog-backdrop");
+  document.getElementById("blog-close").addEventListener("click", closeBlogInputModal);
+  document.getElementById("btn-blog-cancel").addEventListener("click", closeBlogInputModal);
+  document.getElementById("btn-blog-generate").addEventListener("click", onGenerateBlog);
+  backdrop.addEventListener("click", e => { if (e.target === backdrop) closeBlogInputModal(); });
+
+  document.querySelectorAll("input[name='blog-length']").forEach(radio => {
+    radio.addEventListener("change", () => {
+      document.querySelectorAll(".blog-length-option").forEach(opt => opt.classList.remove("selected"));
+      radio.closest(".blog-length-option").classList.add("selected");
+    });
+  });
+
+  // ── Result panel ─────────────────────────────────────────────────────────
+  const resultBackdrop = document.getElementById("blog-result-backdrop");
+  document.getElementById("blog-result-close").addEventListener("click", closeBlogResult);
+  resultBackdrop.addEventListener("click", e => { if (e.target === resultBackdrop) closeBlogResult(); });
+
+  document.getElementById("btn-blog-export-md").addEventListener("click", exportBlogMD);
+  document.getElementById("btn-blog-export-html").addEventListener("click", exportBlogHTML);
+
+  const blogBtn = document.getElementById("btn-write-blog");
+  if (blogBtn) blogBtn.addEventListener("click", openBlogInputModal);
+}
+
+function openBlogInputModal() {
+  if (!currentTopic) { showAlert("Please select a topic first.", "No Topic Selected"); return; }
+  if (!currentTopicHasGraph) { showAlert("Build the graph first before writing a blog post.", "No Graph"); return; }
+  document.getElementById("blog-backdrop").style.display = "flex";
+  document.getElementById("blog-ideas").focus();
+}
+
+function closeBlogInputModal() {
+  document.getElementById("blog-backdrop").style.display = "none";
+}
+
+function openBlogResult() {
+  document.getElementById("blog-result-title").textContent = `Blog Post — ${currentTopic}`;
+  document.getElementById("blog-result-footer").textContent = "";
+  document.getElementById("btn-blog-export-md").disabled = true;
+  document.getElementById("btn-blog-export-html").disabled = true;
+  document.getElementById("blog-result-backdrop").classList.add("open");
+}
+
+function closeBlogResult() {
+  if (_blogAbortController) { _blogAbortController.abort(); _blogAbortController = null; }
+  document.getElementById("blog-result-backdrop").classList.remove("open");
+  window._blogCharts.forEach(c => { try { c.destroy(); } catch {} });
+  window._blogCharts = [];
+}
+
+async function onGenerateBlog() {
+  const ideas = document.getElementById("blog-ideas").value.trim();
+  if (!ideas) { document.getElementById("blog-ideas").focus(); return; }
+
+  const outline = document.getElementById("blog-outline").value.trim() || null;
+  const length  = document.querySelector("input[name='blog-length']:checked")?.value || "medium";
+  const llm     = llmPayload();
+  const serverReady = serverConfig && serverConfig.has_server_config;
+  if (!llm && !serverReady) { openSettingsModal(); return; }
+
+  closeBlogInputModal();
+  openBlogResult();
+
+  _blogRawText = "";
+  const contentEl = document.getElementById("blog-content");
+  contentEl.innerHTML =
+    `<div class="blog-stream-status">` +
+    `<span class="stream-dot"></span><span class="stream-dot"></span><span class="stream-dot"></span>` +
+    ` <span id="blog-status-text">Gathering knowledge from graph…</span></div>`;
+
+  _blogAbortController = new AbortController();
+  let renderTimer = null;
+  let firstToken = true;
+
+  function schedulePreviewRender() {
+    if (renderTimer) return;
+    renderTimer = setTimeout(() => {
+      renderTimer = null;
+      const { html } = renderBlogMarkdown(_blogRawText, true);
+      contentEl.innerHTML = html;
+    }, 80);
+  }
+
+  try {
+    const res = await fetch(
+      `/api/topics/${encodeURIComponent(currentTopic)}/blog/stream`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ideas, outline, length, llm }),
+        signal: _blogAbortController.signal,
+      }
+    );
+
+    if (!res.ok) {
+      let detail = "Blog generation failed.";
+      try { detail = (await res.json()).detail || detail; } catch {}
+      contentEl.innerHTML = `<p style="color:var(--danger);padding:20px 0">${detail}</p>`;
+      return;
+    }
+
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let doneEvent = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let nl;
+      while ((nl = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, nl).trim();
+        buffer = buffer.slice(nl + 1);
+        if (!line) continue;
+        let ev;
+        try { ev = JSON.parse(line); } catch { continue; }
+
+        if (ev.type === "status") {
+          const statusEl = document.getElementById("blog-status-text");
+          if (statusEl) statusEl.textContent = ev.message || "";
+        } else if (ev.type === "token") {
+          if (firstToken) {
+            firstToken = false;
+            contentEl.innerHTML = "";
+          }
+          _blogRawText += ev.text || "";
+          schedulePreviewRender();
+        } else if (ev.type === "done") {
+          doneEvent = ev;
+        } else if (ev.type === "error") {
+          contentEl.innerHTML += `<p style="color:var(--danger)">Error: ${ev.message || "unknown"}</p>`;
+        }
+      }
+    }
+
+    if (renderTimer) { clearTimeout(renderTimer); renderTimer = null; }
+
+    // Final full render with Chart.js
+    renderBlogFull(contentEl, _blogRawText);
+    document.getElementById("blog-result-body").scrollTop = 0;
+
+    const words = _blogRawText.split(/\s+/).filter(Boolean).length;
+    const srcCount = doneEvent?.source_count || 0;
+    const commCount = doneEvent?.community_count || 0;
+    document.getElementById("blog-result-footer").textContent =
+      `${words.toLocaleString()} words · ${commCount} communities · ${srcCount} source${srcCount !== 1 ? "s" : ""}`;
+
+    document.getElementById("btn-blog-export-md").disabled = false;
+    document.getElementById("btn-blog-export-html").disabled = false;
+
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    if (renderTimer) clearTimeout(renderTimer);
+    contentEl.innerHTML = `<p style="color:var(--danger);padding:20px 0">Network error: ${err.message}</p>`;
+  }
+}
+
+// ── Markdown renderer for blog ────────────────────────────────────────────────
+
+/**
+ * Parse blog markdown into HTML.
+ *
+ * preview=true  → chartjs fences become placeholder divs (safe during streaming).
+ * preview=false → chartjs fences become <canvas> elements; config objects are
+ *                 returned in chartConfigs for Chart.js instantiation.
+ *
+ * Also collects [^N]: text footnote definitions and appends a References block.
+ */
+function renderBlogMarkdown(text, preview) {
+  const lines = text.split('\n');
+  let html = '';
+  let chartConfigs = [];
+  let chartIdx = 0;
+  let footnotes = {};  // key → definition text
+  let inUl = false, inOl = false;
+  let tableLines = [];
+  let inCode = false, codeLang = '', codeBuf = [];
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function closeLists() {
+    if (inUl) { html += '</ul>'; inUl = false; }
+    if (inOl) { html += '</ol>'; inOl = false; }
+  }
+  function flushTable() {
+    if (tableLines.length < 2) {
+      tableLines.forEach(l => { html += `<p class="blog-p">${inlineB(l)}</p>`; });
+      tableLines = []; return;
+    }
+    const sepIdx = tableLines.findIndex(l => /^\|[\s\-|:]+\|$/.test(l.trim()));
+    if (sepIdx < 1) {
+      tableLines.forEach(l => { html += `<p class="blog-p">${inlineB(l)}</p>`; });
+      tableLines = []; return;
+    }
+    const pr = l => l.trim().replace(/^\||\|$/g,'').split('|').map(c => c.trim());
+    let t = '<table class="blog-table"><thead><tr>';
+    pr(tableLines[sepIdx - 1]).forEach(h => { t += `<th>${inlineB(h)}</th>`; });
+    t += '</tr></thead><tbody>';
+    tableLines.slice(sepIdx + 1).forEach(l => {
+      t += '<tr>';
+      pr(l).forEach(c => { t += `<td>${inlineB(c)}</td>`; });
+      t += '</tr>';
+    });
+    t += '</tbody></table>';
+    html += t;
+    tableLines = [];
+  }
+  function inlineB(s) {
+    return s
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*([^*\n]+?)\*/g,'<em>$1</em>')
+      .replace(/`([^`\n]+?)`/g,'<code>$1</code>')
+      .replace(/\[\^(\w+)\]/g,'<sup class="blog-footnote-ref">[$1]</sup>');
+  }
+
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+
+    // Fenced code block open/close
+    const fenceMatch = line.match(/^```(\w*)\s*$/);
+    if (fenceMatch) {
+      if (inCode) {
+        if (codeLang === 'chartjs') {
+          const cfgStr = codeBuf.join('\n').trim();
+          if (preview) {
+            html += '<div class="blog-chart-placeholder">📊 Interactive chart — renders after generation</div>';
+          } else {
+            const id = `blog-chart-${chartIdx++}`;
+            html += `<div class="blog-chart-wrap"><canvas id="${id}"></canvas></div>`;
+            try {
+              chartConfigs.push({ id, config: JSON.parse(cfgStr) });
+            } catch {
+              html = html.replace(`<canvas id="${id}"></canvas>`,
+                '<span class="blog-chart-placeholder">📊 Invalid chart config</span>');
+            }
+          }
+        } else {
+          html += `<pre class="blog-pre"><code>${esc(codeBuf.join('\n'))}</code></pre>`;
+        }
+        inCode = false; codeLang = ''; codeBuf = [];
+      } else {
+        closeLists();
+        if (tableLines.length) flushTable();
+        inCode = true;
+        codeLang = fenceMatch[1] || '';
+      }
+      continue;
+    }
+    if (inCode) { codeBuf.push(raw); continue; }
+
+    // Footnote definitions: [^key]: text
+    const fnMatch = line.match(/^\[\^(\w+)\]:\s*(.+)/);
+    if (fnMatch) {
+      footnotes[fnMatch[1]] = fnMatch[2];
+      continue;
+    }
+
+    if (/^\|/.test(line)) {
+      closeLists();
+      tableLines.push(line);
+    } else {
+      if (tableLines.length) flushTable();
+      if (/^# /.test(line)) {
+        closeLists();
+        html += `<h1 class="blog-h1">${inlineB(line.slice(2))}</h1>`;
+      } else if (/^## /.test(line)) {
+        closeLists();
+        html += `<h2 class="blog-h2">${inlineB(line.slice(3))}</h2>`;
+      } else if (/^### /.test(line)) {
+        closeLists();
+        html += `<h3 class="blog-h3">${inlineB(line.slice(4))}</h3>`;
+      } else if (/^- /.test(line)) {
+        if (inOl) { html += '</ol>'; inOl = false; }
+        if (!inUl) { html += '<ul class="blog-ul">'; inUl = true; }
+        html += `<li>${inlineB(line.slice(2))}</li>`;
+      } else if (/^\d+\. /.test(line)) {
+        if (inUl) { html += '</ul>'; inUl = false; }
+        if (!inOl) { html += '<ol class="blog-ol">'; inOl = true; }
+        html += `<li>${inlineB(line.replace(/^\d+\. /,''))}</li>`;
+      } else if (line.trim() === '') {
+        closeLists();
+      } else {
+        closeLists();
+        html += `<p class="blog-p">${inlineB(line)}</p>`;
+      }
+    }
+  }
+  if (inCode) {
+    html += `<pre class="blog-pre"><code>${esc(codeBuf.join('\n'))}</code></pre>`;
+  }
+  if (tableLines.length) flushTable();
+  closeLists();
+
+  // Append collected footnote definitions sorted by numeric key
+  if (Object.keys(footnotes).length > 0) {
+    const sorted = Object.entries(footnotes).sort((a, b) => {
+      const na = parseInt(a[0], 10), nb = parseInt(b[0], 10);
+      return (isNaN(na) || isNaN(nb)) ? a[0].localeCompare(b[0]) : na - nb;
+    });
+    html += '<div class="blog-footnotes">';
+    sorted.forEach(([key, text]) => {
+      html += `<p id="fn-${key}"><sup>[${key}]</sup> ${esc(text)}</p>`;
+    });
+    html += '</div>';
+  }
+
+  return { html, chartConfigs };
+}
+
+function renderBlogFull(container, text) {
+  const { html, chartConfigs } = renderBlogMarkdown(text, false);
+  container.innerHTML = html;
+  if (typeof Chart === 'undefined') return;
+  chartConfigs.forEach(({ id, config }) => {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    try {
+      window._blogCharts.push(new Chart(canvas, config));
+    } catch (e) {
+      const wrap = canvas.closest('.blog-chart-wrap');
+      if (wrap) wrap.innerHTML =
+        `<div class="blog-chart-placeholder">📊 Chart render error: ${e.message}</div>`;
+    }
+  });
+}
+
+// ── Exports ───────────────────────────────────────────────────────────────────
+
+function exportBlogMD() {
+  if (!_blogRawText) return;
+  _triggerDownload(
+    new Blob([_blogRawText], { type: 'text/markdown;charset=utf-8' }),
+    `${_safeName()}_blog.md`
+  );
+}
+
+function exportBlogHTML() {
+  if (!_blogRawText) return;
+  const { html, chartConfigs } = renderBlogMarkdown(_blogRawText, false);
+
+  let chartScript = '';
+  if (chartConfigs.length > 0) {
+    const inits = chartConfigs.map(({ id, config }) =>
+      `  new Chart(document.getElementById(${JSON.stringify(id)}), ${JSON.stringify(config, null, 2)});`
+    ).join('\n');
+    chartScript = `\n<script>\ndocument.addEventListener('DOMContentLoaded', function() {\n${inits}\n});\n<\/script>`;
+  }
+
+  const titleMatch = _blogRawText.match(/^#\s+(.+)/m);
+  const title = titleMatch ? titleMatch[1].trim() : `${currentTopic} Blog Post`;
+  const safeTitle = title.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'})[c]);
+
+  const fullHtml =
+`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${safeTitle}</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"><\/script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:800px;margin:40px auto;padding:0 24px;color:#1a1a1a;line-height:1.7}
+h1.blog-h1{font-size:2.2em;margin-bottom:.3em;color:#111;line-height:1.2}
+h2.blog-h2{font-size:1.45em;margin-top:2em;margin-bottom:.5em;border-bottom:1px solid #e5e7eb;padding-bottom:.3em;color:#111}
+h3.blog-h3{font-size:1.2em;margin-top:1.5em;color:#222}
+p.blog-p{margin-bottom:1.1em;font-size:1.05em}
+ul.blog-ul,ol.blog-ol{margin:.5em 0 1.1em 1.6em}
+li{margin-bottom:.3em;font-size:1.05em}
+strong{font-weight:700}
+em{font-style:italic}
+table.blog-table{border-collapse:collapse;width:100%;margin:1.2em 0}
+th,td{border:1px solid #d1d5db;padding:8px 14px;text-align:left}
+th{background:#f9fafb;font-weight:600}
+tr:hover td{background:#fef9c3}
+code{background:#f3f4f6;padding:2px 5px;border-radius:3px;font-family:monospace;font-size:.9em}
+pre.blog-pre{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:14px 18px;overflow-x:auto;margin-bottom:1.2em}
+.blog-chart-wrap{max-width:620px;margin:1.8em auto}
+.blog-chart-placeholder{max-width:620px;margin:1.8em auto;background:#f9fafb;border:1px dashed #d1d5db;border-radius:6px;padding:20px;text-align:center;color:#6b7280}
+sup.blog-footnote-ref{font-size:.75em;color:#2563eb}
+.blog-footnotes{margin-top:2em;padding-top:1em;border-top:1px solid #e5e7eb;font-size:.9em;color:#4b5563}
+.blog-footnotes p{margin:.4em 0;line-height:1.6}
+</style>
+</head>
+<body>
+${html}${chartScript}
+</body>
+</html>`;
+
+  _triggerDownload(new Blob([fullHtml], { type: 'text/html;charset=utf-8' }), `${_safeName()}_blog.html`);
+}
+
+function _triggerDownload(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function _safeName() {
+  return (currentTopic || 'blog').replace(/[^a-z0-9_-]/gi, '_');
 }

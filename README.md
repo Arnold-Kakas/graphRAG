@@ -4,6 +4,8 @@ An end-to-end GraphRAG web app that ingests your documents, extracts entities an
 
 **Runs fully locally** with LM Studio / Ollama, or on cloud APIs (OpenAI, Anthropic, Gemini).
 
+> **New to GraphRAG Explorer?** The **[User Guide](USERGUIDE.md)** covers use cases, every feature explained in plain language, deployment options, and tips for adding content.
+
 ---
 
 ## Features
@@ -23,6 +25,7 @@ An end-to-end GraphRAG web app that ingests your documents, extracts entities an
 - **Incremental builds** - re-running Build Graph only processes files whose mtime changed.
 - **Auto-cleanup on file removal** - deleted files have their contributed nodes and edges pruned automatically on the next incremental build (nodes whose `sources` list becomes empty are removed; nodes that were also mentioned in surviving files keep their remaining provenance).
 - **Thinking-mode support** - handles `<think>...</think>` output from Qwen3, DeepSeek-R1, and similar reasoning models without breaking JSON extraction.
+- **Merge entities as a standalone task** — LLM-based synonym resolution runs separately from the build so you control timing. Learned merges are saved to `learned_aliases.json` and reapplied automatically on future builds — you only pay the LLM cost once per synonym pair.
 
 ### Chat / query engine
 
@@ -45,6 +48,7 @@ An end-to-end GraphRAG web app that ingests your documents, extracts entities an
 - **Obsidian-style detail panel** - click a node to see its description, edges, source files, and community membership.
 - **Wikipedia-style wiki articles** - double-click a node to generate a 3–5 paragraph encyclopedic article synthesized from its description, relationships, and community context. Cached per node after first generation.
 - **Obsidian vault export** - sidebar button downloads a zip with one `.md` per entity (YAML frontmatter, inline `[[wiki links]]` to neighbours, cluster context, cached wiki article). Drop the unzipped folder into an Obsidian vault and the graph view + backlinks light up automatically.
+- **Blog post generation** — sidebar button opens a dialog to set your angle, outline, and length target. Generates a structured blog post grounded in community summaries and entity relationships, with optional interactive Chart.js charts and source citations as footnotes. Export as raw Markdown or standalone HTML.
 
 ### UX niceties
 
@@ -147,7 +151,7 @@ graphRAG/
 │           └── graph.js   # D3 force layout, node/edge interaction, wiki modal
 ├── raw/<topic>/           # Source documents (mounted into container)
 ├── graphs/<topic>/        # Persisted graph artifacts (mounted into container)
-├── BLOG_NOTES.md          # Content notes / blog drafts (private)
+├── USERGUIDE.md           # End-user feature guide and deployment docs
 ├── log.md                 # Change log
 └── docker-compose.yml
 ```

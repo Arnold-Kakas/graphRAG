@@ -25,7 +25,7 @@ from .config import Settings
 from .graph_store import GraphRAGStore
 from .models import LLMConfig, OntologyConfig, TaskState
 from .parser import DocumentParser
-from .pipeline import build_topic_graph
+from .pipeline import build_topic_graph, merge_topic_entities
 
 logger = logging.getLogger(__name__)
 
@@ -228,6 +228,60 @@ class TaskManager:
 
         except Exception as exc:
             logger.exception("Build failed for topic '%s': %s", topic, exc)
+            if topic in self._tasks:
+                self._tasks[topic].status = "error"
+                self._tasks[topic].error = str(exc)
+                self._tasks[topic].completed_at = datetime.now(timezone.utc)
+
+    async def start_merge(
+        self,
+        topic: str,
+        llm_config: Optional[LLMConfig],
+        query_engines: dict,
+        thinking: bool = False,
+    ) -> None:
+        """Launch a background merge task. Raises RuntimeError if a task is already running."""
+        existing = self._tasks.get(topic)
+        if existing and existing.status == "building":
+            raise RuntimeError(f"A task is already in progress for topic '{topic}'")
+
+        self._tasks[topic] = TaskState(topic=topic, status="building", progress="Starting merge...")
+        self.invalidate_store(topic)
+        query_engines.pop(topic, None)
+
+        asyncio.create_task(self._run_merge(topic, llm_config, query_engines, thinking))
+
+    async def _run_merge(
+        self,
+        topic: str,
+        llm_config: Optional[LLMConfig],
+        query_engines: dict,
+        thinking: bool = False,
+    ) -> None:
+        def _progress(msg: str) -> None:
+            if topic in self._tasks:
+                self._tasks[topic].progress = msg
+
+        try:
+            config = self.config
+            extraction_model = (llm_config.extraction_model if llm_config else None) or config.extraction_model
+            llm = make_llm(extraction_model, llm_config, config)
+
+            await merge_topic_entities(
+                topic=topic,
+                llm=llm,
+                config=config,
+                thinking=thinking,
+                progress_callback=_progress,
+            )
+
+            self._tasks[topic].status = "complete"
+            self._tasks[topic].progress = "Merge complete"
+            self._tasks[topic].completed_at = datetime.now(timezone.utc)
+            logger.info("Merge complete for topic '%s'", topic)
+
+        except Exception as exc:
+            logger.exception("Merge failed for topic '%s': %s", topic, exc)
             if topic in self._tasks:
                 self._tasks[topic].status = "error"
                 self._tasks[topic].error = str(exc)

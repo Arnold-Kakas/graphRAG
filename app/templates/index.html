@@ -6,6 +6,7 @@
 <title>GraphRAG Explorer</title>
 <link rel="stylesheet" href="/static/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -24,15 +25,16 @@
     </select>
 
     <button class="btn-primary" id="btn-build">Build Graph</button>
+    <button class="btn-secondary" id="btn-merge" disabled title="Run LLM-based entity deduplication on the existing graph — merges similar names (MMM / Marketing Mix Modeling, Facebook / Meta, etc.). Runs separately from the build so you control when it happens. Learned merges are saved and applied automatically on future builds.">Merge entities</button>
 
     <label class="force-rebuild-label" id="force-rebuild-wrap" title="Ignore cached file state and re-process all documents from scratch">
       <input type="checkbox" id="chk-force-rebuild">
       Full rebuild
     </label>
 
-    <label class="force-rebuild-label" title="Enable LLM reasoning/thinking mode during extraction (slower but more accurate)">
+    <label class="force-rebuild-label" title="Check this when your model is a reasoning/thinking model (DeepSeek R1, QwQ, Phi-4-reasoning, etc.). Switches extraction to handle &lt;think&gt; token output instead of using structured prediction, which breaks on those models. Also reduces entity-resolution batch size to reduce reasoning loops.">
       <input type="checkbox" id="chk-thinking">
-      Enable thinking
+      Reasoning model
     </label>
 
     <div class="status-badge" id="status-badge">
@@ -234,6 +236,12 @@
               Obsidian vault (.zip)
             </button>
           </div>
+          <div class="btn-row">
+            <button class="ctrl-btn" id="btn-write-blog"
+                    title="Generate a blog post from the knowledge graph, with optional interactive charts and source references.">
+              Write Blog Post
+            </button>
+          </div>
         </div>
       </div>
     </aside>
@@ -268,7 +276,72 @@
   </div>
 </div>
 
-<script src="/static/js/graph.js"></script>
-<script src="/static/js/app.js"></script>
+<!-- ── Blog input modal ─────────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="blog-backdrop" style="display:none">
+  <div class="modal modal-blog" id="blog-modal">
+    <div class="modal-header">
+      <div class="modal-title">Write Blog Post</div>
+      <div class="modal-close" id="blog-close">&#10005;</div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-hint">
+        Describe your angle and ideas. The model will pull relevant content from the knowledge graph and weave it into a structured post with optional interactive charts and source references.
+      </p>
+      <div class="form-group">
+        <label class="form-label" for="blog-ideas">Your Ideas &amp; Angle</label>
+        <textarea id="blog-ideas" class="form-input context-textarea"
+          placeholder="What's the main argument or angle? What should the reader take away? Any specific aspects to emphasise?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="blog-outline">Structure / Outline <span class="form-hint">(optional)</span></label>
+        <textarea id="blog-outline" class="form-input" style="min-height:70px;resize:vertical"
+          placeholder="e.g. Intro → Key concepts → Common pitfalls → Best practices → Conclusion"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Length</label>
+        <div class="blog-length-group">
+          <label class="blog-length-option" id="blo-short">
+            <input type="radio" name="blog-length" value="short">
+            <span class="blo-name">Short</span>
+            <span class="blo-words">~500 words</span>
+          </label>
+          <label class="blog-length-option selected" id="blo-medium">
+            <input type="radio" name="blog-length" value="medium" checked>
+            <span class="blo-name">Medium</span>
+            <span class="blo-words">~1 000 words</span>
+          </label>
+          <label class="blog-length-option" id="blo-long">
+            <input type="radio" name="blog-length" value="long">
+            <span class="blo-name">Long</span>
+            <span class="blo-words">~1 800 words</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="btn-blog-cancel">Cancel</button>
+      <button class="btn-primary" id="btn-blog-generate">Generate Blog Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Blog result panel ─────────────────────────────────────────────────────── -->
+<div class="blog-result-backdrop" id="blog-result-backdrop">
+  <div class="blog-result-modal">
+    <div class="blog-result-header">
+      <div class="blog-result-title" id="blog-result-title">Blog Post</div>
+      <button class="ctrl-btn blog-export-btn" id="btn-blog-export-md" disabled title="Download as Markdown (.md)">Export MD</button>
+      <button class="ctrl-btn blog-export-btn" id="btn-blog-export-html" disabled title="Download as standalone HTML with interactive charts">Export HTML</button>
+      <button class="node-modal-close" id="blog-result-close" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="blog-result-body" id="blog-result-body">
+      <div class="blog-content" id="blog-content"></div>
+    </div>
+    <div class="blog-result-footer" id="blog-result-footer"></div>
+  </div>
+</div>
+
+<script src="/static/js/graph.js?v=20260427"></script>
+<script src="/static/js/app.js?v=20260427"></script>
 </body>
 </html>

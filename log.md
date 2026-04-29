@@ -7,6 +7,54 @@
 
 ---
 
+## 2026-04-27
+
+### Fix: Merge task running forever — no timeout on resolve_entities LLM calls
+**Purpose:** `resolve_entities` used `llm.complete()` (synchronous, no timeout). With a local reasoning model generating tokens in an infinite loop, this blocked indefinitely — confirmed case of 8+ hour hang.
+**Technical implementation:** Converted `resolve_entities` and `_resolve_one_pass` to `async def`, switching from `llm.complete()` to `await asyncio.wait_for(llm.acomplete(prompt), timeout=timeout)`. Default timeout is 120 s per batch (overridden to `config.llm_request_timeout` when called from `merge_topic_entities`). Timed-out batches log a warning and are skipped; the rest of the pass continues. Added `import asyncio` to `graph_store.py`. Updated caller in `pipeline.py` to `await` the now-async call. (`app/graph_store.py`, `app/pipeline.py`)
+
+---
+
+### Feat: LLM re-summarization of merged entity descriptions
+**Purpose:** When two nodes are merged, their `entity_description` fields are concatenated — the result is redundant, verbose, and incoherent. The concatenated text then pollutes wiki generation, community summaries, and future resolution prompts.
+**Technical implementation:** `deduplicate_nodes()` now tracks which winner nodes had their description extended by a loser's text (returned as `set[str]` alongside the existing count — call sites that don't need it unpack with `_`). New async `resummmarize_merged_descriptions(node_ids, llm)` method on `GraphRAGStore` iterates those nodes and asks the LLM to rewrite the combined text into a single 2–4 sentence description, stripping redundancy while preserving unique facts. Strips `</think>` tokens for reasoning models. Called from `merge_topic_entities()` in `pipeline.py` after deduplication; the build pipeline ignores the winners set since rule-based-only deduplication rarely produces meaningful concatenations. (`app/graph_store.py`, `app/pipeline.py`)
+
+---
+
+### Feat: Merge entities as a standalone task
+**Purpose:** LLM-based entity resolution (`resolve_entities`) was baked into every build, making builds slow and prone to reasoning-model loops. Users had no control over when the expensive synonym-merging step ran. Separating it lets users build quickly, inspect the graph, then decide to merge.
+**Technical implementation:** Removed `resolve_entities()` call from `build_topic_graph()` in `pipeline.py` — builds now only apply rule-based `deduplicate_nodes()` with existing learned and ontology aliases. New `merge_topic_entities()` async function in `pipeline.py` loads the existing store, runs `resolve_entities()` + `deduplicate_nodes()`, persists `learned_aliases.json`, rebuilds the index, saves, and updates `build_meta.json`. New `start_merge()` / `_run_merge()` methods on `TaskManager` follow the same background-task pattern as builds. New `POST /api/topics/{topic}/merge` endpoint (202). New `MergeRequest` model in `models.py`. New "Merge entities" button in the header (disabled until a graph exists), wired to the same polling mechanism as builds. (`app/pipeline.py`, `app/task_manager.py`, `app/main.py`, `app/models.py`, `app/templates/index.html`, `app/static/js/app.js`)
+
+---
+
+### Fix: Reasoning-model loops in entity resolution + misleading checkbox label
+**Purpose:** When a reasoning/thinking model (DeepSeek R1, QwQ, etc.) is loaded in LM Studio, `resolve_entities()` sent up to 60 entities per batch. The model would loop through the full list repeatedly in its chain-of-thought, never emitting the JSON result and eventually timing out. The "Enable thinking" checkbox label was also misleading — it doesn't add `/think` to prompts; it switches extraction from `astructured_predict()` to raw `acomplete()` so `</think>` tokens don't break structured parsing.
+**Technical implementation:** Reduced `max_entities_per_batch` default in `resolve_entities()` from 60 → 25 (15 when `thinking=True` is explicitly set). Added `"Output ONLY a raw JSON array ... No commentary, no explanation, no step-by-step reasoning."` directive at the top of the `_resolve_one_pass` prompt to discourage chain-of-thought before the answer. Renamed checkbox from "Enable thinking" to "Reasoning model" with an accurate tooltip explaining what the flag actually does. (`app/graph_store.py`, `app/pipeline.py`, `app/templates/index.html`)
+
+---
+
+## 2026-04-25
+
+### Fix: Runaway thinking-mode builds timing out after hours
+**Purpose:** When thinking mode was enabled during a build, `_summarise_document` and `_acomplete_extract` both called `llm.acomplete()` with no per-call time limit. The LLM client's `timeout` constructor argument controls the HTTP connection timeout, not the total generation duration. On a slow local model with `max_tokens=16384`, a thinking model could spend many hours generating reasoning tokens for a single document, with no way to interrupt it.
+**Technical implementation:** Wrapped both `acomplete()` calls in `asyncio.wait_for(..., timeout=config.llm_request_timeout)`. Added a `timeout` parameter to `GraphRAGExtractor.__init__` (stored as `self._timeout`) and `_summarise_document`. `build_topic_graph` now threads `config.llm_request_timeout` through to both. The existing `except Exception` handlers already catch `asyncio.TimeoutError` and fall back gracefully (empty extraction result / raw text fallback), so a timed-out call just moves on to the next document. (`app/pipeline.py`)
+
+---
+
+### Feat: Blog post generation with interactive charts, references, and export
+**Purpose:** Allow users to turn the knowledge graph into a publishable blog post. The graph contains rich structured knowledge but no way to produce long-form content from it. The new feature lets the user describe their angle and preferred structure, then generates a blog post grounded in community summaries and entity relationships, with optional interactive Chart.js visualisations and source references traced back to the original documents.
+**Technical implementation:**
+- New `BlogRequest` model in `app/models.py` (`ideas`, `outline`, `length`, `llm`).
+- Two helper functions in `app/main.py`: `_build_blog_context()` collects top-20 community summaries, top-30 entities by centrality, top-40 relationships, and a numbered source-file reference list derived from entity `sources` properties; `_build_blog_prompt()` assembles the LLM prompt with chart example and footnote referencing instructions.
+- New streaming endpoint `POST /api/topics/{topic}/blog/stream` (NDJSON, same protocol as `/query/stream`): loads the store, builds context, calls `llm.astream_complete()`, streams `status|token|done|error` events.
+- Frontend: "Write Blog Post" button added to the sidebar Export section; blog input modal (ideas textarea, optional outline, 3-way length selector); full-screen blog result overlay (900 px wide, 90 vh tall) with live streaming preview and final Chart.js render.
+- `renderBlogMarkdown(text, preview)` in `app.js`: full markdown parser for blog typography (h1–h3, p, ul, ol, table, pre); ` ```chartjs ` fences become placeholder divs in preview mode and `<canvas>` elements in full mode; `[^N]` footnote references rendered as superscripts; `[^N]: text` definitions collected and appended as a References block.
+- Export to MD: raw markdown download. Export to HTML: standalone file with Chart.js CDN, inline `<script>` initialises each chart on DOMContentLoaded, plain readable CSS.
+- Chart.js 4.4.1 CDN added to `index.html`; blog input and result modals added before `<script>` tags.
+(`app/models.py`, `app/main.py`, `app/templates/index.html`, `app/static/js/app.js`, `app/static/css/style.css`)
+
+---
+
 ## 2026-04-21
 
 ### Fix: Synonym duplicates surviving incremental builds
