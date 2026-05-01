@@ -23,7 +23,9 @@
       "Bash(git commit *)",
       "WebFetch(domain:gist.github.com)",
       "Bash(node -e \"require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\); new Function\\(require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\)\\); console.log\\('js-ok'\\)\")",
-      "Bash(node -e \"new Function\\(require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\)\\); console.log\\('js-ok'\\)\")"
+      "Bash(node -e \"new Function\\(require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\)\\); console.log\\('js-ok'\\)\")",
+      "Bash(node --input-type=module)",
+      "Bash(node --check app/static/js/app.js)"
     ]
   }
 }

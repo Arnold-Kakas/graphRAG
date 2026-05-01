@@ -1,99 +1,86 @@
 # Graph index — marketing mix modeling
 
-_737 entities · 10 types · 162 communities_
+_625 entities · 10 types · 159 communities_
 
 ## Top hubs
 
-- **Marketing Mix Modeling** (CONCEPT) — 109 connections
-- **PyMC-Marketing** (TECHNOLOGY) — 41 connections
-- **Robyn** (PRODUCT) — 34 connections
+- **Marketing Mix Modeling** (CONCEPT) — 158 connections
+- **PyMC-Marketing** (TECHNOLOGY) — 37 connections
+- **Robyn** (PRODUCT) — 35 connections
+- **Bayesian Marketing Mix Modeling** (CONCEPT) — 33 connections
 - **Qonto** (ORGANIZATION) — 30 connections
-- **Media Mix Modeling** (CONCEPT) — 24 connections
-- **Meta** (ORGANIZATION) — 20 connections
-- **Return on Ad Spend** (OTHER) — 20 connections
-- **Recast** (ORGANIZATION) — 18 connections
-- **Bayesian Marketing Mix Modeling** (CONCEPT) — 18 connections
-- **MMM Class** (CONCEPT) — 16 connections
-- **Michaelis-Menten Kinetics** (CONCEPT) — 16 connections
+- **Return on Ad Spend** (OTHER) — 29 connections
+- **Facebook** (ORGANIZATION) — 28 connections
+- **Michaelis-Menten Kinetics** (CONCEPT) — 18 connections
+- **Attribution Model** (CONCEPT) — 17 connections
+- **Recast** (ORGANIZATION) — 17 connections
+- **Incrementality Testing** (CONCEPT) — 16 connections
 - **Lume** (ORGANIZATION) — 16 connections
-- **Incrementality** (CONCEPT) — 15 connections
+- **Incremental ROAS** (CONCEPT) — 16 connections
+- **Meta Marketing Science** (ORGANIZATION) — 15 connections
 - **GetYourGuide** (ORGANIZATION) — 15 connections
-- **Media Mix Model** (CONCEPT) — 15 connections
 
 ## By type
 
-### CONCEPT (344)
-- **Marketing Mix Modeling** — A privacy-friendly, highly resilient, data-driven statistical analysis that quantifies incremental sales impact and ROI of marketing activities.
-- **Media Mix Modeling** — Media Mix Modeling is a statistical technique used to quantify the effectiveness of advertising on business metrics like customer acquisition.
-- **Bayesian Marketing Mix Modeling** — Bayesian Marketing Mix Modeling is the core subject matter of the article, defined as an additive linear regression model.
-- **MMM Class** — The high-level model class within PyMC-Marketing that combines various components like media transformations and seasonality.
+### CONCEPT (284)
+- **Marketing Mix Modeling** — Marketing Mix Modeling (also called Media Mix Modeling) is a privacy-safe, data-driven econometric technique in use since the 1960s that uses historical aggregated data to quantify
+- **Bayesian Marketing Mix Modeling** — Bayesian Marketing Mix Modeling is an additive linear regression framework that estimates response values at specific time points using multiple factors, applying Bayesian inferenc
 - **Michaelis-Menten Kinetics** — Michaelis-Menten Kinetics describes a functional form ensuring diminishing returns in response functions.
-- **Incrementality** — Incrementality refers to the causal impact of a marketing channel measured by comparing conversion numbers between exposed and non-exposed groups.
-- **Media Mix Model** — A statistical model used to estimate how various marketing inputs drive revenue.
-- **Adstock** — A concept that encapsulates time delay and time decay effects of advertising.
-- **Return on Investment** — A key performance indicator that MMM helps measure, including overall and channel-specific ROI.
+- **Attribution Model** — An Attribution Model assigns credit for sales or revenue to specific marketing touchpoints and channels, linking ad spend to outcomes in order to inform budget allocation decisions
 - **Incrementality Testing** — The gold standard of marketing measurement used to understand true efficiency.
-- **Incrementality Experimentation** — Experiments designed to measure the causal impact of marketing channels.
-- **Marketing Mix Model** — A statistical model used to measure the incremental revenue contribution of each marketing channel by isolating marginal revenue.
+- **Incremental ROAS** — Incremental ROAS is a metric that measures the true causal impact of marketing spend on business outcomes, distinguishing it from attributed conversions that would have occurred or
+- **Adstock Transformation** — A modeling technique that captures the lagged and decayed impact of advertising on consumer behavior.
+- **Revenue** — Revenue is the dependent (target/response) variable in a Marketing Mix Modeling equation, representing metrics such as sales volume, number of conversions, or revenue — often expre
+- **Prior Distributions** — Prior distributions are statistical inputs that express uncertainty in initial assumptions before observing data, encoding explicit beliefs or expert knowledge (such as ensuring RO
+- **Saturation Effect** — A nonlinear relation between investment and revenue where maximal revenue is reached at a certain point.
+- **Portfolio Theory** — Portfolio Theory is a financial framework originated by Harry Markowitz in 1952 that evaluates investments as a portfolio rather than individually, emphasizing correlations and ris
 - **Randomized Controlled Trials** — Data points generated based on simulated true lift used for calibration use cases to constrain predicted responses in models.
+- **Conversion Lift Test** — A Conversion Lift Test is a type of incrementality test that randomizes at the individual user level to measure the causal impact of advertising by splitting audiences into control
 - **Contextual Calibration** — A feature in latest Robyn versions that calibrates true ROAS against immediate effect instead of total effect for better performance.
-- **Attribution Model** — An Attribution Model assigns conversions to specific marketing touchpoints, typically using a Last-click principle.
-- **GeometricAdstock** — A specific adstock function used in the pre-trained MMM model to handle carryover effects.
-- **Attribution** — The core goal of the modeling process, aiming to accurately decompose and assign credit to different marketing channels.
+- **Budget Optimization** — Budget Optimization is the process of allocating a total budget across media channels and time periods to maximize return, using model outputs and cost-per-unit assumptions to dete
 - **Lift Testing** — Lift testing is an experimental method used for incrementality measurement but is limited by slow pace and specific channels like podcasts.
-- **Bayesian Methods** — A statistical framework used to estimate parameters and make inferences based on prior knowledge and observed data.
 - **Calibrated Marketing Mix Model** — A method that improves prediction accuracy of marketing mix models by constraining predicted response closer to Randomized Controlled Trials results.
-- **Prior Distributions** — Used to express uncertainty and variability in initial assumptions before seeing data.
-- **Portfolio Strategy** — A framework that groups advertising channels into allocation tiers based on risk appetite and resources to balance return and execution ability.
-- **Budget Optimization** — The process of allocating a total budget across different channels and time periods to maximize return.
+- **Mean Absolute Percentage Error** — An evaluation metric computed between True ROAS and Estimated ROAS to measure model accuracy and serve as an objective function.
 - **Likelihood Function** — The Likelihood Function determines the choice of distribution for modeling data such as customer counts.
 - **Incrementality Multiplier** — The ratio of true incremental conversions to platform-attributed conversions.
-- **Conversion Lift Test** — A Conversion Lift Test is a type of incrementality test that randomizes based on individual users to measure causal impact.
 - **Geo-based Experiment** — A Geo-based Experiment is an incrementality test that randomizes based on geography, comparing treated regions against control regions.
 - **target_efficiency Scenario** — A scenario added in Robyn v3.10.1 that sets ROAS or CPA targets with a variable budget constraint for growth advertisers.
 - **Online Paid Acquisition** — Clickable ads on platforms like LinkedIn, Instagram, and YouTube representing a significant portion of the budget.
 - **Multi-Objective Optimization** — A method requiring the balancing of multiple goals such as prediction error and business error.
+- **Bayes' Theorem** — Bayes' Theorem is a fundamental theorem for updating probabilities given evidence, comprising likelihood, prior, and posterior components, and is central to the Bayesian approach u
 - **Customer Acquisition Cost** — A metric associated with referral channels and other acquisition methods.
-- **Revenue** — The endogenous variable or target metric in Marketing Mix Modeling.
 - **Confidence Interval** — A range of values likely containing the true ROI, calculated using bootstrap resampling to indicate estimate precision versus uncertainty.
 - **Brand Activity** — Undervalued at 23% budget; Recommended 60%; Drives 65% of sales across Wholesale, Retail, and Ecommerce.
-- **LogisticSaturation** — A specific saturation function used in the pre-trained MMM model to define channel impact.
+- **Privacy Regulations** — Privacy regulations are legal frameworks that restrict data collection practices, challenging traditional web-tracking methods like cookies and degrading the quality and quantity o
 - **Seasonality** — Fluctuations in business demand over time, such as holidays or viral news stories, which must be accounted for in forecasting.
 - **Minimax Regret** — Minimax Regret is a decision theory criterion that minimizes worst-case regret across different models.
-- **Saturation (Diminishing Returns)** — A phenomenon where returns diminish as spend increases, modeled using transformations like LogisticSaturation.
-- **Adstock Function** — A transformation applied to media spend to model carryover effects.
-- **Mean Absolute Percentage Error** — An evaluation metric computed between True ROAS and Estimated ROAS to measure model accuracy and serve as an objective function.
+- **Media Channels** — Media Channels are the various platforms — such as TV, out-of-home (OOH), print, Facebook, and search — through which marketing spend is allocated and measured.
 - **Business Plausibility** — Business Plausibility refers to the evaluation of model results based on business logic and signs of coefficients.
 - **Experiment Goal** — The objective to measure the contribution of acquisition channels in the French market while maintaining business confidentiality.
-- **Saturation Transformation** — A concept accounting for diminishing returns where each additional unit of investment increases response at a declining rate.
+- **Time-Series Forecasting** — Time-Series Forecasting is a domain of analysis focused on predicting future data points based on past trends.
 - **Next40 Index** — A financial index in which Qonto has been listed since 2021.
 - **Overfitting** — A risk in modeling where too many input variables relative to historical data lead to poor generalization.
 - **Reproducibility** — The requirement for consistent results when re-running cells.
 - **Machine Learning Operations** — A set of practices and tools integrating ML workflows into the software development lifecycle, combining DevOps principles with data engineering and machine learning.
 - **Model Evaluation** — A process involving metrics like Confidence Intervals, Credible Intervals, R-Squared, and Root-Mean-Square-Error.
 - **Ecommerce** — A central channel for reaching consumers that was accelerated by the pandemic.
-- **Attribution Modelling** — Previously based on last-click; Now moving to econometrics + test-and-learn for accurate investment decisions.
 - **Last-Click Attribution** — Previously based on last-click; Caused over-investment in Paid Search and Online Display.
 - **Marketing Investments** — Independent variables representing investment on different Marketing actions.
 - **Multi-Touch Attribution** — A measurement approach used alongside marketing mix modeling as part of a triangulation strategy to understand the complete picture of marketing performance.
-- **Sequential Least Squares Quadratic Programming** — A gradient-based optimization algorithm implemented by the SLSQP Algorithm for solving optimization problems.
+- **LogisticSaturation** — A specific saturation function used in the pre-trained MMM model to define channel impact.
 - **Funded Account** — A higher-value metric where users add money to the platform.
 - **Cost-per-Unit** — A parameter enabling modeling in native units with post-fit conversion to a common currency.
-- **MichaelisMentenSaturation** — A model component representing saturation curves that visualize diminishing returns as spend increases.
 - **Distributionally Robust Optimization** — Distributionally Robust Optimization is a framework for optimizing against worst-case distribution within an ambiguity set.
 - **Finance** — Finance is the domain requiring decisions on increasing or decreasing spend across marketing channels.
 - **Search** — Search is a marketing channel name often ranked as having high incremental return in regression models.
 - **Incremental ROI** — The metric reported in this document, representing actual incremental contribution isolated from cross-channel halo effects and attribution overlap.
 - **Platform Attribution** — A measurement method used by Google Ads that conflates incrementality with attribution credit and cannot account for organic intercept.
-- **Advertising Attribution** — Advertising Attribution is the core problem being solved by the model, linking ad spend to outcomes like revenue or sales.
-- **Bayesian Inference** — A methodology used by PyMC-Marketing for estimating model parameters and uncertainty.
-- **Portfolio Theory** — A financial theory originating from Harry Markowitz in 1952 that evaluates investments as a portfolio rather than individually.
+- **No-U-Turn Sampler** — A Markov Chain Monte Carlo algorithm used for sampling from the posterior distribution of the Bayesian model parameters.
+- **Time-Varying Parameter** — A modeling concept in which parameters evolve dynamically over time to capture changing trends, events, and external factors.
 - **Schnell-Mendoza equation** — A closed form solution based on the Lambert W function used to estimate V and Km from time course data for enzyme reactions.
 - **Brand Response Campaign** — A hybrid campaign type combining a brand idea with short-term activation.
 - **Multicollinearity** — A risk where two or more independent variables are highly correlated with each other.
 - **Shape Effect** — Non-linear response curves representing ad saturation and diminishing returns at high levels of spend.
-- **Sales Response** — The response variable in the model, typically sales or log-transformed sales.
-- **Marketing Mix Modelling Decomposition** — This is a key output of Marketing Mix Modelling that details the attribution of outcomes to individual variables.
 - **Statistical Fit** — Statistical fit is a measure of model quality often prioritized in traditional analysis.
 - **Minimum Detectable Effect** — The Minimum Detectable Effect is a threshold for statistical significance that determines if an observed uplift is real or noise.
 - **Alpha Parameter** — A parameter controlling the shape of the Hill Function saturation curve.
@@ -101,19 +88,15 @@ _737 entities · 10 types · 162 communities_
 - **max_response Scenario** — A scenario that maximizes response given a fixed total budget level, operating as a zero-sum game between channels.
 - **Synthetic Control Methods** — A methodology popularized by Abadie et al.
 - **Channel X** — An anonymized name for a significant fraction of paid online acquisition budget targeted in the experiment.
-- **Mean Absolute Percentage Error for experiments** — A metric used for calibration error that minimizes the difference between predicted effect and causal effect.
+- **Normalized Root Mean Square Error** — Normalized Root Mean Square Error (NRMSE) is a metric used to measure prediction error in training or validation sets, serving as one of the primary objective functions for evaluat
 - **Cookie Contamination** — A threat to external validity caused by overlap in audience or conversions between platforms, leading to overestimation of incremental impact when running simultaneous tests.
 - **External Validity** — The generalizability of results outside the specific study context.
-- **Bayesian Theorem And Priors** — Statistical concepts used within the Marketing Mix Modeling framework.
 - **Marketing Science Theory** — The theoretical framework that guides the selection of saturation curves and adstock functions in MMM.
-- **Bayes' Theorem** — The fundamental theorem for updating probabilities given evidence, consisting of likelihood, prior, and posterior components.
 - **Bayesian Statistics** — A philosophy where probability expresses a degree of belief in an event that updates based on new evidence.
-- **Posterior Distribution** — The updated probability distribution after considering new evidence or data.
 - **Paid Channel Coefficients** — Parameters included in the MMM regression equation representing the effect of paid channels.
 - **Competitor Marketing Investment** — A variable in the MMM model representing competitor activity.
 - **Probabilistic Programming Language** — A language designed specifically to build and test Bayesian models.
 - **Trend and Seasonality** — Components of model input including linear trend features and Fourier modes for seasonality.
-- **Sales** — A Key Performance Indicator example used in Marketing Mix Modeling to measure the incremental impact of activities.
 - **Customer Journey** — A key concept for which a holistic view is delivered through the Measurement 360 framework.
 - **First-Party Data** — The preferred data source for advanced analytics within the framework.
 - **Naïve Calibration** — Approach that aims to drive MMM's total predicted effect closer to causal estimates using a Bayesian framework.
@@ -121,45 +104,36 @@ _737 entities · 10 types · 162 communities_
 - **Innovation Tier** — An allocation tier featuring high variance platforms like Pinterest and Programmatic, requiring specialized optimization resources and rigorous testing.
 - **Digital Advertising** — Over-invested area (desktop and mobile); Drives sales but was over-emphasized in Adidas strategy.
 - **Paid Search and Online Display** — Over-invested area due to digital attribution story; Traffic/revenue did not dip when Google AdWords broke in Latin America.
-- **Saturation Effect** — A nonlinear relation between investment and revenue where maximal revenue is reached at a certain point.
 - **Legacy MMM Vendors** — Traditional enterprise marketing mix modeling vendors characterized by black box methodology, biannual refresh cycles, and a focus on decomposing baseline conversions.
-- **Budgeting with Bayesian Models** — A methodological basis for the budget allocation function found in the PyMC-Marketing library.
-- **MMM** — The core Media Mix Model class loaded via build_mmm_from_yaml in the PyMC-Marketing library.
 - **Traditional Attribution Methods** — Last-touch attribution systems that often miss the nuance of multi-stage customer journeys.
 - **Registration** — A top-of-funnel metric where users sign up for the KOHO app.
+- **Upper-Funnel Channels** — Activation campaigns like Meta traffic campaigns that drive awareness and traffic but were previously undervalued by in-platform metrics.
 - **Website Traffic** — A metric impacted by exogenous events such as the 2024 Presidential Election and Los Angeles Wildfires, requiring accurate attribution.
 - **Social Media Channel** — A marketing channel where advertising spend is typically measured in impressions.
 - **Dollars** — The standard currency unit used for measuring TV channel spend and as the common currency for reporting.
 - **GaussianBasis** — A standard Gaussian bump function used for modeling latent event effects in the event basis module.
 - **Averaging Strategy** — The Averaging Strategy involves averaging fundamentally different causal and non-causal quantities.
-- **Display** — Display is a marketing channel name attributed with driving more contacts and dollar in attribution dashboards.
+- **Display / GDN** — Display/GDN is a campaign type and key marketing channel characterized by wider variance in outcomes across different advertisers and verticals.
 - **Organic Cannibalization** — A phenomenon where platforms credit revenue that would have happened organically or via retargeting regardless of ad spend.
 - **Conversion Rate Benchmarks** — Platform-level metrics published by third-party tools like WordStream and LocalIQ to measure efficiency.
 - **Diminishing Returns** — Saturation effect observed in advertising spend where revenue increases slow down after a certain threshold.
-- **Marketing Spend** — The independent variable representing marketing channels and budget allocation across different media types.
 - **Analyst Bias** — A problem prevented by flexible Bayesian modeling frameworks that allows for explicit inclusion of assumptions.
 - **Normal Distribution** — A statistical distribution used as a likelihood function for cost-per-target calibration when experimental data is unavailable.
 - **Uncertainty Quantification** — The process of measuring model reliability using metrics like Highest Density Interval and sampling divergences.
-- **No-U-Turn Sampler** — A Markov Chain Monte Carlo algorithm used for sampling from the posterior distribution of the Bayesian model parameters.
-- **Sales Data** — The target variable representing weekly sales figures of the client, used to train and evaluate the media mix model.
+- **Synthetic Data** — Data generated with known true parameters used to demonstrate model recovery and calibration effectiveness in examples.
 - **Media Spend Data** — Input variables representing weekly spend on different media channels, such as Paid Social or Offline/TV advertising.
-- **Temporal Dynamics Neglect** — A problem where traditional regression models fail to account for the temporal dynamics of marketing activities, leading to biased insights and overestimation of contributions.
-- **Time-Varying Media Baseline** — A sophisticated model solution that incorporates time as a key component through a Gaussian Process to capture hidden latent temporal variation in marketing contributions.
 - **Gaussian Process** — A mathematical model used to represent the Time-Varying Intercept, providing a flexible way to capture complex temporal patterns.
 - **Baseline Intercept** — The underlying baseline sales level that constrains and multiplies with the Hilbert Space Gaussian Process to form the final intercept.
 - **GP Extrapolation** — The process of using the Gaussian Process model to predict values outside the training data range, which can fail for simple trends.
 - **Attribution Blind Spots** — Conceptual issues inherent in attribution software, such as selection bias and unobservable touchpoints.
 - **Correlations** — A statistical measure of how marketing channels move together or independently.
 - **Unobserved Confounder** — A variable that influences both ad spend and sales but is absent from the model, causing bias.
-- **Time-Slice Cross-Validation** — A validation method ensuring no data leakage from future lift tests into training folds.
 - **Baseline Model** — The initial Media Mix Model configuration without lift test measurements.
 - **ROAS Reparametrization Method** — A technique proposed by Zhang et al.
 - **Actual Sales** — The true revenue figures used as a baseline for comparison against inflated attribution metrics.
 - **Direct Response Campaign** — A campaign type focused solely on generating direct response or short-term sales.
 - **Audience Overlap Effect** — A phenomenon occurring at high spend levels where the core audience is exhausted, forcing targeting to broaden to users reached by other channels.
-- **Media Channels** — Media Channels refer to the influence of media spend on response across different platforms.
 - **Key Performance Indicator** — The dependent variable in the model, such as sales, website visits, or account sign-ups.
-- **Privacy-friendly** — A key strength of MMM that overcomes signal loss by not needing user-level data.
 - **Signal-resilient** — The ability to overcome signal loss compared to multi-touch attribution which relies on online signals.
 - **Holistic** — Measures sales outcomes for all marketing channels together in one analysis.
 - **Granular Data** — Data collected at a detailed level, such as campaign attributes or impression data.
@@ -171,13 +145,13 @@ _737 entities · 10 types · 162 communities_
 - **Causal Inference Challenges** — Difficulties in establishing causation from correlation, particularly when data is limited or explanatory variables are correlated.
 - **Meta MMM Badged Partner Program** — This program manages the directory of MMM partners and served as the source for survey participants.
 - **Cost per Incremental Conversion** — Cost per Incremental Conversion is a metric used to adjust marketing budget allocation by accounting for the actual incremental impact.
+- **Marginal ROAS** — Marginal ROAS is a metric that measures the additional revenue generated from a one-unit increase in spend, representing cost efficiency at the margin.
 - **Gamma Parameter** — A parameter controlling the inflexion point of the saturation curve.
 - **eval_g_eq_effi Function** — A function defining the nonlinear equality constraint for the target_efficiency scenario using the objective function.
 - **eval_g_eq Function** — A function defining the linear equality constraint for the max_response scenario where sum of spend equals a constant budget.
 - **Break-even Point** — The state where total response equals total spend, corresponding to a ROAS value of 1.
 - **Linear TV** — Traditional media channel analyzed by BARK alongside digital channels to determine optimal budget allocation mix.
 - **Email** — Digital communication channel analyzed by BARK to measure marketing investment efficiency across different mediums.
-- **Privacy Changes** — Looming changes in the digital landscape affecting marketing measurement signals quality and quantity.
 - **Consumer Behavior** — The shift from offline to online shopping observed during the COVID-19 pandemic which increased revenue metrics.
 - **A/B Testing** — The gold standard for experimental research but deemed unsuitable here due to funnel timing and late exposure detection.
 - **Before vs After Analysis** — An analytical approach deemed unsuitable due to seasonality and market fluctuations confounding the results of budget changes.
@@ -186,9 +160,7 @@ _737 entities · 10 types · 162 communities_
 - **Group B*** — A synthetic version of Group B created as a counterfactual control group to mimic pre-test behavior accurately.
 - **Blocking Local Campaigns** — A necessary action to ensure an unbiased experiment by preventing local marketing from confounding the Channel X variable.
 - **Financial Outcome** — The result of the experiment showing considerable money saved on Channel X without losing overall growth due to channel overlap.
-- **Time-Series Forecasting** — A domain of analysis focused on predicting future data points based on past trends.
 - **Lasso** — A regularised regression method using L1-form regularization that eliminates features by zeroing them out.
-- **Normalized Root Mean Square Error** — A metric used to measure prediction error in the training or validation sets.
 - **Decomposition Root Sum of Squared Distance** — A key invention of Robyn that measures business error by comparing share of spend to share of effect.
 - **K-Means Clustering** — An algorithm used in Robyn to reduce model choice from Pareto-optimal candidates by clustering based on hyperparameters.
 - **Velocity** — The number of experiments run in a given time period.
@@ -198,7 +170,6 @@ _737 entities · 10 types · 162 communities_
 - **Weibull PDF Adstock** — A versatile adstock function that models both fixed delay and flexible decay.
 - **Concave Saturation Curve** — A saturation curve type characterized by diminishing returns to scale.
 - **Linear Saturation Curve** — A saturation curve type suggesting constant returns to scale.
-- **Sales Revenue Conversions** — Target Key Performance Indicators for Marketing Mix Modeling.
 - **Dimension Reduction** — A pre-processing technique used to improve model parsimony by reducing correlated variables.
 - **Frequentist Philosophy** — A statistical approach where probability is based on the frequency of events rather than degrees of belief.
 - **Likelihood** — Represents the probability of evidence given a hypothesis, such as negative reviews given a favorite restaurant.
@@ -211,7 +182,6 @@ _737 entities · 10 types · 162 communities_
 - **Customer Lifetime Value** — A key metric often modeled using Marketing Mix Models or CLV models built on top of probabilistic programming languages like PyMC.
 - **Acquisition Channels** — Marketing channels used to acquire customers, such as LinkedIn or TV, which are analyzed for their impact on business outcomes in MMM contexts.
 - **RD-D2 shrinkage prior** — A statistical prior used to mitigate overfitting in Bayesian models.
-- **Markov Chain Monte Carlo Sampling** — A computational method used to sample from posterior distributions in Bayesian models.
 - **Causal DAG** — A Directed Acyclic Graph representing the causal relationship between input data and the target.
 - **Experiment Tracking** — A function within ML workflows that logs metrics, parameters, artifacts, and model environment dependencies for performance comparison.
 - **Model Registry** — A central repository for managing and versioning models that tracks lineage, sharing, and access control within an ML workflow.
@@ -220,7 +190,6 @@ _737 entities · 10 types · 162 communities_
 - **R-Squared** — A metric indicating the proportion of variance explained by the MMM.
 - **Digital Media** — A central channel for reaching consumers that became even more important following the pandemic.
 - **Marketing Measurement** — The overarching domain addressed by the Measurement 360 framework.
-- **Privacy By Design** — A principle to be enabled in future-proof strategies, ensuring privacy-safe operation.
 - **Historical Approach** — A fragmented approach to marketing measurement emphasizing a small number of solutions.
 - **Media Strategies** — Strategies that have shifted due to consumer expectations and data availability changes.
 - **Correlation vs. Causation** — Argument that correlation does not imply causation.
@@ -232,17 +201,12 @@ _737 entities · 10 types · 162 communities_
 - **Performance Marketing** — 77% of budget allocation; Linked to ecommerce belief; Undervalued brand building contrasted with this.
 - **Marketing Efficiency** — Focus on reducing cost of KPIs rather than brand interests; Previous focus of Adidas strategy.
 - **Marketing Effectiveness** — Target state (shift from efficiency); Focus on generating brand desire and long-term growth.
-- **Return on Investment and Return on Ad Spend** — Metrics focused on short-term; Caused wrong metrics focus and over-investment in digital ads.
 - **Econometrics** — New model introduced; Revealed true drivers of sales (video, TV, outdoor, cinema) and first-time buyers.
 - **Creating the new** — New marketing playbook introduced by Adidas; Focuses on emotional, brand-driving activity at centre.
 - **Short-termism** — Result of focus on ROI/ROAS metrics; Led to wrong investment decisions and price sensitivity.
 - **Over-investment** — Problem resulting from efficiency focus and attribution errors; Led to products sold on promotion.
-- **Privacy Regulations** — Privacy regulations represent legal frameworks that restrict data collection practices.
 - **Funnel Effect** — The Funnel Effect describes the phenomenon where upper-funnel marketing influences lower-funnel channels.
 - **Incremental Customer Acquisition Cost** — Incremental Customer Acquisition Cost is a standard measure of marketing efficiency calculated as spend divided by estimated customers acquired.
-- **Classical Media Mix Modeling** — A method using linear regression with nonlinear transformations for marketing features.
-- **Hill Equation** — A mathematical model used to describe the saturation effect, representing the nonlinear relation between investment and revenue.
-- **Adstock Equation** — A mathematical model that describes revenue's time allocation after channel-specific investment, accounting for time-delay effects.
 - **Target Sales** — The dependent variable in the regression equation representing sales outcomes.
 - **External Control Variables** — Factors outside Marketing that impact sales, such as pricing, competition, and seasonality.
 - **Time Delay** — The phenomenon where revenue effects are observed after a delay relative to the marketing investment.
@@ -253,7 +217,6 @@ _737 entities · 10 types · 162 communities_
 - **Constraint** — A class defining business rules for optimization, including equality and inequality constraints.
 - **Total Media Channel Contribution** — A metric representing the sum of media channel contribution by date used in optimization scenarios.
 - **Sample Response Distribution** — A variable storing posterior distributions of total response including carryover effects and noise.
-- **ROAS** — Return on Ad Spend, a metric visualized in budget allocation plots representing units back per unit spend.
 - **Channel Return on Investment** — A metric representing the return generated per unit of currency spent on a specific marketing channel.
 - **Model Uncertainty** — A concept crucial for budget decisions that exposes the confidence levels associated with parameter estimates in statistical models.
 - **Default Skepticism** — A principle stating that practitioners should be skeptical of model results until trust is earned through rigorous validation.
@@ -265,7 +228,6 @@ _737 entities · 10 types · 162 communities_
 - **Active Monitoring** — Daily tracking of backend registration volumes versus model forecasts.
 - **Organic Baseline Demand** — Conversions occurring without paid marketing influence, which must be distinguished from paid media impact in forecasting.
 - **Double-Counting of Conversions** — An issue with in-platform metrics where conversions were counted multiple times across channels, leading to organizational confusion.
-- **Upper-Funnel Channels** — Activation campaigns like Meta traffic campaigns that drive awareness and traffic but were previously undervalued by in-platform metrics.
 - **Lower-Funnel Channels** — Performance-driven channels like Branded Search or Programmatic Display that drive actions but can take too much credit for conversions.
 - **TV Channel** — A traditional marketing channel where advertising spend is measured directly in dollars.
 - **Impressions** — The native unit of measurement for social media advertising exposure.
@@ -276,7 +238,6 @@ _737 entities · 10 types · 162 communities_
 - **MonthlyFourier** — A seasonality component class used to model recurring monthly patterns within the marketing mix model.
 - **HalfGaussianBasis** — A specialized basis type that models half-Gaussian effects, either occurring before or after an event date.
 - **AsymmetricGaussianBasis** — A basis type that allows for asymmetric modeling with different sigma values before and after an event.
-- **Prior Class** — A utility class used to define hierarchical or common priors outside the standard model context for distributions like Normal or Gamma.
 - **Fourier Seasonality** — A conceptual component representing recurring seasonality modeling using sine and cosine coefficients.
 - **Event Basis** — A conceptual component representing the latent event effects modeled as Gaussian bumps with specific dimensions.
 - **Omni-channel Marketing** — A future modeling goal for Daily Harvest involving the measurement of impact across all distribution channels.
@@ -287,28 +248,21 @@ _737 entities · 10 types · 162 communities_
 - **Search Non-Brand** — A Google Ads campaign type that captures category-level intent and typically yields the highest ROI among all verticals.
 - **Search Brand** — A defensive campaign type that protects revenue from competitors bidding on brand keywords, often yielding lower ROI than Non-Brand.
 - **Performance Max** — A Google Ads campaign format with low risk but opacity issues regarding budget allocation across inventory.
-- **Video / YouTube** — An underpriced channel with upper-funnel economics and lower CPM costs compared to Search for equivalent audience quality.
 - **Organic Data** — Organic Data refers to non-paid traffic features such as organic search and social used to improve paid media effect estimates.
-- **Bayesian Programming** — Modeling approach used for consistency storytelling and comparison with machine learning techniques.
 - **Time Series Cross-Validation** — Method ensuring training data precedes test data in time to prevent look-ahead bias during model validation.
 - **Hyperparameter Optimization** — Process of tuning model parameters like adstock decay rates and tree depths to improve performance metrics.
 - **Correlated Variables** — Variables where marketing orgs adjust budget across many channels simultaneously, causing biased estimates in Ordinary Least Squares models.
-- **Prior Information** — Explicit beliefs included into the model to constrain coefficients, such as ensuring ROI never falls below zero.
-- **Multi-Channel Marketing Mix Modeling** — A statistical modeling approach used to decompose marketing channel effects and estimate attribution when channels are correlated or spend data is imperfect.
 - **Gamma Distribution** — A statistical distribution used as a likelihood function for lift test observations to model the absolute change in contribution.
 - **Highest Density Interval** — A metric used for uncertainty visualization, such as 94% HDI, to represent the credible intervals of parameter estimates.
 - **Python Implementation** — The general concept of the programming environment, specifically identified here as CPython version 3.12.11.
 - **Cost-per-target Calibration** — An alternative calibration method that computes cost-per-target values and adds observed Normal likelihood to the model.
 - **Sampling Divergences** — An indicator of sampling issues during inference, such as high divergence counts which suggest poor model convergence.
-- **Synthetic Data** — Data generated with known true parameters used to demonstrate model recovery and calibration effectiveness in examples.
-- **Attribution Model Construction** — Attribution Model Construction refers to the shift from Bottom-up user-level data to Top-down Recast data as primary input for Lume.
 - **Black Box** — A Black Box refers to platforms that analyze data internally without transparency, which Lume explicitly rejected in favor of rigorous analysis.
 - **Directed Acyclic Graph** — A structural representation used to define causal relationships between marketing, events, and sales variables.
+- **Temporal Dynamics Neglect** — A problem where traditional regression models fail to account for the temporal dynamics of marketing activities, leading to biased insights and overestimation of contributions.
 - **y_sigma** — The error term standard deviation parameter in the model, normally distributed, representing Gaussian noise in the target variable.
 - **Divergences** — Diagnostic metrics indicating sampling problems or structural mismatches within the Bayesian framework during inference.
 - **R-hat Statistic** — A diagnostic metric used to assess convergence of Markov Chain Monte Carlo simulations, where values larger than 1.01 indicate potential issues.
-- **Basic Marketing Mix Model** — A standard MMM specification that neglects temporal dynamics and often leads to biased insights due to poor parameter estimation.
-- **Time-Varying Intercept** — A specific component of the MMM model where the baseline sales level is allowed to change over time, modeled as a Gaussian Process.
 - **Target Seasonal** — A simulated target variable in the dataset that follows a yearly seasonal pattern, typically modeled using a cosine wave.
 - **Cosine Wave** — A mathematical function used to model periodic patterns like seasonality in sales data, with a specific period and amplitude.
 - **Simple Patterns** — Regular temporal patterns like seasonality or linear trends that GP extrapolation struggles to capture accurately beyond the training set.
@@ -316,7 +270,6 @@ _737 entities · 10 types · 162 communities_
 - **Efficient Frontier** — A set of portfolio allocations that maximize return at each level of risk.
 - **Selection Bias** — A specific type of attribution blind spot where users clicking branded search were already influenced by other channels.
 - **Expected Returns** — A key input for portfolio construction and efficient frontier analysis.
-- **Incremental ROAS** — A metric estimating the causal impact of spend, distinct from attribution credit.
 - **Risk Profiles** — Characteristics of marketing channels regarding their return variance.
 - **Enzyme kinetics** — The study of rates of enzyme-catalysed reactions, of which Michaelis–Menten kinetics is a core component and simplest case.
 - **Biochemistry** — The domain of science that encompasses the chemical processes within and relating to living organisms, including enzyme kinetics.
@@ -327,19 +280,15 @@ _737 entities · 10 types · 162 communities_
 - **Diffusion Limited Enzymes** — A category of enzymes that work at the theoretical upper limit of reaction rate, limited by the diffusion of substrate into the active site.
 - **Continuous Ranked Probability Score** — A metric measuring the distance between predicted distribution and observed value.
 - **First Purchase Breakeven** — A business constraint requiring ads to be first purchase breakeven without any payback period.
-- **Media Mix Measurement** — A function provided by Recast to determine true performance across existing marketing channels.
 - **Buying Habits** — Consumer behavior patterns that were significantly impacted by the coronavirus pandemic and subsequent planning challenges.
 - **Reach Function** — The Reach Function models channel saturation and diminishing returns on spend.
-- **Prior Knowledge** — Prior Knowledge refers to the integration of expert intuition or lift test results into the model.
 - **Poisson Distribution** — The Poisson Distribution is a discrete distribution option used for modeling customer counts in marketing data.
 - **Negative Binomial Distribution** — The Negative Binomial Distribution is another discrete distribution option for modeling customer counts.
 - **Cauchy Distribution** — The Cauchy Distribution is a distribution option characterized by longer tails compared to the Normal Distribution.
 - **Student’s T-distribution** — Student’s T-distribution is a distribution option with longer tails suitable for modeling customer counts.
-- **Adstock Transformation** — A modeling technique that captures the lagged and decayed impact of advertising on consumer behavior.
 - **Law of Diminishing Returns** — A principle describing the non-linear relationship between advertising spend and business outcomes.
 - **Marketing ROI** — Return on Investment, a key metric used to measure the effectiveness of marketing activities relative to their cost.
 - **Business Outcome** — The measurable result of business activities such as sales or revenue.
-- **Normalization Requirement** — A condition requiring input variables to fall within a specific range, typically 0 to 1, unless scaled.
 - **Decomposition of Trends and Seasonality** — A data preparation step involving the separation of time series components like trends and seasonal patterns.
 - **Response Level** — The estimated business outcome calculated via coefficients multiplied by saturation levels.
 - **Budget Constraint** — A limitation ensuring the sum of media spend equals a fixed budget.
@@ -349,43 +298,32 @@ _737 entities · 10 types · 162 communities_
 - **Rational Campaign** — A campaign type that works with System 2 processing and decays faster than emotional campaigns.
 - **Emotional Priming** — A strategy used by Aldi to overcome rational prejudice about low price equating to low quality.
 - **Share of Voice** — A metric used in the ESOV formula (Extra Share of Voice) calculated as SOV minus SOM.
-- **Prior Specifications** — Prior Specifications are the focus of the article regarding assumed distributions of parameters without underlying data knowledge.
 - **Additive Linear Regression Model** — The Additive Linear Regression Model is the mathematical structure implemented by LightweightMMM.
-- **Hill Saturation** — Hill Saturation is a media channel behavior transformation that defines a saturation point.
 - **Model Adequacy** — Model Adequacy refers to the assessment of how well a statistical model fits the expected data patterns.
-- **Marginal ROAS** — A metric that converges to equilibrium when constraints are relaxed, representing the efficiency of spend at the margin.
-- **Marginal CPA** — A metric that converges when optimization freedom increases, indicating cost efficiency per acquisition at the margin.
-- **Group B** — The intervention group where the budget for Channel X was reduced to zero in specific regions.
 - **Bayesian Regression** — A statistical method equivalent to Ridge regression when using a normal or Gaussian prior.
 - **S-Shaped Saturation Curve** — A saturation curve type with variable returns to scale, introducing the concept of a threshold.
 - **Television, Outdoor, and Cinema** — Recommended media channels to drive ecommerce; Didn't show up in last-click attribution.
 - **Wholesale and Retail** — Sales channels driven by brand activity (65%); Driven by performance marketing as well.
 - **Shopping** — A product-intent channel that holds up well for retail categories, though sample sizes can be insufficient in certain verticals.
-- **Display / GDN** — A campaign type characterized by wider variance in outcomes across different advertisers and verticals.
 - **Demand Gen / Discovery** — A campaign type where confidence intervals require scrutiny, with most advertisers advised to validate measurement methodology closely.
-- **Saturation Function** — A transformation that models the diminishing returns of marketing inputs, where incremental benefit decreases as allocated resources increase.
-- **Time-Varying Parameter** — A modeling concept that captures changing trends, events, and external factors over time, allowing model parameters to evolve dynamically.
 - **Retail Sales Price** — A control variable representing the price of goods at retail, used to account for price effects on sales separate from marketing spend.
-- **Risk-Adjusted ROAS** — A formalized metric used to evaluate channel risk profiles within a portfolio context.
 
-### DOCUMENT (49)
-- **Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects** — A research document published by Google Inc.
+### DOCUMENT (42)
 - **Marketing Measurement series: Marketing Mix Modeling at Qonto** — A technical blog post published on Medium detailing the implementation of Bayesian Marketing Mix Modeling using PyMC.
+- **Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects** — A research document published by Google Inc.
 - **2026 Media Effectiveness Benchmarks** — The primary document summarizing 83 channels and $1.85B in ad spend, published by Cassandra on April 20, 2026.
 - **The Qonto Way** — The Qonto Way is a publication series hosted on Medium that shares stories and learnings from the team behind Qonto.
-- **Bayesian Media Mix Modeling with limited data** — The primary article published on Medium.com by Artefact discussing Bayesian methods for media mix modeling.
 - **Decision-Making Processes in Marketing Mix Modelling: A Survey of MMM Providers** — This is an exploratory survey article first published on October 12, 2023.
 - **AdAnalyse Dataset** — The AdAnalyse Dataset is a Kaggle dataset containing ad groups for brands in marketplaces like Walmart.
+- **MMM Example Notebook** — A technical documentation notebook hosted on GitHub that demonstrates the implementation of Media Mix Modeling (MMM) using the PyMC-Marketing package.
 - **Marketing in the Era of Accountability** — A publication from 2007 co-authored by Les Binet and Peter Field.
 - **Analyst's Guide to MMM** — A comprehensive document summarizing the methodology and tools for Marketing Mix Modeling.
 - **Calibration Simulation Project** — A proof-of-concept project created during the hackathon to demonstrate MMM calibration capabilities using simulated data.
 - **Article: Hitting ROAS target using Robyn's budget allocator** — The publication detailing the usage of Robyn's budget allocator to hit specific ROAS or CPA targets.
 - **Article: How to invest better in acquisition channels?** — The publication hosted on Medium and Qonto Way detailing the experiment, results, and future actions regarding acquisition investment.
 - **Marketing Measurement series: Incrementality test scheduling** — A specific document within the Marketing Measurement series published on Medium in June 2024.
-- **Marketing Measurement Series Part II** — An article titled Marketing Mix Modeling at Qonto, specifically focusing on Adstock and saturation concepts.
 - **The MMM Handbook** — A document sourced from ThinkWithGoogle that discusses long-term advertising effects and the nested model approach.
 - **More precision in MMM-experiment calibration with Robyn from Meta Marketing Science** — Document published on Medium by Gufeng Zhou and others in 2022.
-- **Bayesian Media Mix Modeling using PyMC3, for Fun and Profit** — This is the title of the technical blog post published on HelloTech.
 - **Case Study: KOHO** — A document published in 2025 detailing the partnership between KOHO and Recast.
 - **The Theory of Statistical Decision** — The Theory of Statistical Decision is a seminal 1951 work by Leonard Savage on decision theory.
 - **Improving Marketing Mix Modeling Using Machine Learning Approaches** — The title of the article published on Towards Data Science detailing methods to enhance marketing mix models.
@@ -397,17 +335,13 @@ _737 entities · 10 types · 162 communities_
 - **Marketing Mix Modeling series** — The Marketing Mix Modeling series is a publication sequence detailing the implementation of Bayesian models at Qonto.
 - **Project Halo** — An industry-wide collaboration for privacy-safe cross-channel reach deduplication.
 - **Bayesian Methods for Hackers** — A book or guide that introduces PyMC for beginners.
-- **Demo Notebook** — A GitHub repository containing a demonstration notebook for Marketing Mix Modeling using PyMC.
 - **Part I: Getting started** — The first part of the Marketing Measurement series, released on May 21, 2024.
 - **Part VI: MLOps** — The sixth part of the Marketing Measurement series, released on June 14, 2024.
 - **Wikipedia - Marketing Mix Modeling** — External reference document providing general information on Marketing Mix Modeling.
 - **Borden, N. H. (1964)** — This publication titled 'The concept of the marketing mix' is a historical reference.
 - **Chan & Perry (2017)** — This publication titled 'Challenges And Opportunities In Media Mix Modeling' discusses key issues in the field.
-- **Budget Allocation with PyMC-Marketing** — A Jupyter Notebook exploring budget allocation function in PyMC-Marketing, serving as the primary source document.
 - **Case Study: LA Times** — A marketing performance report published by Recast detailing the partnership and results with Los Angeles Times.
 - **Lume Case Study** — The Lume Case Study is the document detailing Lume's partnership with Recast for always-on incrementality measurement.
-- **MMM Example Notebook** — A technical documentation notebook demonstrating the implementation of Media Mix Models using the PyMC Marketing package.
-- **Media Mix Modeling (MMM) Quickstart Guide** — A walkthrough document for fitting a basic Media Mix Model in PyMC-Marketing to understand advertising channel contributions.
 - **Media Effect Estimation with PyMC** — A work by Juan Orduz detailing Media Mix Modeling concepts including Adstock, Saturation and Diminishing Returns.
 - **Jin, Yuxue et al. (2017)** — A research paper titled Bayesian methods for media mix modeling with carryover and shape effects that serves as the source of the base model specification.
 - **media_tvp_data.csv** — A synthetic dataset file containing weekly observations from April 2018 to September 2021 with two channels and control events.
@@ -417,31 +351,25 @@ _737 entities · 10 types · 162 communities_
 - **How Brands Grow** — A book by Byron Sharp published in 2010 that discusses behavioral loyalty laws and mental availability as key drivers for brand growth.
 - **Seducing the Subconscious** — A publication by Robert Heath focusing on emotive processing versus cognitive power in TV advertising contexts.
 - **The Long and the Short of It** — A document or summary report funded by Thinkbox that analyzes marketing effectiveness over time.
-- **PyMC-Marketing Documentation** — Official documentation for the PyMC-Marketing library available online.
 
-### ENTITY (30)
+### ENTITY (25)
 - **In-Platform Metrics** — A measurement methodology that suffers from attribution inflation, often summing to 2.5 times actual sales.
 - **Germany** — A key market for Qonto's operations alongside France, Italy, and Spain.
 - **Italy** — One of the four European markets where Qonto provides its financial services for SMEs and freelancers.
 - **Platform Performance**
 - **Model Selection** — Model selection is the process of choosing a final marketing mix model for use.
 - **Spain** — A European market where Qonto operates, contributing to its presence in the Next40 index since 2021.
-- **"Marketing Measurement series: Marketing Mix Modeling at Qonto"**
-- **Square US**
-- **Optimization Result**
 - **Prior Predictive Check** — Prior Predictive Check is a method to assess model adequacy before observing data.
 - **Long-term Share Growth**
 - **InputCollect Object**
 - **CXL**
 - **Best Practices**
-- **Facebook Business News**
 - **Matt Patton**
+- **Optimization Result**
 - **Incrementality System**
 - **Opacity**
-- **Upper-funnel Economics**
 - **Healthcare**
 - **High Customer Lifetime Value**
-- **Marketing Budget Optimization**
 - **Posterior Predictive Check**
 - **Annual Budget**
 - **Santiago Schnell**
@@ -469,63 +397,53 @@ _737 entities · 10 types · 162 communities_
 - **EffWeek Conference** — Conference where Simon Peel spoke; Platform for presenting findings on Adidas marketing strategy.
 - **Onboarding Event** — A specific project event that occurred in October 2023 when GetYourGuide onboarded the Recast Marketing Mix Model.
 
-### LOCATION (10)
+### LOCATION (8)
 - **France** — The primary market where the Qonto acquisition channel experiment was conducted.
-- **New York** — Headquarters location for the BARK organization, situated in the United States.
 - **US** — Primary market where Resident operates with a significant presence of over 2,500 brick-and-mortar stores.
-- **UK** — Secondary market where Resident operates alongside the United States.
+- **New York** — Headquarters location for the BARK organization, situated in the United States.
 - **Latin America Market** — Location of specific attribution breakdown case study (Google AdWords) showing SEO traffic stability.
 - **Brazil** — The geographical location associated with the Artefact team, indicating their origin and operational base for the published content.
 - **Berlin** — The headquarters location of GetYourGuide where the company is based.
 - **Canada** — The geographic location where KOHO operates as one of Canada's fastest-growing fintechs.
-- **Western United States** — The geographic region where Los Angeles Times operates as the largest newspaper in the area.
 - **California** — Location of the historical tobacco control program study by Abadie et al.
 
-### ORGANIZATION (97)
+### ORGANIZATION (82)
 - **Qonto** — Qonto is a financial technology company founded in 2016 that provides online business accounts and invoicing tools for SMEs and freelancers.
-- **Meta** — Primary developer of MMM tools and supports all advertisers regardless of implementation method.
+- **Facebook** — Meta (formerly Facebook) is a major technology company operating advertising platforms including Facebook and Instagram, with billions of daily active users, and offering advertise
 - **Recast** — A vendor and platform provider offering a forward-looking, time-varying Bayesian model for marketing measurement with weekly refreshes and transparency into diagnostics.
 - **Lume** — Lume is a primary subject of the case study specializing in whole body odor control products.
-- **GetYourGuide** — A Berlin-based travel experience marketplace founded in 2009 that operates across multiple countries including Germany, France, and Italy.
+- **Meta Marketing Science** — Meta Marketing Science is a research group at Meta (associated with Facebook) that focuses on marketing science research, tools, and business measurement.
+- **GetYourGuide** — GetYourGuide is a Berlin-based travel experience marketplace founded in 2009, operating across multiple countries including Germany, France, and Italy, with over 150,000 experience
 - **BARK** — Dog-centric company founded in 2012 and headquartered in New York, managing over 2.3 million active subscriptions across categories like fun, food, health, and home.
-- **Meta Marketing Science** — The organization that developed the Robyn package and where the authors are affiliated.
-- **Google** — Digital channel used by BARK for marketing spend analysis and customer acquisition cost evaluation.
-- **Resident** — An e-commerce company specializing in home goods, primarily mattresses and bedding brands like Nectar and DreamCloud.
+- **Google** — Google is a major technology company and advertising platform — and a subsidiary of parent company Alphabet — that owns products including Google Ads, Google Shopping, AdWords, and
 - **Daily Harvest** — A food company and direct-to-consumer brand founded in 2015 that sells sustainably grown, organic fruits and vegetables.
-- **Cassandra** — A marketing measurement platform that incorporates Marketing Mix Modeling, Incrementality testing, and Always on Incrementality.
+- **Resident** — An e-commerce company specializing in home goods, primarily mattresses and bedding brands like Nectar and DreamCloud.
 - **Negative Underwear** — A bootstrapped women's underwear brand that utilizes inclusive marketing campaigns and a diverse range of models.
 - **Medium** — The publication platform where the article about Robyn's budget allocator was published.
+- **Cassandra** — A marketing measurement platform that incorporates Marketing Mix Modeling, Incrementality testing, and Always on Incrementality.
 - **Adidas** — Global sports brand; Subject of analysis; Shifted from efficiency to effectiveness focus; Had over-supply problem; Divisions competed against each other.
-- **HelloFresh** — HelloFresh is a meal kit delivery company that hosts the HelloTech engineering blog.
+- **HelloFresh** — HelloFresh is a meal kit delivery company that hosts the HelloTech engineering blog, which serves as the publication venue for HelloFresh Engineering content.
 - **KOHO** — A fast-growing financial technology company based in Canada.
 - **PyMC Labs** — PyMC Labs is a data science team and service provider specializing in Bayesian Media Mix Modeling.
-- **Facebook** — Technology provider; Owner of Facebook attribution model.
+- **Think with Google** — A publication arm of Google that releases guidance documents, including the Modern Measurement Playbook, advising marketers on incrementality approaches.
+- **YouTube** — YouTube is an online video platform and paid acquisition channel within Qonto's marketing mix, used for clickable ads.
 - **Block** — A complex enterprise with multiple business units, international operations, and diverse customer journeys ranging from consumer instant mobile payments to enterprise B2B.
+- **Square** — A business unit and subsidiary of Block that utilizes traditional enterprise marketing mix modeling vendors but is transitioning to new measurement solutions.
 - **Cash App** — A mobile-focused consumer marketing business unit within Block that previously relied on AppsFlyer attribution data and transitioned to Recast after late 2024.
 - **Amazon** — Marketplace and sales channel used by BARK for evaluating marketing effectiveness and driving subscription growth.
-- **YouTube** — An online paid acquisition channel used for clickable ads within Qonto's marketing mix.
 - **Google Research** — The research division of Google that published seminal papers on Bayesian Methods for Media Mix Modeling.
 - **Los Angeles Times** — A daily news institution founded in 1881 and recognized as a top-five newspaper in America.
-- **Towards Data Science** — Publication platform where the document was released and is hosted online.
-- **Facebook Experimental** — The GitHub organization that hosts the Robyn repository.
-- **Meta Open Source** — Initiative by Meta that provides open source code to advertisers, allowing them to build models faster and in a budget-friendly fashion.
-- **Meta Foresight** — Newsletter and insight program associated with Meta that delivers timely insights to subscribers' inboxes.
 - **Analytic Edge** — An organization that published research on the value of calibrating marketing mix models with lift experiments.
 - **Alphabet** — The parent company of Google, reported to capture approximately 51% of the analyzed ad spend in the benchmarks.
-- **HelloTech** — HelloTech is the engineering blog platform where the primary document was published.
 - **Artefact** — A Brazilian team that published the article on Bayesian Media Mix Modeling.
-- **Square** — A business unit and subsidiary of Block that utilizes traditional enterprise marketing mix modeling vendors but is transitioning to new measurement solutions.
 - **AppsFlyer** — An attribution data provider that was previously used by Cash App for attribution data before the adoption of Recast.
 - **Walmart** — Walmart is one of the marketplaces included in the Geos expansion experiment within the AdAnalyse Dataset.
-- **Think with Google** — A publication arm of Google that releases guidance documents, including the Modern Measurement Playbook, advising marketers on incrementality approaches.
 - **Github** — Github is the platform for source code repository hosting where the author maintains their posts.
 - **Shampoo Advertiser** — The real data application case study used to test the proposed models.
 - **Northeastern University** — Northeastern University is an academic institution that employs Julian Runge.
 - **D’Amore-McKim School of Business** — The D’Amore-McKim School of Business is a school within Northeastern University.
-- **Marketing Science** — Marketing Science is the journal where the survey article was first published.
 - **Growth Department** — The Growth Department is an internal division at Qonto that utilizes data science teams to support marketing strategies.
 - **LinkedIn** — An online paid acquisition channel used for clickable ads as part of Qonto's marketing strategy.
-- **Instagram** — An online paid acquisition channel utilized for advertising campaigns targeting potential customers.
 - **Booking.com** — An organization cited as an example of a company that runs simultaneous or high velocity experiment scheduling strategies in its operations.
 - **Netflix** — An organization cited as an example of a company using stratified sampling for simultaneous or high velocity experiment scheduling.
 - **Deloitte** — A professional services firm that collaborated with Meta in developing the Measurement 360 framework.
@@ -538,7 +456,6 @@ _737 entities · 10 types · 162 communities_
 - **Mistplay** — Mistplay is a mobile gaming platform where Luca Fiaschi currently works as CDAO.
 - **Afterpay** — A subsidiary of Block focused on two-sided marketplace dynamics that is preparing to tackle unique measurement challenges within the enterprise.
 - **Bolt** — An organization that authored the methodology 'Budgeting with Bayesian Models' which inspired PyMC-Marketing.
-- **GetYourGuide Marketing Experimentation Team** — An internal team at GetYourGuide responsible for leading marketing experimentation initiatives using advanced statistical tools.
 - **Harry's** — A retail-heavy brand that serves as a client of Recast.
 - **Mockingbird** — A retail-heavy brand and client of Recast.
 - **Kroger, Costco, Wegmans** — Brick-and-mortar retailers that serve as distribution partners for Daily Harvest.
@@ -558,8 +475,6 @@ _737 entities · 10 types · 162 communities_
 - **Target** — Target is one of the retail distribution partners where Lume sells its products alongside other major retailers.
 - **H-E-B** — H-E-B is a retail distribution partner where Lume sells its products as part of its broader retail expansion strategy.
 - **Meijer** — Meijer is a retail distribution partner for Lume, contributing to the company's diverse sales channel mix.
-- **Meta Platform** — One of the major advertising platforms analyzed in the study.
-- **Google Platform** — Another major advertising platform analyzed in the study.
 - **Home Improvement Retailer** — A specific client type used in the case study analysis.
 - **International Union of Biochemistry and Molecular Biology** — An organization that recommends symbols for biochemical reactions, including those related to Michaelis–Menten kinetics.
 - **Merchandising Team** — An internal team at Negative Underwear that considers incrementality via the Recast model for decision making.
@@ -573,26 +488,21 @@ _737 entities · 10 types · 162 communities_
 - **MIT** — MIT is the license holder for the Robyn dataset and tool.
 - **Unsplash** — Unsplash is the image hosting platform that serves as the source for the photo credit in the document.
 - **Data Science Team** — The Data Science Team is a specialized group within Qonto that manages technical entities like attribution models and incrementality tests.
-- **Facebook Incubator** — Host of the GeoLift library, supporting research and development in data science and experimentation.
-- **GetYourGuide Data Science Team** — An internal group that uses Recast features specifically for model validation purposes.
-- **GetYourGuide Marketing Teams** — The end-users of the Recast platform who execute media mix plans based on insights provided by the data science team.
-- **GetYourGuide Executive Team** — The leadership group that provides overall marketing budget and receives performance ranges or outcomes rather than point estimates.
 - **HubSpot** — Used for widget and consent collection as a technical implementation detail in the context of the document.
 - **Lifesight.io** — An organization offering Incrementality-adjusted Attribution as a product solution for measuring marketing performance accurately.
 
-### OTHER (10)
-- **Return on Ad Spend** — A metric calculated by setting spend to zero in a change period and comparing predicted revenue against historical spend.
+### OTHER (9)
+- **Return on Ad Spend** — Return on Ad Spend (ROAS) is a key performance indicator measuring revenue generated per dollar of ad spend, calculated as total response divided by total spend, including carryove
 - **Los Angeles Times Marketing Organization** — The internal team at Los Angeles Times responsible for marketing performance and planning.
 - **Los Angeles Times Data Science Team** — An internal technical team that reviewed and validated the Recast Model through a stress test approach to ensure accuracy.
 - **Gibbs Sampling** — An MCMC algorithm implemented in C++ using slice sampler and BOOM library.
 - **Hamiltonian Monte Carlo** — A sampling method used by the Stan Sampler that utilizes gradient information.
-- **Marginal Return on Ad Spend** — A metric measuring additional revenue from one-unit increase in spend.
 - **Bayesian Information Criterion** — A metric used for model selection that penalizes complexity.
 - **Propensity Score Methods** — Techniques used for causal inference that are hard to implement due to limited data.
 - **Optimizer Tool** — A component of the Recast Platform used for providing marketing recommendations based on calibrated experiments.
 - **Forecaster Tool** — A component of the Recast Platform used for the forecasting process, accounting for seasonality and demand spikes.
 
-### PERSON (65)
+### PERSON (63)
 - **Gufeng Zhou** — Gufeng Zhou is a researcher affiliated with Meta and Marketing Science.
 - **Ruari Walker** — Author of the article discussing investment in acquisition channels, with a linked LinkedIn profile.
 - **Juan Orduz** — Author of a reference article on PyMC MMM.
@@ -609,7 +519,6 @@ _737 entities · 10 types · 162 communities_
 - **Abadie et al.** — Researchers who popularized Synthetic Control Methods in the early 2000s and conducted studies on tobacco control.
 - **Gabriele Franco** — Founder and CEO of Cassandra who reviewed the final write-up for the document.
 - **Peter Field** — Academic/Theorist; Co-author of research on advertising split recommendations.
-- **Dr. Vladislav Borisov** — The lead of the GetYourGuide Marketing Experimentation Team with expertise in marketing science and statistical modeling.
 - **Mario Filho** — Mario Filho is the author of the tutorial on LightweightMMM and is associated with Forecastegy.
 - **Donald Van Slyke** — A scientist who studied urease and assumed the first step was an irreversible second-order reaction, functionally indistinguishable from the Henri–Michaelis–Menten equation.
 - **Evan Maridou** — Chief Marketing Officer at Negative Underwear who serves as a new marketing leader during the case study period.
@@ -628,9 +537,11 @@ _737 entities · 10 types · 162 communities_
 - **Rhayssa Sonohata** — A member of the Artefact team who reviewed the article before its publication.
 - **Vinicius Pacheco** — A member of the Artefact team who reviewed the article before its publication.
 - **Wedeueis Braz** — A member of the Artefact team who reviewed the article before its publication.
+- **Koehler, J.** — An author of the reference paper on Bayesian methods for media mix modeling with carryover and shape effects.
 - **Michael Wexler** — Head of Global Go To Market Data at Square who focuses on marketing levers under control and emphasizes speed to insight in decision making.
 - **Ling Chiao** — Marketing Analytics Lead at Square US with seven years tenure who highlighted limitations of biannual refresh cycles and advocated for mid-month course corrections.
 - **Peter Zhou** — Technical Transition Lead at Square US who led the technical transition and incorporated incrementality test results for model calibration with previous lift tests.
+- **Dr. Vladislav Borisov** — The lead of the GetYourGuide Marketing Experimentation Team with expertise in marketing science and statistical modeling.
 - **Yassine Bakri** — Senior Director of Performance Marketing at KOHO.
 - **Lindsey Rodriguez** — Head of Performance Marketing at Daily Harvest.
 - **Darcy Hinck** — Senior Data Analyst at Daily Harvest who provided a testimonial on support experience.
@@ -639,8 +550,6 @@ _737 entities · 10 types · 162 communities_
 - **Michael Kaminsky** — Author of the article and employee of Recast who discusses core advantages of using Bayesian methods for Marketing Mix Modeling.
 - **Shannon Klingman, MD (OB/GYN)** — Shannon Klingman is the founder and developer of Lume products.
 - **Jordan Allen** — Jordan Allen is the Head of Analytics and Technology at Lume.
-- **Jin, Yuxue** — An author cited for foundational research on Bayesian methods for media mix modeling with carryover and shape effects.
-- **Jin, Y., Wang, Y., Sun, Y., Chan, D., & Koehler, J.** — Authors of the paper on Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects.
 - **Harry Markowitz** — The originator of Portfolio Theory in 1952.
 - **Leonor Michaelis** — A scientist who, along with Maud Menten, proposed a mathematical model for enzyme kinetics in 1913 specifically for invertase.
 - **Maud Menten** — A scientist who collaborated with Leonor Michaelis to propose the mathematical model for enzyme kinetics in 1913, realizing initial rate analysis was simpler.
@@ -657,23 +566,16 @@ _737 entities · 10 types · 162 communities_
 - **Wang, Y.** — An author of the reference paper on Bayesian methods for media mix modeling with carryover and shape effects.
 - **Sun, Y.** — An author of the reference paper on Bayesian methods for media mix modeling with carryover and shape effects.
 - **Chan, D.** — An author of the reference paper on Bayesian methods for media mix modeling with carryover and shape effects.
-- **Koehler, J.** — An author of the reference paper on Bayesian methods for media mix modeling with carryover and shape effects.
 
-### PRODUCT (42)
-- **Robyn** — Open-source R code using machine learning techniques for in-house or DIY modelers.
+### PRODUCT (32)
+- **Robyn** — Robyn is an open-source Marketing Mix Modeling (MMM) package developed by Meta's Facebook Experimental team, designed to democratize access to best-in-class MMM for in-house and DI
+- **GeoLift by Recast** — GeoLift by Recast is an incrementality measurement platform within the Recast ecosystem that conducts geographic experiments to validate MMM findings, calibrate model coefficients,
 - **Recast Platform** — The core incrementality system used for planning, experimentation, model validation, and optimization.
 - **Measurement 360** — An advanced measurement framework designed to help organizations adopt an agile measurement strategy.
-- **Meta GeoLift** — A geo-based incrementality study methodology used to calibrate MMM models.
-- **Multi-Channel Marketing Mix Modeling Class** — The main software class within pymc-marketing that handles model construction, fitting, and adding lift test measurements.
-- **GeoLift by Recast** — An incrementality platform and experimentation tool provided by Recast.
-- **Project Robyn** — A specific initiative by the Meta Marketing Science team to build in-house models.
-- **Conversion Lift Tests** — Tools provided by Meta and Google that use cookies or unique identifiers to track conversions across sessions.
 - **Television (TV)** — Television is an offline marketing channel typically used for brand awareness.
 - **Meta Conversion Lift** — A people-based incrementality study methodology used to calibrate MMM coefficients.
-- **In-house MMM Solution** — A custom-built measurement solution developed by Resident's data science team over five working months.
 - **Search Engine Marketing** — Search Engine Marketing is a lower-funnel online channel used for direct response.
 - **CausalPy** — An external library recommended for conducting experiments like Interrupted Time Series to generate results compatible with MMM models.
-- **Hill Saturation Function** — A Python class implementation that applies the Hill function formula to transform saturation levels.
 - **Complete Code Implementation** — The full set of scripts and functions available for download from the GitHub repository.
 - **BarkBox** — Subscription service product within BARK's portfolio focused on delivering fun items to dog parents.
 - **Super Chewer** — Subscription service product within BARK's portfolio focused on health and wellness for dogs.
@@ -682,16 +584,12 @@ _737 entities · 10 types · 162 communities_
 - **Nectar** — A brand owned by Resident within its portfolio of home goods companies.
 - **DreamCloud** — Another brand owned by Resident within its portfolio of home goods companies.
 - **Online Business Account** — The core product offered by Qonto for SMEs and freelancers, including invoicing, bookkeeping, and spend management tools.
-- **Fictitious Dataset** — A dataset provided by the Facebook Experimental Robyn repository used for demonstration.
 - **Instagram Only** — A specific marketing channel listed as a top performer by median ROI with high efficiency but lower client concentration.
 - **Pinterest** — A marketing channel known for high median ROI but extremely wide confidence intervals indicating high execution-dependent variance.
 - **Recast Insights Dashboards** — Backwards-looking reports and views that display metrics such as saturation curves, time shifts, and marginal ROIs.
-- **Recast GeoLift Platform** — A new platform feature introduced in 2025 that enables expansion into new geographies and fuels the experimentation roadmap.
 - **BuildMergedModel** — The BuildMergedModel is a class for merging multiple models into a single computational graph.
 - **CustomModelWrapper** — The CustomModelWrapper is a wrapper class that exposes channel data and contribution metrics to the optimizer.
 - **Mando** — Mando is a men's brand under Lume that recently began modeling with Recast.
-- **Synthetic Dataset** — A simulated weekly sales dataset used to demonstrate model fitting and diagnostics in PyMC-Marketing.
-- **Google Search** — A digital media channel included in the model as a source of marketing spend and contribution to sales.
 - **Invertase** — An enzyme investigated by Michaelis and Menten that catalyzes the hydrolysis of sucrose into glucose and fructose.
 - **Urease** — An enzyme studied by Van Slyke and Cullen around the same time as Michaelis and Menten studied invertase.
 - **Fumarase** — An example of a diffusion limited enzyme that works at the theoretical upper limit of catalytic efficiency.
@@ -703,21 +601,22 @@ _737 entities · 10 types · 162 communities_
 - **Performance Incrementality Dashboard** — A product offered by Cassandra.app that aggregates MTA data, MMM outputs, and incrementality test results to compare attribution ROAS versus true incremental ROAS daily.
 - **Meta Ads Manager** — The primary advertising platform provided by Meta for managing campaigns and viewing performance metrics like conversion lift.
 
-### TECHNOLOGY (74)
-- **PyMC-Marketing** — An open-source package built on top of PyMC specifically for building Customer Lifetime Value and Marketing Mix Models.
-- **LightweightMMM** — LightweightMMM is a Python library implementing Bayesian Marketing Mix Models.
+### TECHNOLOGY (64)
+- **PyMC-Marketing** — PyMC-Marketing is an open-source Python library built on top of PyMC, specifically designed for Marketing Mix Modeling (MMM), Media Mix Modeling, and Customer Lifetime Value analys
 - **PyMC** — PyMC is a software library used for specifying Bayesian models, particularly referenced in Marketing Mix Modeling series.
+- **LightweightMMM** — LightweightMMM is a Python library implementing Bayesian Marketing Mix Models.
+- **Hill Function** — A two-parametric function in Robyn reflecting saturation of each media channel.
 - **Markov Chain Monte Carlo** — A class of algorithms for sampling from probability distributions based on Markov chains.
 - **Multi-stage Media Mix Modeling** — A measurement technology that measures impact across multiple customer journey stages.
 - **Python** — The programming language used to implement the pymc-marketing library and its associated data analysis scripts.
-- **Hill Function** — A two-parametric function in Robyn reflecting saturation of each media channel.
 - **NumPy** — A fundamental library for numerical computing in Python.
 - **Prophet** — Meta open-source code for forecasting time series data.
 - **Ridge Regression** — A regularization technique used to reduce variance at the cost of bias, preventing overfitting and multicollinearity.
-- **PyMC3** — PyMC3 is a Python library used for Bayesian statistical modeling.
+- **Geometric Adstock** — A simple transformation requiring one parameter theta with a fixed decay rate.
 - **BudgetOptimizer** — A direct optimizer class for custom constraints and utility functions within PyMC-Marketing.
 - **Pandas** — A Python library used for data manipulation within the pymc-marketing workflow.
 - **Hilbert Space Gaussian Process** — An algorithm used to capture hidden latent temporal variation of marketing contributions within the model architecture.
+- **Scipy** — SciPy is a Python library for numerical and scientific computing, widely used in applications such as Bayesian modeling (e.g., simulation of prior samples) and Marketing Mix Modeli
 - **ArviZ** — A library used for exploratory analysis of Bayesian models, providing in-depth visualization and analysis of model outputs to ensure convergence and performance.
 - **Scikit-learn** — A machine learning library used for scaling variables in the model.
 - **Data Version Control** — An open-source tool for version control of data, models, pipelines, and experiments that tracks changes to data artifacts as metadata.
@@ -729,18 +628,15 @@ _737 entities · 10 types · 162 communities_
 - **matplotlib** — A visualization library used for plotting saturation curves and budget allocation in the notebook.
 - **Random Forest** — Tree-based ensemble algorithm that captures non-linearities and interactions within marketing mix models.
 - **Stan** — An MCMC engine software used for advanced implementations in R and Python for Bayesian Marketing Mix Modeling.
-- **Geometric Adstock** — A simple transformation requiring one parameter theta with a fixed decay rate.
 - **Meta Pixel** — The Meta Pixel is a tracking tool used within the Conversion Lift Test process to monitor conversions.
 - **R** — A programming language used to write the GeoLift library and perform statistical analyses for the experiment.
 - **nloptr** — An optimization package used in Robyn for budget allocation scenarios.
-- **Robyn v3.8** — Specific version of the Robyn package that introduces Contextual Calibration.
 - **Cookies (Web-tracking)** — Cookies are web-tracking technologies used to monitor advertising touchpoints.
 - **Touch-Based Attribution** — An older method relied upon before Recast that was inaccurate for measuring true incremental impact and caused double-counting of conversions.
 - **Internal MTA Tool** — An internal tool used by Daily Harvest for media measurement before switching to Recast.
 - **Google Ads** — The advertising platform being analyzed in the benchmarks, utilizing Last-click attribution and reporting Platform ROAS.
 - **Google Colab** — Google Colab is the platform used for running the code and generating plots for the LightweightMMM tutorial.
 - **SHAP** — Shapley Additive Explanations method used to explain individual predictions and feature importance in models.
-- **Scipy Optimize Minimize** — A function within the Scipy library used for optimization.
 - **Weibull CDF Adstock** — A cumulative distribution function offering flexible decay rates with two parameters.
 - **glmnet** — An R package used for regularised regression fitting within Robyn.
 - **Git** — A source code management system that tracks changes to code and is used to track DVC metadata but not recommended for storing CSVs directly.
@@ -750,31 +646,23 @@ _737 entities · 10 types · 162 communities_
 - **Google AMSS** — A data generation tool created by Google used for parameter recovery exercises in model evaluation.
 - **Constrained Optimization Algorithm** — This algorithm is used to generate budget recommendations that maximize conversions.
 - **PySTAN** — A probabilistic modeling library in Python used to implement prior distributions in the Bayesian Media Mix Modeling approach.
-- **Lightweight MMM** — A competitor or alternative MMM library developed by Google, compared with PyMC-Marketing methodology.
 - **MultiDimensionalBudgetOptimizerWrapper** — A module that wraps the MMM model for optimization tasks within the PyMC-Marketing framework.
-- **Recast GeoLift** — An incrementality measurement tool provided by the Recast platform for evaluating specific geographic or channel impacts.
 - **Recast Optimizer** — A scenario-analysis and planning tool that determines optimal channel budgets based on various inputs like budget flighting and promotional calendars.
-- **Bayesian Time Series Model** — The underlying technology for the Recast platform that exposes model uncertainty associated with all parameter estimates.
 - **Google Performance Planner** — A technology used for unified growth projections alongside Multi-stage Media Mix Modeling.
 - **build_mmm_from_yaml** — A function used to initialize and build a Media Mix Model from a YAML configuration file.
 - **Optuna** — Hyperparameter optimization framework utilized to tune model parameters and adstock decay rates.
 - **LIME** — An explainability method proposed in the machine learning community for local interpretation of model outputs.
-- **No-U-Turns Sampler** — A Markov Chain Monte Carlo sampling algorithm used in the fit method to estimate model parameters and handle inference data.
 - **CPython** — The specific implementation of the Python programming language used to execute the notebook and run the pymc-marketing library.
 - **Google Analytics** — Google Analytics was a previous attribution tool used by Lume with a direct-to-consumer focus before Recast adoption.
 - **How Did You Hear About Us Survey Tool** — This survey tool, previously known as HDYHAU, was used by Lume for media mix optimization before the Recast adoption.
 - **seaborn** — A statistical data visualization library used for enhancing plots, version 0.13.2.
 - **JAX** — A numerical computing library used as the gradient backend for the nutpie sampler, enabling efficient automatic differentiation.
 - **nutpie** — A sampler backend version 0.19.0 that works with JAX to perform Markov Chain Monte Carlo sampling for Bayesian inference.
-- **Bayesian Marketing Mix Models** — A specific type of model used in the analysis to estimate Incremental ROAS.
-- **SLSQP** — Sequential Least Squares Programming, an algorithm method used for constrained optimization problems.
 - **TV Broadcast** — A brand-building channel par excellence with high reach and involvement.
 - **Meridian** — An open-source tool provided by Google specifically designed for Marketing Mix Modeling, accessible through their developer documentation.
-- **Scipy** — Scipy is a Python library used for simulation of prior samples in the context of Bayesian modeling.
-- **PyMC Extras** — An extension package for PyMC that provides additional functionality such as prior definitions.
 - **PreliZ** — PreliZ is a library of tools specifically designed for prior elicitation in Bayesian models.
 - **IPython** — IPython is an interactive Python environment used for the development and testing of the code logic.
 - **Gradient Boosting Machines** — Algorithm class mentioned in H2O.ai proof-of-concept contexts for improving model accuracy.
 - **pytensor** — A computational graph framework used as a backend for PyMC, version 2.36.3.
 - **numpyro** — A probabilistic programming backend that can be used alongside or with PyMC, version 0.19.0.
-- **pymc_extras** — A library used for defining priors in the model, version 0.7.0.
+- **pymc_extras** — PyMC Extras is an extension package for PyMC (version 0.7.0) that provides additional functionality beyond the core library, including support for defining priors in probabilistic

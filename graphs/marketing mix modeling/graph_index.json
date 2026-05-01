@@ -4,8 +4,8 @@
       "id": "Marketing Mix Modeling",
       "name": "Marketing Mix Modeling",
       "type": "CONCEPT",
-      "description": "A privacy-friendly, highly resilient, data-driven statistical analysis that quantifies incremental sales impact and ROI of marketing activities.",
-      "degree": 109,
+      "description": "Marketing Mix Modeling (also called Media Mix Modeling) is a privacy-safe, data-driven econometric technique in use since the 1960s that uses historical aggregated data to quantify",
+      "degree": 158,
       "community": "75",
       "sources": [
         "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
@@ -17,7 +17,23 @@
         "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md",
         "Optimizing Marketing Spend with Bayesian MMM.md",
         "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
-        "The Incrementality Multiplier_ A Diminishing Returns Problem.md"
+        "The Incrementality Multiplier_ A Diminishing Returns Problem.md",
+        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md",
+        "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
+        "MMM with time-varying parameters (TVP).md",
+        "Budget Allocation with PyMC-Marketing.md",
+        "MMM Example Notebook.md",
+        "Custom Models with MMM components.md",
+        "Lift Test Calibration.md",
+        "Bayesian Media Mix Modeling with limited data.md",
+        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
+        "Case Study_ LA Times.md",
+        "Daily Harvest Case Study.md",
+        "Lume Case Study.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
+        "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
+        "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md",
+        "Negative Case Study.md"
       ]
     },
     "Key Performance Indicator": {
@@ -29,34 +45,12 @@
       "community": "75",
       "sources": []
     },
-    "Meta": {
-      "id": "Meta",
-      "name": "Meta",
-      "type": "ORGANIZATION",
-      "description": "Primary developer of MMM tools and supports all advertisers regardless of implementation method.",
-      "degree": 20,
-      "community": "99",
-      "sources": [
-        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
-        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md",
-        "The Incrementality Multiplier_ A Diminishing Returns Problem.md"
-      ]
-    },
-    "Project Robyn": {
-      "id": "Project Robyn",
-      "name": "Project Robyn",
-      "type": "PRODUCT",
-      "description": "A specific initiative by the Meta Marketing Science team to build in-house models.",
-      "degree": 3,
-      "community": "99",
-      "sources": []
-    },
     "Robyn": {
       "id": "Robyn",
       "name": "Robyn",
       "type": "PRODUCT",
-      "description": "Open-source R code using machine learning techniques for in-house or DIY modelers.",
-      "degree": 34,
+      "description": "Robyn is an open-source Marketing Mix Modeling (MMM) package developed by Meta's Facebook Experimental team, designed to democratize access to best-in-class MMM for in-house and DI",
+      "degree": 35,
       "community": "175",
       "sources": [
         "Budget Allocation with PyMC-Marketing.md",
@@ -107,15 +101,6 @@
       "community": "102",
       "sources": []
     },
-    "Meta GeoLift": {
-      "id": "Meta GeoLift",
-      "name": "Meta GeoLift",
-      "type": "PRODUCT",
-      "description": "A geo-based incrementality study methodology used to calibrate MMM models.",
-      "degree": 6,
-      "community": "109",
-      "sources": []
-    },
     "John Wanamaker": {
       "id": "John Wanamaker",
       "name": "John Wanamaker",
@@ -131,15 +116,6 @@
       "type": "DOCUMENT",
       "description": "A comprehensive document summarizing the methodology and tools for Marketing Mix Modeling.",
       "degree": 2,
-      "community": "75",
-      "sources": []
-    },
-    "Privacy-friendly": {
-      "id": "Privacy-friendly",
-      "name": "Privacy-friendly",
-      "type": "CONCEPT",
-      "description": "A key strength of MMM that overcomes signal loss by not needing user-level data.",
-      "degree": 1,
       "community": "75",
       "sources": []
     },
@@ -166,9 +142,16 @@
       "name": "Geometric Adstock",
       "type": "TECHNOLOGY",
       "description": "A simple transformation requiring one parameter theta with a fixed decay rate.",
-      "degree": 2,
+      "degree": 5,
       "community": "3",
-      "sources": []
+      "sources": [
+        "Budget Allocation with PyMC-Marketing.md",
+        "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
+        "Custom Models with MMM components.md",
+        "Lift Test Calibration.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
+        "MMM with time-varying parameters (TVP).md"
+      ]
     },
     "Weibull CDF Adstock": {
       "id": "Weibull CDF Adstock",
@@ -184,9 +167,13 @@
       "name": "Hill Function",
       "type": "TECHNOLOGY",
       "description": "A two-parametric function in Robyn reflecting saturation of each media channel.",
-      "degree": 7,
+      "degree": 11,
       "community": "76",
-      "sources": []
+      "sources": [
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
+        "Bayesian Media Mix Modeling with limited data.md"
+      ]
     },
     "Granular Data": {
       "id": "Granular Data",
@@ -224,17 +211,6 @@
       "community": "75",
       "sources": []
     },
-    "Bayesian Methods": {
-      "id": "Bayesian Methods",
-      "name": "Bayesian Methods",
-      "type": "CONCEPT",
-      "description": "A statistical framework used to estimate parameters and make inferences based on prior knowledge and observed data.",
-      "degree": 5,
-      "community": "111",
-      "sources": [
-        "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
     "Markov Chain Monte Carlo": {
       "id": "Markov Chain Monte Carlo",
       "name": "Markov Chain Monte Carlo",
@@ -265,19 +241,6 @@
       "community": "110",
       "sources": []
     },
-    "Adstock Function": {
-      "id": "Adstock Function",
-      "name": "Adstock Function",
-      "type": "CONCEPT",
-      "description": "A transformation applied to media spend to model carryover effects.",
-      "degree": 3,
-      "community": "132",
-      "sources": [
-        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
-        "MMM with time-varying media baseline.md",
-        "Optimizing Marketing Spend with Bayesian MMM.md"
-      ]
-    },
     "Shape Effect": {
       "id": "Shape Effect",
       "name": "Shape Effect",
@@ -300,25 +263,21 @@
       "id": "Return on Ad Spend",
       "name": "Return on Ad Spend",
       "type": "OTHER",
-      "description": "A metric calculated by setting spend to zero in a change period and comparing predicted revenue against historical spend.",
-      "degree": 20,
+      "description": "Return on Ad Spend (ROAS) is a key performance indicator measuring revenue generated per dollar of ad spend, calculated as total response divided by total spend, including carryove",
+      "degree": 29,
       "community": "173",
       "sources": [
         "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
         "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md",
         "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md",
         "Negative Case Study.md",
-        "The Incrementality Multiplier_ A Diminishing Returns Problem.md"
+        "The Incrementality Multiplier_ A Diminishing Returns Problem.md",
+        "Budget Allocation with PyMC-Marketing.md",
+        "Adidas_ We over-invested in digital advertising.md",
+        "Bayesian Media Mix Modeling with limited data.md",
+        "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
+        "Introduction to Bayesian Methods for MMM.md"
       ]
-    },
-    "Marginal Return on Ad Spend": {
-      "id": "Marginal Return on Ad Spend",
-      "name": "Marginal Return on Ad Spend",
-      "type": "OTHER",
-      "description": "A metric measuring additional revenue from one-unit increase in spend.",
-      "degree": 1,
-      "community": "75",
-      "sources": []
     },
     "Optimal Media Mix": {
       "id": "Optimal Media Mix",
@@ -326,15 +285,6 @@
       "type": "CONCEPT",
       "description": "The allocation of budget across media channels that maximizes revenue under a budget constraint.",
       "degree": 1,
-      "community": "172",
-      "sources": []
-    },
-    "Sales Response": {
-      "id": "Sales Response",
-      "name": "Sales Response",
-      "type": "CONCEPT",
-      "description": "The response variable in the model, typically sales or log-transformed sales.",
-      "degree": 2,
       "community": "172",
       "sources": []
     },
@@ -379,7 +329,7 @@
       "name": "Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects",
       "type": "DOCUMENT",
       "description": "A research document published by Google Inc.",
-      "degree": 11,
+      "degree": 9,
       "community": "121",
       "sources": [
         "MMM Example Notebook.md",
@@ -454,7 +404,7 @@
       "name": "Mean Absolute Percentage Error",
       "type": "CONCEPT",
       "description": "An evaluation metric computed between True ROAS and Estimated ROAS to measure model accuracy and serve as an objective function.",
-      "degree": 3,
+      "degree": 5,
       "community": "91",
       "sources": [
         "How To Create A Marketing Mix Model With LightweightMMM (Python).md"
@@ -532,24 +482,6 @@
       "community": "103",
       "sources": []
     },
-    "Marketing Science": {
-      "id": "Marketing Science",
-      "name": "Marketing Science",
-      "type": "ORGANIZATION",
-      "description": "Marketing Science is the journal where the survey article was first published.",
-      "degree": 1,
-      "community": "103",
-      "sources": []
-    },
-    "Marketing Mix Modelling Decomposition": {
-      "id": "Marketing Mix Modelling Decomposition",
-      "name": "Marketing Mix Modelling Decomposition",
-      "type": "CONCEPT",
-      "description": "This is a key output of Marketing Mix Modelling that details the attribution of outcomes to individual variables.",
-      "degree": 2,
-      "community": "85",
-      "sources": []
-    },
     "Statistical Fit": {
       "id": "Statistical Fit",
       "name": "Statistical Fit",
@@ -617,19 +549,25 @@
       "id": "Attribution Model",
       "name": "Attribution Model",
       "type": "CONCEPT",
-      "description": "An Attribution Model assigns conversions to specific marketing touchpoints, typically using a Last-click principle.",
-      "degree": 6,
+      "description": "An Attribution Model assigns credit for sales or revenue to specific marketing touchpoints and channels, linking ad spend to outcomes in order to inform budget allocation decisions",
+      "degree": 17,
       "community": "112",
       "sources": [
-        "Decision-Making Under Contradictions_ Robust Budget Allocation When Your Models Disagree.md"
+        "Decision-Making Under Contradictions_ Robust Budget Allocation When Your Models Disagree.md",
+        "Adidas_ We over-invested in digital advertising.md",
+        "Lume Case Study.md",
+        "Lift Test Calibration.md",
+        "Negative Case Study.md",
+        "The Incrementality Multiplier_ A Diminishing Returns Problem.md",
+        "How To Create A Marketing Mix Model With LightweightMMM (Python).md"
       ]
     },
     "Conversion Lift Test": {
       "id": "Conversion Lift Test",
       "name": "Conversion Lift Test",
       "type": "CONCEPT",
-      "description": "A Conversion Lift Test is a type of incrementality test that randomizes based on individual users to measure causal impact.",
-      "degree": 4,
+      "description": "A Conversion Lift Test is a type of incrementality test that randomizes at the individual user level to measure the causal impact of advertising by splitting audiences into control",
+      "degree": 7,
       "community": "151",
       "sources": []
     },
@@ -641,22 +579,6 @@
       "degree": 4,
       "community": "112",
       "sources": []
-    },
-    "Incrementality": {
-      "id": "Incrementality",
-      "name": "Incrementality",
-      "type": "CONCEPT",
-      "description": "Incrementality refers to the causal impact of a marketing channel measured by comparing conversion numbers between exposed and non-exposed groups.",
-      "degree": 15,
-      "community": "151",
-      "sources": [
-        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
-        "Case Study_ GetYourGuide.md",
-        "Case Study_ KOHO.md",
-        "Case Study_ LA Times.md",
-        "Lume Case Study.md",
-        "Negative Case Study.md"
-      ]
     },
     "Cost per Incremental Conversion": {
       "id": "Cost per Incremental Conversion",
@@ -690,7 +612,7 @@
       "name": "PyMC",
       "type": "TECHNOLOGY",
       "description": "PyMC is a software library used for specifying Bayesian models, particularly referenced in Marketing Mix Modeling series.",
-      "degree": 10,
+      "degree": 13,
       "community": "77",
       "sources": [
         "Custom Models with MMM components.md",
@@ -698,7 +620,11 @@
         "Lift Test Calibration.md",
         "MMM Example Notebook.md",
         "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
-        "MMM with time-varying media baseline.md"
+        "MMM with time-varying media baseline.md",
+        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
+        "Bayesian Media Mix Modeling with limited data.md",
+        "Improving Marketing Mix Modeling Using Machine Learning Approaches.md",
+        "Introduction to Bayesian Methods for MMM.md"
       ]
     },
     "Marketing Mix Modeling series": {
@@ -723,21 +649,10 @@
       "id": "Meta Marketing Science",
       "name": "Meta Marketing Science",
       "type": "ORGANIZATION",
-      "description": "The organization that developed the Robyn package and where the authors are affiliated.",
-      "degree": 10,
+      "description": "Meta Marketing Science is a research group at Meta (associated with Facebook) that focuses on marketing science research, tools, and business measurement.",
+      "degree": 15,
       "community": "181",
       "sources": []
-    },
-    "Facebook Experimental": {
-      "id": "Facebook Experimental",
-      "name": "Facebook Experimental",
-      "type": "ORGANIZATION",
-      "description": "The GitHub organization that hosts the Robyn repository.",
-      "degree": 2,
-      "community": "176",
-      "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
     },
     "Medium": {
       "id": "Medium",
@@ -754,17 +669,8 @@
       "id": "Marginal ROAS",
       "name": "Marginal ROAS",
       "type": "CONCEPT",
-      "description": "A metric that converges to equilibrium when constraints are relaxed, representing the efficiency of spend at the margin.",
-      "degree": 0,
-      "community": null,
-      "sources": []
-    },
-    "Marginal CPA": {
-      "id": "Marginal CPA",
-      "name": "Marginal CPA",
-      "type": "CONCEPT",
-      "description": "A metric that converges when optimization freedom increases, indicating cost efficiency per acquisition at the margin.",
-      "degree": 0,
+      "description": "Marginal ROAS is a metric that measures the additional revenue generated from a one-unit increase in spend, representing cost efficiency at the margin.",
+      "degree": 1,
       "community": null,
       "sources": []
     },
@@ -923,30 +829,12 @@
       "community": "98",
       "sources": []
     },
-    "Meta Open Source": {
-      "id": "Meta Open Source",
-      "name": "Meta Open Source",
-      "type": "ORGANIZATION",
-      "description": "Initiative by Meta that provides open source code to advertisers, allowing them to build models faster and in a budget-friendly fashion.",
-      "degree": 2,
-      "community": "99",
-      "sources": []
-    },
-    "Meta Foresight": {
-      "id": "Meta Foresight",
-      "name": "Meta Foresight",
-      "type": "ORGANIZATION",
-      "description": "Newsletter and insight program associated with Meta that delivers timely insights to subscribers' inboxes.",
-      "degree": 2,
-      "community": "99",
-      "sources": []
-    },
     "Google": {
       "id": "Google",
       "name": "Google",
       "type": "ORGANIZATION",
-      "description": "Digital channel used by BARK for marketing spend analysis and customer acquisition cost evaluation.",
-      "degree": 10,
+      "description": "Google is a major technology company and advertising platform \u2014 and a subsidiary of parent company Alphabet \u2014 that owns products including Google Ads, Google Shopping, AdWords, and",
+      "degree": 12,
       "community": "119",
       "sources": [
         "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
@@ -954,7 +842,9 @@
         "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
         "Optimizing Marketing Spend with Bayesian MMM.md",
         "The Incrementality Multiplier_ A Diminishing Returns Problem.md",
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md",
+        "MMM with time-varying parameters (TVP).md"
       ]
     },
     "Amazon": {
@@ -993,7 +883,7 @@
       "name": "Resident",
       "type": "ORGANIZATION",
       "description": "An e-commerce company specializing in home goods, primarily mattresses and bedding brands like Nectar and DreamCloud.",
-      "degree": 10,
+      "degree": 8,
       "community": "100",
       "sources": []
     },
@@ -1002,24 +892,6 @@
       "name": "Avi Shenshakir",
       "type": "PERSON",
       "description": "Vice President of Data at Resident who provided quotes regarding the success of the project.",
-      "degree": 1,
-      "community": "75",
-      "sources": []
-    },
-    "In-house MMM Solution": {
-      "id": "In-house MMM Solution",
-      "name": "In-house MMM Solution",
-      "type": "PRODUCT",
-      "description": "A custom-built measurement solution developed by Resident's data science team over five working months.",
-      "degree": 2,
-      "community": "100",
-      "sources": []
-    },
-    "Privacy Changes": {
-      "id": "Privacy Changes",
-      "name": "Privacy Changes",
-      "type": "CONCEPT",
-      "description": "Looming changes in the digital landscape affecting marketing measurement signals quality and quantity.",
       "degree": 1,
       "community": "75",
       "sources": []
@@ -1056,18 +928,11 @@
       "name": "US",
       "type": "LOCATION",
       "description": "Primary market where Resident operates with a significant presence of over 2,500 brick-and-mortar stores.",
-      "degree": 1,
+      "degree": 2,
       "community": "100",
-      "sources": []
-    },
-    "UK": {
-      "id": "UK",
-      "name": "UK",
-      "type": "LOCATION",
-      "description": "Secondary market where Resident operates alongside the United States.",
-      "degree": 1,
-      "community": "100",
-      "sources": []
+      "sources": [
+        "Case Study_ LA Times.md"
+      ]
     },
     "COVID-19": {
       "id": "COVID-19",
@@ -1132,15 +997,6 @@
       "community": "109",
       "sources": []
     },
-    "Facebook Incubator": {
-      "id": "Facebook Incubator",
-      "name": "Facebook Incubator",
-      "type": "ORGANIZATION",
-      "description": "Host of the GeoLift library, supporting research and development in data science and experimentation.",
-      "degree": 0,
-      "community": null,
-      "sources": []
-    },
     "LinkedIn": {
       "id": "LinkedIn",
       "name": "LinkedIn",
@@ -1150,21 +1006,12 @@
       "community": "95",
       "sources": []
     },
-    "Instagram": {
-      "id": "Instagram",
-      "name": "Instagram",
-      "type": "ORGANIZATION",
-      "description": "An online paid acquisition channel utilized for advertising campaigns targeting potential customers.",
-      "degree": 1,
-      "community": "95",
-      "sources": []
-    },
     "YouTube": {
       "id": "YouTube",
       "name": "YouTube",
       "type": "ORGANIZATION",
-      "description": "An online paid acquisition channel used for clickable ads within Qonto's marketing mix.",
-      "degree": 3,
+      "description": "YouTube is an online video platform and paid acquisition channel within Qonto's marketing mix, used for clickable ads.",
+      "degree": 4,
       "community": "95",
       "sources": [
         "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
@@ -1264,15 +1111,6 @@
       "community": "12",
       "sources": []
     },
-    "Group B": {
-      "id": "Group B",
-      "name": "Group B",
-      "type": "CONCEPT",
-      "description": "The intervention group where the budget for Channel X was reduced to zero in specific regions.",
-      "degree": 0,
-      "community": null,
-      "sources": []
-    },
     "Group B*": {
       "id": "Group B*",
       "name": "Group B*",
@@ -1340,10 +1178,12 @@
       "id": "Time-Series Forecasting",
       "name": "Time-Series Forecasting",
       "type": "CONCEPT",
-      "description": "A domain of analysis focused on predicting future data points based on past trends.",
-      "degree": 1,
+      "description": "Time-Series Forecasting is a domain of analysis focused on predicting future data points based on past trends.",
+      "degree": 3,
       "community": "175",
-      "sources": []
+      "sources": [
+        "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md"
+      ]
     },
     "Lasso": {
       "id": "Lasso",
@@ -1376,10 +1216,12 @@
       "id": "Normalized Root Mean Square Error",
       "name": "Normalized Root Mean Square Error",
       "type": "CONCEPT",
-      "description": "A metric used to measure prediction error in the training or validation sets.",
-      "degree": 1,
+      "description": "Normalized Root Mean Square Error (NRMSE) is a metric used to measure prediction error in training or validation sets, serving as one of the primary objective functions for evaluat",
+      "degree": 2,
       "community": "102",
-      "sources": []
+      "sources": [
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
+      ]
     },
     "Decomposition Root Sum of Squared Distance": {
       "id": "Decomposition Root Sum of Squared Distance",
@@ -1389,26 +1231,6 @@
       "degree": 1,
       "community": "102",
       "sources": []
-    },
-    "Mean Absolute Percentage Error for experiments": {
-      "id": "Mean Absolute Percentage Error for experiments",
-      "name": "Mean Absolute Percentage Error for experiments",
-      "type": "CONCEPT",
-      "description": "A metric used for calibration error that minimizes the difference between predicted effect and causal effect.",
-      "degree": 2,
-      "community": "102",
-      "sources": []
-    },
-    "Saturation Transformation": {
-      "id": "Saturation Transformation",
-      "name": "Saturation Transformation",
-      "type": "CONCEPT",
-      "description": "A concept accounting for diminishing returns where each additional unit of investment increases response at a declining rate.",
-      "degree": 3,
-      "community": "76",
-      "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
     },
     "K-Means Clustering": {
       "id": "K-Means Clustering",
@@ -1491,15 +1313,6 @@
       "community": "13",
       "sources": []
     },
-    "Incrementality Experimentation": {
-      "id": "Incrementality Experimentation",
-      "name": "Incrementality Experimentation",
-      "type": "CONCEPT",
-      "description": "Experiments designed to measure the causal impact of marketing channels.",
-      "degree": 8,
-      "community": "13",
-      "sources": []
-    },
     "Velocity": {
       "id": "Velocity",
       "name": "Velocity",
@@ -1516,15 +1329,6 @@
       "description": "A concept encompassing both Internal and External Validity.",
       "degree": 1,
       "community": "13",
-      "sources": []
-    },
-    "Conversion Lift Tests": {
-      "id": "Conversion Lift Tests",
-      "name": "Conversion Lift Tests",
-      "type": "PRODUCT",
-      "description": "Tools provided by Meta and Google that use cookies or unique identifiers to track conversions across sessions.",
-      "degree": 3,
-      "community": "122",
       "sources": []
     },
     "Cookie Contamination": {
@@ -1554,15 +1358,6 @@
       "community": "112",
       "sources": []
     },
-    "Bayesian Theorem And Priors": {
-      "id": "Bayesian Theorem And Priors",
-      "name": "Bayesian Theorem And Priors",
-      "type": "CONCEPT",
-      "description": "Statistical concepts used within the Marketing Mix Modeling framework.",
-      "degree": 2,
-      "community": "77",
-      "sources": []
-    },
     "Product/Offering Changes": {
       "id": "Product/Offering Changes",
       "name": "Product/Offering Changes",
@@ -1579,27 +1374,6 @@
       "description": "",
       "degree": 1,
       "community": "13",
-      "sources": []
-    },
-    "Adstock": {
-      "id": "Adstock",
-      "name": "Adstock",
-      "type": "CONCEPT",
-      "description": "A concept that encapsulates time delay and time decay effects of advertising.",
-      "degree": 12,
-      "community": "130",
-      "sources": [
-        "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
-      ]
-    },
-    "Marketing Measurement Series Part II": {
-      "id": "Marketing Measurement Series Part II",
-      "name": "Marketing Measurement Series Part II",
-      "type": "DOCUMENT",
-      "description": "An article titled Marketing Mix Modeling at Qonto, specifically focusing on Adstock and saturation concepts.",
-      "degree": 2,
-      "community": "105",
       "sources": []
     },
     "The MMM Handbook": {
@@ -1645,15 +1419,6 @@
       "description": "A saturation curve type with variable returns to scale, introducing the concept of a threshold.",
       "degree": 0,
       "community": null,
-      "sources": []
-    },
-    "Sales Revenue Conversions": {
-      "id": "Sales Revenue Conversions",
-      "name": "Sales Revenue Conversions",
-      "type": "CONCEPT",
-      "description": "Target Key Performance Indicators for Marketing Mix Modeling.",
-      "degree": 1,
-      "community": "162",
       "sources": []
     },
     "Next40 Index": {
@@ -1730,8 +1495,8 @@
       "id": "Bayes' Theorem",
       "name": "Bayes' Theorem",
       "type": "CONCEPT",
-      "description": "The fundamental theorem for updating probabilities given evidence, consisting of likelihood, prior, and posterior components.",
-      "degree": 2,
+      "description": "Bayes' Theorem is a fundamental theorem for updating probabilities given evidence, comprising likelihood, prior, and posterior components, and is central to the Bayesian approach u",
+      "degree": 4,
       "community": "82",
       "sources": []
     },
@@ -1757,21 +1522,16 @@
       "id": "Prior Distributions",
       "name": "Prior Distributions",
       "type": "CONCEPT",
-      "description": "Used to express uncertainty and variability in initial assumptions before seeing data.",
-      "degree": 5,
+      "description": "Prior distributions are statistical inputs that express uncertainty in initial assumptions before observing data, encoding explicit beliefs or expert knowledge (such as ensuring RO",
+      "degree": 8,
       "community": "156",
       "sources": [
-        "Bayesian Media Mix Modeling with limited data.md"
+        "Bayesian Media Mix Modeling with limited data.md",
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Introduction to Bayesian Methods for MMM.md",
+        "Optimizing Marketing Spend with Bayesian MMM.md",
+        "Custom Models with MMM components.md"
       ]
-    },
-    "Posterior Distribution": {
-      "id": "Posterior Distribution",
-      "name": "Posterior Distribution",
-      "type": "CONCEPT",
-      "description": "The updated probability distribution after considering new evidence or data.",
-      "degree": 2,
-      "community": "156",
-      "sources": []
     },
     "Likelihood": {
       "id": "Likelihood",
@@ -1841,7 +1601,7 @@
       "name": "Incrementality Testing",
       "type": "CONCEPT",
       "description": "The gold standard of marketing measurement used to understand true efficiency.",
-      "degree": 9,
+      "degree": 16,
       "community": "166",
       "sources": [
         "Block Case Study.md",
@@ -1893,8 +1653,8 @@
       "id": "PyMC-Marketing",
       "name": "PyMC-Marketing",
       "type": "TECHNOLOGY",
-      "description": "An open-source package built on top of PyMC specifically for building Customer Lifetime Value and Marketing Mix Models.",
-      "degree": 41,
+      "description": "PyMC-Marketing is an open-source Python library built on top of PyMC, specifically designed for Marketing Mix Modeling (MMM), Media Mix Modeling, and Customer Lifetime Value analys",
+      "degree": 37,
       "community": "124",
       "sources": [
         "Budget Allocation with PyMC-Marketing.md",
@@ -1978,21 +1738,12 @@
       "community": "166",
       "sources": []
     },
-    " Marketing Measurement series: Marketing Mix Modeling at Qonto ": {
-      "id": " Marketing Measurement series: Marketing Mix Modeling at Qonto ",
-      "name": "\"Marketing Measurement series: Marketing Mix Modeling at Qonto\"",
-      "type": "ENTITY",
-      "description": "",
-      "degree": 2,
-      "community": "104",
-      "sources": []
-    },
     "Marketing Measurement series: Marketing Mix Modeling at Qonto": {
       "id": "Marketing Measurement series: Marketing Mix Modeling at Qonto",
       "name": "Marketing Measurement series: Marketing Mix Modeling at Qonto",
       "type": "DOCUMENT",
       "description": "A technical blog post published on Medium detailing the implementation of Bayesian Marketing Mix Modeling using PyMC.",
-      "degree": 8,
+      "degree": 12,
       "community": "105",
       "sources": []
     },
@@ -2014,15 +1765,6 @@
       "community": "77",
       "sources": []
     },
-    "Demo Notebook": {
-      "id": "Demo Notebook",
-      "name": "Demo Notebook",
-      "type": "DOCUMENT",
-      "description": "A GitHub repository containing a demonstration notebook for Marketing Mix Modeling using PyMC.",
-      "degree": 1,
-      "community": "99",
-      "sources": []
-    },
     "Part I: Getting started": {
       "id": "Part I: Getting started",
       "name": "Part I: Getting started",
@@ -2041,23 +1783,17 @@
       "community": "105",
       "sources": []
     },
-    "Markov Chain Monte Carlo Sampling": {
-      "id": "Markov Chain Monte Carlo Sampling",
-      "name": "Markov Chain Monte Carlo Sampling",
-      "type": "CONCEPT",
-      "description": "A computational method used to sample from posterior distributions in Bayesian models.",
-      "degree": 1,
-      "community": "77",
-      "sources": []
-    },
     "Revenue": {
       "id": "Revenue",
       "name": "Revenue",
       "type": "CONCEPT",
-      "description": "The endogenous variable or target metric in Marketing Mix Modeling.",
-      "degree": 4,
+      "description": "Revenue is the dependent (target/response) variable in a Marketing Mix Modeling equation, representing metrics such as sales volume, number of conversions, or revenue \u2014 often expre",
+      "degree": 10,
       "community": "130",
-      "sources": []
+      "sources": [
+        "Introduction to Bayesian Methods for MMM.md",
+        "MMM Example Notebook.md"
+      ]
     },
     "Scikit-learn": {
       "id": "Scikit-learn",
@@ -2095,15 +1831,6 @@
       "description": "Components of model input including linear trend features and Fourier modes for seasonality.",
       "degree": 2,
       "community": "75",
-      "sources": []
-    },
-    "Fictitious Dataset": {
-      "id": "Fictitious Dataset",
-      "name": "Fictitious Dataset",
-      "type": "PRODUCT",
-      "description": "A dataset provided by the Facebook Experimental Robyn repository used for demonstration.",
-      "degree": 1,
-      "community": "130",
       "sources": []
     },
     "Machine Learning Operations": {
@@ -2207,30 +1934,6 @@
         "Improving Marketing Mix Modeling Using Machine Learning Approaches.md"
       ]
     },
-    "Return on Investment": {
-      "id": "Return on Investment",
-      "name": "Return on Investment",
-      "type": "CONCEPT",
-      "description": "A key performance indicator that MMM helps measure, including overall and channel-specific ROI.",
-      "degree": 10,
-      "community": "162",
-      "sources": [
-        "Bayesian Media Mix Modeling with limited data.md",
-        "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
-        "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
-    "Sales": {
-      "id": "Sales",
-      "name": "Sales",
-      "type": "CONCEPT",
-      "description": "A Key Performance Indicator example used in Marketing Mix Modeling to measure the incremental impact of activities.",
-      "degree": 2,
-      "community": "162",
-      "sources": [
-        "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
     "Model Evaluation": {
       "id": "Model Evaluation",
       "name": "Model Evaluation",
@@ -2332,15 +2035,6 @@
       "community": "151",
       "sources": []
     },
-    "Privacy By Design": {
-      "id": "Privacy By Design",
-      "name": "Privacy By Design",
-      "type": "CONCEPT",
-      "description": "A principle to be enabled in future-proof strategies, ensuring privacy-safe operation.",
-      "degree": 1,
-      "community": "136",
-      "sources": []
-    },
     "First-Party Data": {
       "id": "First-Party Data",
       "name": "First-Party Data",
@@ -2377,15 +2071,6 @@
       "community": "135",
       "sources": []
     },
-    "Facebook Business News": {
-      "id": "Facebook Business News",
-      "name": "Facebook Business News",
-      "type": "ENTITY",
-      "description": "",
-      "degree": 1,
-      "community": "135",
-      "sources": []
-    },
     "Mark Chen": {
       "id": "Mark Chen",
       "name": "Mark Chen",
@@ -2393,15 +2078,6 @@
       "description": "Co-author of the document 'More precision in MMM-experiment calibration with Robyn from Meta Marketing Science'.",
       "degree": 1,
       "community": "181",
-      "sources": []
-    },
-    "Robyn v3.8": {
-      "id": "Robyn v3.8",
-      "name": "Robyn v3.8",
-      "type": "TECHNOLOGY",
-      "description": "Specific version of the Robyn package that introduces Contextual Calibration.",
-      "degree": 2,
-      "community": "178",
       "sources": []
     },
     "Correlation vs. Causation": {
@@ -2496,7 +2172,7 @@
       "name": "Cassandra",
       "type": "ORGANIZATION",
       "description": "A marketing measurement platform that incorporates Marketing Mix Modeling, Incrementality testing, and Always on Incrementality.",
-      "degree": 7,
+      "degree": 6,
       "community": "91",
       "sources": [
         "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
@@ -2512,7 +2188,8 @@
       "degree": 2,
       "community": "137",
       "sources": [
-        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md"
+        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
+        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
       ]
     },
     "Confidence Interval": {
@@ -2522,17 +2199,6 @@
       "description": "A range of values likely containing the true ROI, calculated using bootstrap resampling to indicate estimate precision versus uncertainty.",
       "degree": 4,
       "community": "137",
-      "sources": [
-        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md"
-      ]
-    },
-    "Portfolio Strategy": {
-      "id": "Portfolio Strategy",
-      "name": "Portfolio Strategy",
-      "type": "CONCEPT",
-      "description": "A framework that groups advertising channels into allocation tiers based on risk appetite and resources to balance return and execution ability.",
-      "degree": 5,
-      "community": "139",
       "sources": [
         "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md"
       ]
@@ -2684,8 +2350,8 @@
       "id": "Facebook",
       "name": "Facebook",
       "type": "ORGANIZATION",
-      "description": "Technology provider; Owner of Facebook attribution model.",
-      "degree": 4,
+      "description": "Meta (formerly Facebook) is a major technology company operating advertising platforms including Facebook and Instagram, with billions of daily active users, and offering advertise",
+      "degree": 28,
       "community": "115",
       "sources": [
         "Adidas_ We over-invested in digital advertising.md",
@@ -2693,7 +2359,12 @@
         "Improving Marketing Mix Modeling Using Machine Learning Approaches.md",
         "MMM Example Notebook.md",
         "MMM with time-varying parameters (TVP).md",
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
+        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
+        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md",
+        "The Incrementality Multiplier_ A Diminishing Returns Problem.md",
+        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
       ]
     },
     "Sarah Vizard": {
@@ -2808,28 +2479,6 @@
         "Adidas_ We over-invested in digital advertising.md"
       ]
     },
-    "Return on Investment and Return on Ad Spend": {
-      "id": "Return on Investment and Return on Ad Spend",
-      "name": "Return on Investment and Return on Ad Spend",
-      "type": "CONCEPT",
-      "description": "Metrics focused on short-term; Caused wrong metrics focus and over-investment in digital ads.",
-      "degree": 1,
-      "community": "26",
-      "sources": [
-        "Adidas_ We over-invested in digital advertising.md"
-      ]
-    },
-    "Attribution Modelling": {
-      "id": "Attribution Modelling",
-      "name": "Attribution Modelling",
-      "type": "CONCEPT",
-      "description": "Previously based on last-click; Now moving to econometrics + test-and-learn for accurate investment decisions.",
-      "degree": 3,
-      "community": "115",
-      "sources": [
-        "Adidas_ We over-invested in digital advertising.md"
-      ]
-    },
     "Econometrics": {
       "id": "Econometrics",
       "name": "Econometrics",
@@ -2940,22 +2589,11 @@
         "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md"
       ]
     },
-    "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit": {
-      "id": "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit",
-      "name": "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit",
-      "type": "DOCUMENT",
-      "description": "This is the title of the technical blog post published on HelloTech.",
-      "degree": 2,
-      "community": "128",
-      "sources": [
-        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md"
-      ]
-    },
     "HelloFresh": {
       "id": "HelloFresh",
       "name": "HelloFresh",
       "type": "ORGANIZATION",
-      "description": "HelloFresh is a meal kit delivery company that hosts the HelloTech engineering blog.",
+      "description": "HelloFresh is a meal kit delivery company that hosts the HelloTech engineering blog, which serves as the publication venue for HelloFresh Engineering content.",
       "degree": 5,
       "community": "128",
       "sources": [
@@ -2974,36 +2612,6 @@
         "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md"
       ]
     },
-    "Media Mix Modeling": {
-      "id": "Media Mix Modeling",
-      "name": "Media Mix Modeling",
-      "type": "CONCEPT",
-      "description": "Media Mix Modeling is a statistical technique used to quantify the effectiveness of advertising on business metrics like customer acquisition.",
-      "degree": 24,
-      "community": "187",
-      "sources": [
-        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
-        "Bayesian Media Mix Modeling with limited data.md",
-        "Case Study_ LA Times.md",
-        "Daily Harvest Case Study.md",
-        "Lume Case Study.md",
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
-      ]
-    },
-    "PyMC3": {
-      "id": "PyMC3",
-      "name": "PyMC3",
-      "type": "TECHNOLOGY",
-      "description": "PyMC3 is a Python library used for Bayesian statistical modeling.",
-      "degree": 5,
-      "community": "156",
-      "sources": [
-        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
-        "Bayesian Media Mix Modeling with limited data.md",
-        "Improving Marketing Mix Modeling Using Machine Learning Approaches.md",
-        "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
     "Cookies (Web-tracking)": {
       "id": "Cookies (Web-tracking)",
       "name": "Cookies (Web-tracking)",
@@ -3019,8 +2627,8 @@
       "id": "Privacy Regulations",
       "name": "Privacy Regulations",
       "type": "CONCEPT",
-      "description": "Privacy regulations represent legal frameworks that restrict data collection practices.",
-      "degree": 1,
+      "description": "Privacy regulations are legal frameworks that restrict data collection practices, challenging traditional web-tracking methods like cookies and degrading the quality and quantity o",
+      "degree": 4,
       "community": "189",
       "sources": [
         "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md"
@@ -3088,17 +2696,6 @@
       "description": "Mike Bloomberg is a business leader whose quote about measuring impact is cited in the document.",
       "degree": 1,
       "community": "187",
-      "sources": [
-        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md"
-      ]
-    },
-    "HelloTech": {
-      "id": "HelloTech",
-      "name": "HelloTech",
-      "type": "ORGANIZATION",
-      "description": "HelloTech is the engineering blog platform where the primary document was published.",
-      "degree": 2,
-      "community": "128",
       "sources": [
         "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md"
       ]
@@ -3240,43 +2837,12 @@
       "name": "Koehler, J.",
       "type": "PERSON",
       "description": "An author of the reference paper on Bayesian methods for media mix modeling with carryover and shape effects.",
-      "degree": 0,
+      "degree": 1,
       "community": null,
       "sources": [
-        "Bayesian Media Mix Modeling with limited data.md"
-      ]
-    },
-    "Classical Media Mix Modeling": {
-      "id": "Classical Media Mix Modeling",
-      "name": "Classical Media Mix Modeling",
-      "type": "CONCEPT",
-      "description": "A method using linear regression with nonlinear transformations for marketing features.",
-      "degree": 1,
-      "community": "155",
-      "sources": [
-        "Bayesian Media Mix Modeling with limited data.md"
-      ]
-    },
-    "Hill Equation": {
-      "id": "Hill Equation",
-      "name": "Hill Equation",
-      "type": "CONCEPT",
-      "description": "A mathematical model used to describe the saturation effect, representing the nonlinear relation between investment and revenue.",
-      "degree": 1,
-      "community": "169",
-      "sources": [
-        "Bayesian Media Mix Modeling with limited data.md"
-      ]
-    },
-    "Adstock Equation": {
-      "id": "Adstock Equation",
-      "name": "Adstock Equation",
-      "type": "CONCEPT",
-      "description": "A mathematical model that describes revenue's time allocation after channel-specific investment, accounting for time-delay effects.",
-      "degree": 1,
-      "community": "27",
-      "sources": [
-        "Bayesian Media Mix Modeling with limited data.md"
+        "Bayesian Media Mix Modeling with limited data.md",
+        "MMM Example Notebook.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
       ]
     },
     "PySTAN": {
@@ -3328,11 +2894,14 @@
       "name": "Saturation Effect",
       "type": "CONCEPT",
       "description": "A nonlinear relation between investment and revenue where maximal revenue is reached at a certain point.",
-      "degree": 2,
+      "degree": 8,
       "community": "169",
       "sources": [
         "Bayesian Media Mix Modeling with limited data.md",
-        "MMM Example Notebook.md"
+        "MMM Example Notebook.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
+        "MMM with time-varying media baseline.md",
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
       ]
     },
     "Time Delay": {
@@ -3342,17 +2911,6 @@
       "description": "The phenomenon where revenue effects are observed after a delay relative to the marketing investment.",
       "degree": 1,
       "community": "27",
-      "sources": [
-        "Bayesian Media Mix Modeling with limited data.md"
-      ]
-    },
-    "Bayesian Media Mix Modeling with limited data": {
-      "id": "Bayesian Media Mix Modeling with limited data",
-      "name": "Bayesian Media Mix Modeling with limited data",
-      "type": "DOCUMENT",
-      "description": "The primary article published on Medium.com by Artefact discussing Bayesian methods for media mix modeling.",
-      "degree": 6,
-      "community": "120",
       "sources": [
         "Bayesian Media Mix Modeling with limited data.md"
       ]
@@ -3384,7 +2942,7 @@
       "name": "Square",
       "type": "ORGANIZATION",
       "description": "A business unit and subsidiary of Block that utilizes traditional enterprise marketing mix modeling vendors but is transitioning to new measurement solutions.",
-      "degree": 2,
+      "degree": 4,
       "community": "144",
       "sources": [
         "Block Case Study.md"
@@ -3417,7 +2975,7 @@
       "name": "Recast",
       "type": "ORGANIZATION",
       "description": "A vendor and platform provider offering a forward-looking, time-varying Bayesian model for marketing measurement with weekly refreshes and transparency into diagnostics.",
-      "degree": 18,
+      "degree": 17,
       "community": "184",
       "sources": [
         "Block Case Study.md",
@@ -3530,17 +3088,6 @@
         "Block Case Study.md"
       ]
     },
-    "Square US": {
-      "id": "Square US",
-      "name": "Square US",
-      "type": "ENTITY",
-      "description": "",
-      "degree": 2,
-      "community": "29",
-      "sources": [
-        "Block Case Study.md"
-      ]
-    },
     "Matt Patton": {
       "id": "Matt Patton",
       "name": "Matt Patton",
@@ -3563,28 +3110,6 @@
         "Budget Allocation with PyMC-Marketing.md"
       ]
     },
-    "Budgeting with Bayesian Models": {
-      "id": "Budgeting with Bayesian Models",
-      "name": "Budgeting with Bayesian Models",
-      "type": "CONCEPT",
-      "description": "A methodological basis for the budget allocation function found in the PyMC-Marketing library.",
-      "degree": 2,
-      "community": "126",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md"
-      ]
-    },
-    "Lightweight MMM": {
-      "id": "Lightweight MMM",
-      "name": "Lightweight MMM",
-      "type": "TECHNOLOGY",
-      "description": "A competitor or alternative MMM library developed by Google, compared with PyMC-Marketing methodology.",
-      "degree": 1,
-      "community": "124",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md"
-      ]
-    },
     "MultiDimensionalBudgetOptimizerWrapper": {
       "id": "MultiDimensionalBudgetOptimizerWrapper",
       "name": "MultiDimensionalBudgetOptimizerWrapper",
@@ -3597,53 +3122,15 @@
         "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md"
       ]
     },
-    "MMM": {
-      "id": "MMM",
-      "name": "MMM",
-      "type": "CONCEPT",
-      "description": "The core Media Mix Model class loaded via build_mmm_from_yaml in the PyMC-Marketing library.",
-      "degree": 2,
-      "community": "129",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md"
-      ]
-    },
-    "Sequential Least Squares Quadratic Programming": {
-      "id": "Sequential Least Squares Quadratic Programming",
-      "name": "Sequential Least Squares Quadratic Programming",
-      "type": "CONCEPT",
-      "description": "A gradient-based optimization algorithm implemented by the SLSQP Algorithm for solving optimization problems.",
-      "degree": 3,
-      "community": "177",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md"
-      ]
-    },
     "LogisticSaturation": {
       "id": "LogisticSaturation",
       "name": "LogisticSaturation",
       "type": "CONCEPT",
       "description": "A specific saturation function used in the pre-trained MMM model to define channel impact.",
-      "degree": 4,
+      "degree": 3,
       "community": "129",
       "sources": [
         "Budget Allocation with PyMC-Marketing.md",
-        "Lift Test Calibration.md",
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
-        "MMM with time-varying parameters (TVP).md"
-      ]
-    },
-    "GeometricAdstock": {
-      "id": "GeometricAdstock",
-      "name": "GeometricAdstock",
-      "type": "CONCEPT",
-      "description": "A specific adstock function used in the pre-trained MMM model to handle carryover effects.",
-      "degree": 6,
-      "community": "129",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md",
-        "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
-        "Custom Models with MMM components.md",
         "Lift Test Calibration.md",
         "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
         "MMM with time-varying parameters (TVP).md"
@@ -3694,17 +3181,6 @@
         "Budget Allocation with PyMC-Marketing.md"
       ]
     },
-    "ROAS": {
-      "id": "ROAS",
-      "name": "ROAS",
-      "type": "CONCEPT",
-      "description": "Return on Ad Spend, a metric visualized in budget allocation plots representing units back per unit spend.",
-      "degree": 1,
-      "community": "164",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md"
-      ]
-    },
     "matplotlib": {
       "id": "matplotlib",
       "name": "matplotlib",
@@ -3717,23 +3193,12 @@
         "MMM with time-varying media baseline.md"
       ]
     },
-    "Budget Allocation with PyMC-Marketing": {
-      "id": "Budget Allocation with PyMC-Marketing",
-      "name": "Budget Allocation with PyMC-Marketing",
-      "type": "DOCUMENT",
-      "description": "A Jupyter Notebook exploring budget allocation function in PyMC-Marketing, serving as the primary source document.",
-      "degree": 1,
-      "community": "126",
-      "sources": [
-        "Budget Allocation with PyMC-Marketing.md"
-      ]
-    },
     "Optimization Result": {
       "id": "Optimization Result",
       "name": "Optimization Result",
       "type": "ENTITY",
       "description": "",
-      "degree": 2,
+      "degree": 1,
       "community": "164",
       "sources": [
         "Budget Allocation with PyMC-Marketing.md"
@@ -3743,7 +3208,7 @@
       "id": "GetYourGuide",
       "name": "GetYourGuide",
       "type": "ORGANIZATION",
-      "description": "A Berlin-based travel experience marketplace founded in 2009 that operates across multiple countries including Germany, France, and Italy.",
+      "description": "GetYourGuide is a Berlin-based travel experience marketplace founded in 2009, operating across multiple countries including Germany, France, and Italy, with over 150,000 experience",
       "degree": 15,
       "community": "94",
       "sources": [
@@ -3755,52 +3220,8 @@
       "name": "Dr. Vladislav Borisov",
       "type": "PERSON",
       "description": "The lead of the GetYourGuide Marketing Experimentation Team with expertise in marketing science and statistical modeling.",
-      "degree": 2,
-      "community": "96",
-      "sources": [
-        "Case Study_ GetYourGuide.md"
-      ]
-    },
-    "GetYourGuide Marketing Experimentation Team": {
-      "id": "GetYourGuide Marketing Experimentation Team",
-      "name": "GetYourGuide Marketing Experimentation Team",
-      "type": "ORGANIZATION",
-      "description": "An internal team at GetYourGuide responsible for leading marketing experimentation initiatives using advanced statistical tools.",
       "degree": 1,
       "community": "96",
-      "sources": [
-        "Case Study_ GetYourGuide.md"
-      ]
-    },
-    "GetYourGuide Data Science Team": {
-      "id": "GetYourGuide Data Science Team",
-      "name": "GetYourGuide Data Science Team",
-      "type": "ORGANIZATION",
-      "description": "An internal group that uses Recast features specifically for model validation purposes.",
-      "degree": 0,
-      "community": null,
-      "sources": [
-        "Case Study_ GetYourGuide.md"
-      ]
-    },
-    "GetYourGuide Marketing Teams": {
-      "id": "GetYourGuide Marketing Teams",
-      "name": "GetYourGuide Marketing Teams",
-      "type": "ORGANIZATION",
-      "description": "The end-users of the Recast platform who execute media mix plans based on insights provided by the data science team.",
-      "degree": 0,
-      "community": null,
-      "sources": [
-        "Case Study_ GetYourGuide.md"
-      ]
-    },
-    "GetYourGuide Executive Team": {
-      "id": "GetYourGuide Executive Team",
-      "name": "GetYourGuide Executive Team",
-      "type": "ORGANIZATION",
-      "description": "The leadership group that provides overall marketing budget and receives performance ranges or outcomes rather than point estimates.",
-      "degree": 0,
-      "community": null,
       "sources": [
         "Case Study_ GetYourGuide.md"
       ]
@@ -3810,17 +3231,6 @@
       "name": "Berlin",
       "type": "LOCATION",
       "description": "The headquarters location of GetYourGuide where the company is based.",
-      "degree": 1,
-      "community": "94",
-      "sources": [
-        "Case Study_ GetYourGuide.md"
-      ]
-    },
-    "Recast GeoLift": {
-      "id": "Recast GeoLift",
-      "name": "Recast GeoLift",
-      "type": "TECHNOLOGY",
-      "description": "An incrementality measurement tool provided by the Recast platform for evaluating specific geographic or channel impacts.",
       "degree": 1,
       "community": "94",
       "sources": [
@@ -3845,17 +3255,6 @@
       "description": "Backwards-looking reports and views that display metrics such as saturation curves, time shifts, and marginal ROIs.",
       "degree": 1,
       "community": "30",
-      "sources": [
-        "Case Study_ GetYourGuide.md"
-      ]
-    },
-    "Bayesian Time Series Model": {
-      "id": "Bayesian Time Series Model",
-      "name": "Bayesian Time Series Model",
-      "type": "TECHNOLOGY",
-      "description": "The underlying technology for the Recast platform that exposes model uncertainty associated with all parameter estimates.",
-      "degree": 1,
-      "community": "75",
       "sources": [
         "Case Study_ GetYourGuide.md"
       ]
@@ -3974,12 +3373,14 @@
       "id": "GeoLift by Recast",
       "name": "GeoLift by Recast",
       "type": "PRODUCT",
-      "description": "An incrementality platform and experimentation tool provided by Recast.",
-      "degree": 5,
+      "description": "GeoLift by Recast is an incrementality measurement platform within the Recast ecosystem that conducts geographic experiments to validate MMM findings, calibrate model coefficients,",
+      "degree": 13,
       "community": "152",
       "sources": [
         "Case Study_ KOHO.md",
-        "Lume Case Study.md"
+        "Lume Case Study.md",
+        "Case Study_ GetYourGuide.md",
+        "Case Study_ LA Times.md"
       ]
     },
     "Google Performance Planner": {
@@ -4127,17 +3528,6 @@
         "Lume Case Study.md"
       ]
     },
-    "Recast GeoLift Platform": {
-      "id": "Recast GeoLift Platform",
-      "name": "Recast GeoLift Platform",
-      "type": "PRODUCT",
-      "description": "A new platform feature introduced in 2025 that enables expansion into new geographies and fuels the experimentation roadmap.",
-      "degree": 1,
-      "community": "154",
-      "sources": [
-        "Case Study_ LA Times.md"
-      ]
-    },
     "Optimizer Tool": {
       "id": "Optimizer Tool",
       "name": "Optimizer Tool",
@@ -4211,10 +3601,11 @@
       "name": "Upper-Funnel Channels",
       "type": "CONCEPT",
       "description": "Activation campaigns like Meta traffic campaigns that drive awareness and traffic but were previously undervalued by in-platform metrics.",
-      "degree": 1,
+      "degree": 2,
       "community": "32",
       "sources": [
-        "Case Study_ LA Times.md"
+        "Case Study_ LA Times.md",
+        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
       ]
     },
     "Lower-Funnel Channels": {
@@ -4261,17 +3652,6 @@
         "Case Study_ LA Times.md"
       ]
     },
-    "Western United States": {
-      "id": "Western United States",
-      "name": "Western United States",
-      "type": "LOCATION",
-      "description": "The geographic region where Los Angeles Times operates as the largest newspaper in the area.",
-      "degree": 1,
-      "community": "185",
-      "sources": [
-        "Case Study_ LA Times.md"
-      ]
-    },
     "Case Study: LA Times": {
       "id": "Case Study: LA Times",
       "name": "Case Study: LA Times",
@@ -4304,19 +3684,6 @@
       "community": "152",
       "sources": [
         "Case Study_ LA Times.md"
-      ]
-    },
-    "Media Mix Model": {
-      "id": "Media Mix Model",
-      "name": "Media Mix Model",
-      "type": "CONCEPT",
-      "description": "A statistical model used to estimate how various marketing inputs drive revenue.",
-      "degree": 15,
-      "community": "168",
-      "sources": [
-        "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
-        "MMM Example Notebook.md",
-        "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md"
       ]
     },
     "Cost-per-Unit": {
@@ -4378,26 +3745,15 @@
       "id": "Budget Optimization",
       "name": "Budget Optimization",
       "type": "CONCEPT",
-      "description": "The process of allocating a total budget across different channels and time periods to maximize return.",
-      "degree": 5,
+      "description": "Budget Optimization is the process of allocating a total budget across media channels and time periods to maximize return, using model outputs and cost-per-unit assumptions to dete",
+      "degree": 6,
       "community": "90",
       "sources": [
         "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
         "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
         "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
-    },
-    "MichaelisMentenSaturation": {
-      "id": "MichaelisMentenSaturation",
-      "name": "MichaelisMentenSaturation",
-      "type": "CONCEPT",
-      "description": "A model component representing saturation curves that visualize diminishing returns as spend increases.",
-      "degree": 3,
-      "community": "183",
-      "sources": [
-        "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
-        "Custom Models with MMM components.md"
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
+        "Budget Allocation with PyMC-Marketing.md"
       ]
     },
     "build_mmm_from_yaml": {
@@ -4498,29 +3854,6 @@
         "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md"
       ]
     },
-    "PyMC Extras": {
-      "id": "PyMC Extras",
-      "name": "PyMC Extras",
-      "type": "TECHNOLOGY",
-      "description": "An extension package for PyMC that provides additional functionality such as prior definitions.",
-      "degree": 0,
-      "community": null,
-      "sources": [
-        "Custom Models with MMM components.md"
-      ]
-    },
-    "MMM Class": {
-      "id": "MMM Class",
-      "name": "MMM Class",
-      "type": "CONCEPT",
-      "description": "The high-level model class within PyMC-Marketing that combines various components like media transformations and seasonality.",
-      "degree": 16,
-      "community": "182",
-      "sources": [
-        "Custom Models with MMM components.md",
-        "MMM with time-varying parameters (TVP).md"
-      ]
-    },
     "YearlyFourier": {
       "id": "YearlyFourier",
       "name": "YearlyFourier",
@@ -4572,17 +3905,6 @@
       "description": "A basis type that allows for asymmetric modeling with different sigma values before and after an event.",
       "degree": 1,
       "community": "182",
-      "sources": [
-        "Custom Models with MMM components.md"
-      ]
-    },
-    "Prior Class": {
-      "id": "Prior Class",
-      "name": "Prior Class",
-      "type": "CONCEPT",
-      "description": "A utility class used to define hierarchical or common priors outside the standard model context for distributions like Normal or Gamma.",
-      "degree": 1,
-      "community": "183",
       "sources": [
         "Custom Models with MMM components.md"
       ]
@@ -4900,10 +4222,12 @@
       "name": "Michaelis-Menten Kinetics",
       "type": "CONCEPT",
       "description": "Michaelis-Menten Kinetics describes a functional form ensuring diminishing returns in response functions.",
-      "degree": 16,
+      "degree": 18,
       "community": "157",
       "sources": [
-        "Decision-Making Under Contradictions_ Robust Budget Allocation When Your Models Disagree.md"
+        "Decision-Making Under Contradictions_ Robust Budget Allocation When Your Models Disagree.md",
+        "Cost-per-Unit_ Model What Drives Revenue, Report What You Spend.md",
+        "Custom Models with MMM components.md"
       ]
     },
     "Dimensional Analysis": {
@@ -4951,17 +4275,6 @@
         "SYS1-long-and-short-of-it.pdf"
       ]
     },
-    "Display": {
-      "id": "Display",
-      "name": "Display",
-      "type": "CONCEPT",
-      "description": "Display is a marketing channel name attributed with driving more contacts and dollar in attribution dashboards.",
-      "degree": 2,
-      "community": "112",
-      "sources": [
-        "Decision-Making Under Contradictions_ Robust Budget Allocation When Your Models Disagree.md"
-      ]
-    },
     "Google Ads": {
       "id": "Google Ads",
       "name": "Google Ads",
@@ -4971,19 +4284,6 @@
       "community": "92",
       "sources": [
         "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
-      ]
-    },
-    "Marketing Mix Model": {
-      "id": "Marketing Mix Model",
-      "name": "Marketing Mix Model",
-      "type": "CONCEPT",
-      "description": "A statistical model used to measure the incremental revenue contribution of each marketing channel by isolating marginal revenue.",
-      "degree": 8,
-      "community": "91",
-      "sources": [
-        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md",
-        "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
-        "MMM with time-varying parameters (TVP).md"
       ]
     },
     "Incremental ROI": {
@@ -5096,26 +4396,16 @@
         "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
       ]
     },
-    "Video / YouTube": {
-      "id": "Video / YouTube",
-      "name": "Video / YouTube",
-      "type": "CONCEPT",
-      "description": "An underpriced channel with upper-funnel economics and lower CPM costs compared to Search for equivalent audience quality.",
-      "degree": 1,
-      "community": "43",
-      "sources": [
-        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
-      ]
-    },
     "Display / GDN": {
       "id": "Display / GDN",
       "name": "Display / GDN",
       "type": "CONCEPT",
-      "description": "A campaign type characterized by wider variance in outcomes across different advertisers and verticals.",
-      "degree": 0,
+      "description": "Display/GDN is a campaign type and key marketing channel characterized by wider variance in outcomes across different advertisers and verticals.",
+      "degree": 2,
       "community": null,
       "sources": [
-        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
+        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md",
+        "Decision-Making Under Contradictions_ Robust Budget Allocation When Your Models Disagree.md"
       ]
     },
     "Demand Gen / Discovery": {
@@ -5162,17 +4452,6 @@
         "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
       ]
     },
-    "Upper-funnel Economics": {
-      "id": "Upper-funnel Economics",
-      "name": "Upper-funnel Economics",
-      "type": "ENTITY",
-      "description": "",
-      "degree": 1,
-      "community": "43",
-      "sources": [
-        "Google Ads Benchmarks 2026 \u2014 Not From Platform Attribution.md"
-      ]
-    },
     "Healthcare": {
       "id": "Healthcare",
       "name": "Healthcare",
@@ -5211,11 +4490,12 @@
       "name": "LightweightMMM",
       "type": "TECHNOLOGY",
       "description": "LightweightMMM is a Python library implementing Bayesian Marketing Mix Models.",
-      "degree": 11,
+      "degree": 12,
       "community": "125",
       "sources": [
         "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Budget Allocation with PyMC-Marketing.md"
       ]
     },
     "Forecastegy": {
@@ -5247,17 +4527,6 @@
       "description": "The AdAnalyse Dataset is a Kaggle dataset containing ad groups for brands in marketplaces like Walmart.",
       "degree": 4,
       "community": "118",
-      "sources": [
-        "How To Create A Marketing Mix Model With LightweightMMM (Python).md"
-      ]
-    },
-    "Advertising Attribution": {
-      "id": "Advertising Attribution",
-      "name": "Advertising Attribution",
-      "type": "CONCEPT",
-      "description": "Advertising Attribution is the core problem being solved by the model, linking ad spend to outcomes like revenue or sales.",
-      "degree": 3,
-      "community": "91",
       "sources": [
         "How To Create A Marketing Mix Model With LightweightMMM (Python).md"
       ]
@@ -5332,19 +4601,6 @@
         "Improving Marketing Mix Modeling Using Machine Learning Approaches.md"
       ]
     },
-    "Towards Data Science": {
-      "id": "Towards Data Science",
-      "name": "Towards Data Science",
-      "type": "ORGANIZATION",
-      "description": "Publication platform where the document was released and is hosted online.",
-      "degree": 3,
-      "community": "107",
-      "sources": [
-        "Improving Marketing Mix Modeling Using Machine Learning Approaches.md",
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
-      ]
-    },
     "H2O.ai": {
       "id": "H2O.ai",
       "name": "H2O.ai",
@@ -5408,17 +4664,6 @@
       "description": "Algorithm class mentioned in H2O.ai proof-of-concept contexts for improving model accuracy.",
       "degree": 0,
       "community": null,
-      "sources": [
-        "Improving Marketing Mix Modeling Using Machine Learning Approaches.md"
-      ]
-    },
-    "Bayesian Programming": {
-      "id": "Bayesian Programming",
-      "name": "Bayesian Programming",
-      "type": "CONCEPT",
-      "description": "Modeling approach used for consistency storytelling and comparison with machine learning techniques.",
-      "degree": 1,
-      "community": "156",
       "sources": [
         "Improving Marketing Mix Modeling Using Machine Learning Approaches.md"
       ]
@@ -5524,17 +4769,6 @@
         "Introduction to Bayesian Methods for MMM.md"
       ]
     },
-    "Marketing Spend": {
-      "id": "Marketing Spend",
-      "name": "Marketing Spend",
-      "type": "CONCEPT",
-      "description": "The independent variable representing marketing channels and budget allocation across different media types.",
-      "degree": 2,
-      "community": "162",
-      "sources": [
-        "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
     "Correlated Variables": {
       "id": "Correlated Variables",
       "name": "Correlated Variables",
@@ -5542,17 +4776,6 @@
       "description": "Variables where marketing orgs adjust budget across many channels simultaneously, causing biased estimates in Ordinary Least Squares models.",
       "degree": 1,
       "community": "163",
-      "sources": [
-        "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
-    "Prior Information": {
-      "id": "Prior Information",
-      "name": "Prior Information",
-      "type": "CONCEPT",
-      "description": "Explicit beliefs included into the model to constrain coefficients, such as ensuring ROI never falls below zero.",
-      "degree": 1,
-      "community": "111",
       "sources": [
         "Introduction to Bayesian Methods for MMM.md"
       ]
@@ -5566,17 +4789,6 @@
       "community": "163",
       "sources": [
         "Introduction to Bayesian Methods for MMM.md"
-      ]
-    },
-    "Multi-Channel Marketing Mix Modeling": {
-      "id": "Multi-Channel Marketing Mix Modeling",
-      "name": "Multi-Channel Marketing Mix Modeling",
-      "type": "CONCEPT",
-      "description": "A statistical modeling approach used to decompose marketing channel effects and estimate attribution when channels are correlated or spend data is imperfect.",
-      "degree": 1,
-      "community": "166",
-      "sources": [
-        "Lift Test Calibration.md"
       ]
     },
     "Gamma Distribution": {
@@ -5600,17 +4812,6 @@
       "sources": [
         "Lift Test Calibration.md",
         "Optimizing Marketing Spend with Bayesian MMM.md"
-      ]
-    },
-    "No-U-Turns Sampler": {
-      "id": "No-U-Turns Sampler",
-      "name": "No-U-Turns Sampler",
-      "type": "TECHNOLOGY",
-      "description": "A Markov Chain Monte Carlo sampling algorithm used in the fit method to estimate model parameters and handle inference data.",
-      "degree": 1,
-      "community": "129",
-      "sources": [
-        "Lift Test Calibration.md"
       ]
     },
     "Highest Density Interval": {
@@ -5646,17 +4847,6 @@
         "Lift Test Calibration.md"
       ]
     },
-    "Multi-Channel Marketing Mix Modeling Class": {
-      "id": "Multi-Channel Marketing Mix Modeling Class",
-      "name": "Multi-Channel Marketing Mix Modeling Class",
-      "type": "PRODUCT",
-      "description": "The main software class within pymc-marketing that handles model construction, fitting, and adding lift test measurements.",
-      "degree": 6,
-      "community": "129",
-      "sources": [
-        "Lift Test Calibration.md"
-      ]
-    },
     "CausalPy": {
       "id": "CausalPy",
       "name": "CausalPy",
@@ -5667,19 +4857,6 @@
       "sources": [
         "Lift Test Calibration.md",
         "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md"
-      ]
-    },
-    "Attribution": {
-      "id": "Attribution",
-      "name": "Attribution",
-      "type": "CONCEPT",
-      "description": "The core goal of the modeling process, aiming to accurately decompose and assign credit to different marketing channels.",
-      "degree": 6,
-      "community": "166",
-      "sources": [
-        "Lift Test Calibration.md",
-        "Negative Case Study.md",
-        "The Incrementality Multiplier_ A Diminishing Returns Problem.md"
       ]
     },
     "Uncertainty Quantification": {
@@ -5720,10 +4897,11 @@
       "name": "Synthetic Data",
       "type": "CONCEPT",
       "description": "Data generated with known true parameters used to demonstrate model recovery and calibration effectiveness in examples.",
-      "degree": 1,
+      "degree": 2,
       "community": "129",
       "sources": [
-        "Lift Test Calibration.md"
+        "Lift Test Calibration.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
       ]
     },
     "Lume": {
@@ -5836,17 +5014,6 @@
         "Lume Case Study.md"
       ]
     },
-    "Attribution Model Construction": {
-      "id": "Attribution Model Construction",
-      "name": "Attribution Model Construction",
-      "type": "CONCEPT",
-      "description": "Attribution Model Construction refers to the shift from Bottom-up user-level data to Top-down Recast data as primary input for Lume.",
-      "degree": 1,
-      "community": "117",
-      "sources": [
-        "Lume Case Study.md"
-      ]
-    },
     "Black Box": {
       "id": "Black Box",
       "name": "Black Box",
@@ -5873,11 +5040,12 @@
       "id": "MMM Example Notebook",
       "name": "MMM Example Notebook",
       "type": "DOCUMENT",
-      "description": "A technical documentation notebook demonstrating the implementation of Media Mix Models using the PyMC Marketing package.",
-      "degree": 1,
+      "description": "A technical documentation notebook hosted on GitHub that demonstrates the implementation of Media Mix Modeling (MMM) using the PyMC-Marketing package.",
+      "degree": 3,
       "community": "131",
       "sources": [
-        "MMM Example Notebook.md"
+        "MMM Example Notebook.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
       ]
     },
     "No-U-Turn Sampler": {
@@ -5885,22 +5053,12 @@
       "name": "No-U-Turn Sampler",
       "type": "CONCEPT",
       "description": "A Markov Chain Monte Carlo algorithm used for sampling from the posterior distribution of the Bayesian model parameters.",
-      "degree": 2,
+      "degree": 3,
       "community": "124",
       "sources": [
         "MMM Example Notebook.md",
-        "MMM with time-varying media baseline.md"
-      ]
-    },
-    "Sales Data": {
-      "id": "Sales Data",
-      "name": "Sales Data",
-      "type": "CONCEPT",
-      "description": "The target variable representing weekly sales figures of the client, used to train and evaluate the media mix model.",
-      "degree": 2,
-      "community": "127",
-      "sources": [
-        "MMM Example Notebook.md"
+        "MMM with time-varying media baseline.md",
+        "Lift Test Calibration.md"
       ]
     },
     "Media Spend Data": {
@@ -5914,17 +5072,6 @@
         "MMM Example Notebook.md"
       ]
     },
-    "Jin, Yuxue": {
-      "id": "Jin, Yuxue",
-      "name": "Jin, Yuxue",
-      "type": "PERSON",
-      "description": "An author cited for foundational research on Bayesian methods for media mix modeling with carryover and shape effects.",
-      "degree": 1,
-      "community": "121",
-      "sources": [
-        "MMM Example Notebook.md"
-      ]
-    },
     "Directed Acyclic Graph": {
       "id": "Directed Acyclic Graph",
       "name": "Directed Acyclic Graph",
@@ -5934,85 +5081,6 @@
       "community": "168",
       "sources": [
         "MMM Example Notebook.md"
-      ]
-    },
-    "Marketing Budget Optimization": {
-      "id": "Marketing Budget Optimization",
-      "name": "Marketing Budget Optimization",
-      "type": "ENTITY",
-      "description": "",
-      "degree": 1,
-      "community": "168",
-      "sources": [
-        "MMM Example Notebook.md"
-      ]
-    },
-    "Bayesian Inference": {
-      "id": "Bayesian Inference",
-      "name": "Bayesian Inference",
-      "type": "CONCEPT",
-      "description": "A methodology used by PyMC-Marketing for estimating model parameters and uncertainty.",
-      "degree": 3,
-      "community": "111",
-      "sources": [
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
-        "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md",
-        "Optimizing Marketing Spend with Bayesian MMM.md"
-      ]
-    },
-    "Saturation (Diminishing Returns)": {
-      "id": "Saturation (Diminishing Returns)",
-      "name": "Saturation (Diminishing Returns)",
-      "type": "CONCEPT",
-      "description": "A phenomenon where returns diminish as spend increases, modeled using transformations like LogisticSaturation.",
-      "degree": 4,
-      "community": "129",
-      "sources": [
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
-      ]
-    },
-    "Jin, Y., Wang, Y., Sun, Y., Chan, D., & Koehler, J.": {
-      "id": "Jin, Y., Wang, Y., Sun, Y., Chan, D., & Koehler, J.",
-      "name": "Jin, Y., Wang, Y., Sun, Y., Chan, D., & Koehler, J.",
-      "type": "PERSON",
-      "description": "Authors of the paper on Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects.",
-      "degree": 1,
-      "community": "121",
-      "sources": [
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
-      ]
-    },
-    "Media Mix Modeling (MMM) Quickstart Guide": {
-      "id": "Media Mix Modeling (MMM) Quickstart Guide",
-      "name": "Media Mix Modeling (MMM) Quickstart Guide",
-      "type": "DOCUMENT",
-      "description": "A walkthrough document for fitting a basic Media Mix Model in PyMC-Marketing to understand advertising channel contributions.",
-      "degree": 1,
-      "community": "124",
-      "sources": [
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
-      ]
-    },
-    "PyMC-Marketing Documentation": {
-      "id": "PyMC-Marketing Documentation",
-      "name": "PyMC-Marketing Documentation",
-      "type": "DOCUMENT",
-      "description": "Official documentation for the PyMC-Marketing library available online.",
-      "degree": 0,
-      "community": null,
-      "sources": [
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
-      ]
-    },
-    "Synthetic Dataset": {
-      "id": "Synthetic Dataset",
-      "name": "Synthetic Dataset",
-      "type": "PRODUCT",
-      "description": "A simulated weekly sales dataset used to demonstrate model fitting and diagnostics in PyMC-Marketing.",
-      "degree": 1,
-      "community": "187",
-      "sources": [
-        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md"
       ]
     },
     "Media Effect Estimation with PyMC": {
@@ -6054,30 +5122,8 @@
       "name": "Temporal Dynamics Neglect",
       "type": "CONCEPT",
       "description": "A problem where traditional regression models fail to account for the temporal dynamics of marketing activities, leading to biased insights and overestimation of contributions.",
-      "degree": 2,
+      "degree": 1,
       "community": "84",
-      "sources": [
-        "MMM with time-varying media baseline.md"
-      ]
-    },
-    "Time-Varying Media Baseline": {
-      "id": "Time-Varying Media Baseline",
-      "name": "Time-Varying Media Baseline",
-      "type": "CONCEPT",
-      "description": "A sophisticated model solution that incorporates time as a key component through a Gaussian Process to capture hidden latent temporal variation in marketing contributions.",
-      "degree": 2,
-      "community": "79",
-      "sources": [
-        "MMM with time-varying media baseline.md"
-      ]
-    },
-    "Saturation Function": {
-      "id": "Saturation Function",
-      "name": "Saturation Function",
-      "type": "CONCEPT",
-      "description": "A transformation that models the diminishing returns of marketing inputs, where incremental benefit decreases as allocated resources increase.",
-      "degree": 0,
-      "community": null,
       "sources": [
         "MMM with time-varying media baseline.md"
       ]
@@ -6142,11 +5188,12 @@
       "id": "pymc_extras",
       "name": "pymc_extras",
       "type": "TECHNOLOGY",
-      "description": "A library used for defining priors in the model, version 0.7.0.",
+      "description": "PyMC Extras is an extension package for PyMC (version 0.7.0) that provides additional functionality beyond the core library, including support for defining priors in probabilistic",
       "degree": 0,
       "community": null,
       "sources": [
-        "MMM with time-varying media baseline.md"
+        "MMM with time-varying media baseline.md",
+        "Custom Models with MMM components.md"
       ]
     },
     "media_tvp_data.csv": {
@@ -6193,37 +5240,16 @@
         "MMM with time-varying media baseline.md"
       ]
     },
-    "Basic Marketing Mix Model": {
-      "id": "Basic Marketing Mix Model",
-      "name": "Basic Marketing Mix Model",
-      "type": "CONCEPT",
-      "description": "A standard MMM specification that neglects temporal dynamics and often leads to biased insights due to poor parameter estimation.",
-      "degree": 1,
-      "community": "84",
-      "sources": [
-        "MMM with time-varying media baseline.md"
-      ]
-    },
     "Time-Varying Parameter": {
       "id": "Time-Varying Parameter",
       "name": "Time-Varying Parameter",
       "type": "CONCEPT",
-      "description": "A modeling concept that captures changing trends, events, and external factors over time, allowing model parameters to evolve dynamically.",
-      "degree": 0,
+      "description": "A modeling concept in which parameters evolve dynamically over time to capture changing trends, events, and external factors.",
+      "degree": 3,
       "community": null,
       "sources": [
-        "MMM with time-varying parameters (TVP).md"
-      ]
-    },
-    "Time-Varying Intercept": {
-      "id": "Time-Varying Intercept",
-      "name": "Time-Varying Intercept",
-      "type": "CONCEPT",
-      "description": "A specific component of the MMM model where the baseline sales level is allowed to change over time, modeled as a Gaussian Process.",
-      "degree": 1,
-      "community": "79",
-      "sources": [
-        "MMM with time-varying parameters (TVP).md"
+        "MMM with time-varying parameters (TVP).md",
+        "MMM with time-varying media baseline.md"
       ]
     },
     "Gaussian Process": {
@@ -6266,17 +5292,6 @@
       "description": "A sampler backend version 0.19.0 that works with JAX to perform Markov Chain Monte Carlo sampling for Bayesian inference.",
       "degree": 1,
       "community": "50",
-      "sources": [
-        "MMM with time-varying parameters (TVP).md"
-      ]
-    },
-    "Google Search": {
-      "id": "Google Search",
-      "name": "Google Search",
-      "type": "PRODUCT",
-      "description": "A digital media channel included in the model as a source of marketing spend and contribution to sales.",
-      "degree": 1,
-      "community": "182",
       "sources": [
         "MMM with time-varying parameters (TVP).md"
       ]
@@ -6358,37 +5373,16 @@
         "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
       ]
     },
-    "Meta Platform": {
-      "id": "Meta Platform",
-      "name": "Meta Platform",
-      "type": "ORGANIZATION",
-      "description": "One of the major advertising platforms analyzed in the study.",
-      "degree": 1,
-      "community": "53",
-      "sources": [
-        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
-      ]
-    },
-    "Google Platform": {
-      "id": "Google Platform",
-      "name": "Google Platform",
-      "type": "ORGANIZATION",
-      "description": "Another major advertising platform analyzed in the study.",
-      "degree": 1,
-      "community": "53",
-      "sources": [
-        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
-      ]
-    },
     "Portfolio Theory": {
       "id": "Portfolio Theory",
       "name": "Portfolio Theory",
       "type": "CONCEPT",
-      "description": "A financial theory originating from Harry Markowitz in 1952 that evaluates investments as a portfolio rather than individually.",
-      "degree": 3,
+      "description": "Portfolio Theory is a financial framework originated by Harry Markowitz in 1952 that evaluates investments as a portfolio rather than individually, emphasizing correlations and ris",
+      "degree": 8,
       "community": "54",
       "sources": [
-        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
+        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md",
+        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md"
       ]
     },
     "Harry Markowitz": {
@@ -6413,17 +5407,6 @@
         "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
       ]
     },
-    "Bayesian Marketing Mix Models": {
-      "id": "Bayesian Marketing Mix Models",
-      "name": "Bayesian Marketing Mix Models",
-      "type": "TECHNOLOGY",
-      "description": "A specific type of model used in the analysis to estimate Incremental ROAS.",
-      "degree": 1,
-      "community": "56",
-      "sources": [
-        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
-      ]
-    },
     "Efficient Frontier": {
       "id": "Efficient Frontier",
       "name": "Efficient Frontier",
@@ -6431,17 +5414,6 @@
       "description": "A set of portfolio allocations that maximize return at each level of risk.",
       "degree": 1,
       "community": "57",
-      "sources": [
-        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
-      ]
-    },
-    "Risk-Adjusted ROAS": {
-      "id": "Risk-Adjusted ROAS",
-      "name": "Risk-Adjusted ROAS",
-      "type": "CONCEPT",
-      "description": "A formalized metric used to evaluate channel risk profiles within a portfolio context.",
-      "degree": 0,
-      "community": null,
       "sources": [
         "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
       ]
@@ -6494,11 +5466,17 @@
       "id": "Incremental ROAS",
       "name": "Incremental ROAS",
       "type": "CONCEPT",
-      "description": "A metric estimating the causal impact of spend, distinct from attribution credit.",
-      "degree": 1,
+      "description": "Incremental ROAS is a metric that measures the true causal impact of marketing spend on business outcomes, distinguishing it from attributed conversions that would have occurred or",
+      "degree": 16,
       "community": "56",
       "sources": [
-        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md"
+        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md",
+        "2026 Media Effectiveness Benchmarks_ 83 Channels & $1.85B in Ad Spend.md",
+        "Case Study_ GetYourGuide.md",
+        "Case Study_ KOHO.md",
+        "Case Study_ LA Times.md",
+        "Lume Case Study.md",
+        "Negative Case Study.md"
       ]
     },
     "Risk Profiles": {
@@ -6787,17 +5765,6 @@
         "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md"
       ]
     },
-    "Time-Slice Cross-Validation": {
-      "id": "Time-Slice Cross-Validation",
-      "name": "Time-Slice Cross-Validation",
-      "type": "CONCEPT",
-      "description": "A validation method ensuring no data leakage from future lift tests into training folds.",
-      "degree": 2,
-      "community": "173",
-      "sources": [
-        "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md"
-      ]
-    },
     "Continuous Ranked Probability Score": {
       "id": "Continuous Ranked Probability Score",
       "name": "Continuous Ranked Probability Score",
@@ -6919,17 +5886,6 @@
         "Negative Case Study.md"
       ]
     },
-    "Media Mix Measurement": {
-      "id": "Media Mix Measurement",
-      "name": "Media Mix Measurement",
-      "type": "CONCEPT",
-      "description": "A function provided by Recast to determine true performance across existing marketing channels.",
-      "degree": 1,
-      "community": "184",
-      "sources": [
-        "Negative Case Study.md"
-      ]
-    },
     "Buying Habits": {
       "id": "Buying Habits",
       "name": "Buying Habits",
@@ -7030,17 +5986,6 @@
         "Optimizing Marketing Spend with Bayesian MMM.md"
       ]
     },
-    "Prior Knowledge": {
-      "id": "Prior Knowledge",
-      "name": "Prior Knowledge",
-      "type": "CONCEPT",
-      "description": "Prior Knowledge refers to the integration of expert intuition or lift test results into the model.",
-      "degree": 1,
-      "community": "155",
-      "sources": [
-        "Optimizing Marketing Spend with Bayesian MMM.md"
-      ]
-    },
     "Likelihood Function": {
       "id": "Likelihood Function",
       "name": "Likelihood Function",
@@ -7123,32 +6068,16 @@
       "name": "Adstock Transformation",
       "type": "CONCEPT",
       "description": "A modeling technique that captures the lagged and decayed impact of advertising on consumer behavior.",
-      "degree": 1,
+      "degree": 11,
       "community": "75",
       "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
-    },
-    "SLSQP": {
-      "id": "SLSQP",
-      "name": "SLSQP",
-      "type": "TECHNOLOGY",
-      "description": "Sequential Least Squares Programming, an algorithm method used for constrained optimization problems.",
-      "degree": 1,
-      "community": "90",
-      "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
-    },
-    "Hill Saturation Function": {
-      "id": "Hill Saturation Function",
-      "name": "Hill Saturation Function",
-      "type": "PRODUCT",
-      "description": "A Python class implementation that applies the Hill function formula to transform saturation levels.",
-      "degree": 2,
-      "community": "121",
-      "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
+        "How To Create A Marketing Mix Model With LightweightMMM (Python).md",
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Bayesian Media Mix Modeling with limited data.md",
+        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
+        "MMM with time-varying media baseline.md",
+        "Optimizing Marketing Spend with Bayesian MMM.md"
       ]
     },
     "Law of Diminishing Returns": {
@@ -7195,17 +6124,6 @@
         "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
       ]
     },
-    "Normalization Requirement": {
-      "id": "Normalization Requirement",
-      "name": "Normalization Requirement",
-      "type": "CONCEPT",
-      "description": "A condition requiring input variables to fall within a specific range, typically 0 to 1, unless scaled.",
-      "degree": 1,
-      "community": "121",
-      "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
-    },
     "Decomposition of Trends and Seasonality": {
       "id": "Decomposition of Trends and Seasonality",
       "name": "Decomposition of Trends and Seasonality",
@@ -7213,17 +6131,6 @@
       "description": "A data preparation step involving the separation of time series components like trends and seasonal patterns.",
       "degree": 1,
       "community": "115",
-      "sources": [
-        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
-      ]
-    },
-    "Scipy Optimize Minimize": {
-      "id": "Scipy Optimize Minimize",
-      "name": "Scipy Optimize Minimize",
-      "type": "TECHNOLOGY",
-      "description": "A function within the Scipy library used for optimization.",
-      "degree": 2,
-      "community": "90",
       "sources": [
         "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md"
       ]
@@ -7607,10 +6514,13 @@
       "name": "Think with Google",
       "type": "ORGANIZATION",
       "description": "A publication arm of Google that releases guidance documents, including the Modern Measurement Playbook, advising marketers on incrementality approaches.",
-      "degree": 2,
+      "degree": 5,
       "community": "165",
       "sources": [
-        "The Incrementality Multiplier_ A Diminishing Returns Problem.md"
+        "The Incrementality Multiplier_ A Diminishing Returns Problem.md",
+        "Improving Marketing Mix Modeling Using Machine Learning Approaches.md",
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
       ]
     },
     "Lifesight.io": {
@@ -7694,11 +6604,13 @@
       "id": "Scipy",
       "name": "Scipy",
       "type": "TECHNOLOGY",
-      "description": "Scipy is a Python library used for simulation of prior samples in the context of Bayesian modeling.",
-      "degree": 1,
+      "description": "SciPy is a Python library for numerical and scientific computing, widely used in applications such as Bayesian modeling (e.g., simulation of prior samples) and Marketing Mix Modeli",
+      "degree": 5,
       "community": "155",
       "sources": [
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Practical Approaches to Optimizing Budget in Marketing Mix Modeling.md",
+        "Budget Allocation with PyMC-Marketing.md"
       ]
     },
     "Github": {
@@ -7716,22 +6628,20 @@
       "id": "Bayesian Marketing Mix Modeling",
       "name": "Bayesian Marketing Mix Modeling",
       "type": "CONCEPT",
-      "description": "Bayesian Marketing Mix Modeling is the core subject matter of the article, defined as an additive linear regression model.",
-      "degree": 18,
+      "description": "Bayesian Marketing Mix Modeling is an additive linear regression framework that estimates response values at specific time points using multiple factors, applying Bayesian inferenc",
+      "degree": 33,
       "community": "155",
       "sources": [
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
-      ]
-    },
-    "Prior Specifications": {
-      "id": "Prior Specifications",
-      "name": "Prior Specifications",
-      "type": "CONCEPT",
-      "description": "Prior Specifications are the focus of the article regarding assumed distributions of parameters without underlying data knowledge.",
-      "degree": 1,
-      "community": "155",
-      "sources": [
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Marketing Attribution Software Is Lying to You_ 792-Model Proof.md",
+        "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit.md",
+        "Bayesian Media Mix Modeling with limited data.md",
+        "Introduction to Bayesian Methods for MMM.md",
+        "MMM Quickstart Guide \u2014 Open Source Marketing Analytics Solution.md",
+        "Mitigating Unobserved Confounders in MMMs with Lift Test Likelihoods.md",
+        "Optimizing Marketing Spend with Bayesian MMM.md",
+        "Improving Marketing Mix Modeling Using Machine Learning Approaches.md",
+        "Case Study_ GetYourGuide.md"
       ]
     },
     "Additive Linear Regression Model": {
@@ -7745,26 +6655,16 @@
         "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
       ]
     },
-    "Hill Saturation": {
-      "id": "Hill Saturation",
-      "name": "Hill Saturation",
-      "type": "CONCEPT",
-      "description": "Hill Saturation is a media channel behavior transformation that defines a saturation point.",
-      "degree": 1,
-      "community": "130",
-      "sources": [
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
-      ]
-    },
     "Media Channels": {
       "id": "Media Channels",
       "name": "Media Channels",
       "type": "CONCEPT",
-      "description": "Media Channels refer to the influence of media spend on response across different platforms.",
-      "degree": 2,
+      "description": "Media Channels are the various platforms \u2014 such as TV, out-of-home (OOH), print, Facebook, and search \u2014 through which marketing spend is allocated and measured.",
+      "degree": 4,
       "community": "130",
       "sources": [
-        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md"
+        "Understanding Bayesian Marketing Mix Modeling_ A Deep Dive into Prior Specifications.md",
+        "Introduction to Bayesian Methods for MMM.md"
       ]
     },
     "Model Adequacy": {
@@ -7815,76 +6715,63 @@
   "by_type": {
     "CONCEPT": [
       "Marketing Mix Modeling",
-      "Media Mix Modeling",
       "Bayesian Marketing Mix Modeling",
-      "MMM Class",
       "Michaelis-Menten Kinetics",
-      "Incrementality",
-      "Media Mix Model",
-      "Adstock",
-      "Return on Investment",
-      "Incrementality Testing",
-      "Incrementality Experimentation",
-      "Marketing Mix Model",
-      "Randomized Controlled Trials",
-      "Contextual Calibration",
       "Attribution Model",
-      "GeometricAdstock",
-      "Attribution",
-      "Lift Testing",
-      "Bayesian Methods",
-      "Calibrated Marketing Mix Model",
+      "Incrementality Testing",
+      "Incremental ROAS",
+      "Adstock Transformation",
+      "Revenue",
       "Prior Distributions",
-      "Portfolio Strategy",
+      "Saturation Effect",
+      "Portfolio Theory",
+      "Randomized Controlled Trials",
+      "Conversion Lift Test",
+      "Contextual Calibration",
       "Budget Optimization",
+      "Lift Testing",
+      "Calibrated Marketing Mix Model",
+      "Mean Absolute Percentage Error",
       "Likelihood Function",
       "Incrementality Multiplier",
-      "Conversion Lift Test",
       "Geo-based Experiment",
       "target_efficiency Scenario",
       "Online Paid Acquisition",
       "Multi-Objective Optimization",
+      "Bayes' Theorem",
       "Customer Acquisition Cost",
-      "Revenue",
       "Confidence Interval",
       "Brand Activity",
-      "LogisticSaturation",
+      "Privacy Regulations",
       "Seasonality",
       "Minimax Regret",
-      "Saturation (Diminishing Returns)",
-      "Adstock Function",
-      "Mean Absolute Percentage Error",
+      "Media Channels",
       "Business Plausibility",
       "Experiment Goal",
-      "Saturation Transformation",
+      "Time-Series Forecasting",
       "Next40 Index",
       "Overfitting",
       "Reproducibility",
       "Machine Learning Operations",
       "Model Evaluation",
       "Ecommerce",
-      "Attribution Modelling",
       "Last-Click Attribution",
       "Marketing Investments",
       "Multi-Touch Attribution",
-      "Sequential Least Squares Quadratic Programming",
+      "LogisticSaturation",
       "Funded Account",
       "Cost-per-Unit",
-      "MichaelisMentenSaturation",
       "Distributionally Robust Optimization",
       "Finance",
       "Search",
       "Incremental ROI",
       "Platform Attribution",
-      "Advertising Attribution",
-      "Bayesian Inference",
-      "Portfolio Theory",
+      "No-U-Turn Sampler",
+      "Time-Varying Parameter",
       "Schnell-Mendoza equation",
       "Brand Response Campaign",
       "Multicollinearity",
       "Shape Effect",
-      "Sales Response",
-      "Marketing Mix Modelling Decomposition",
       "Statistical Fit",
       "Minimum Detectable Effect",
       "Alpha Parameter",
@@ -7892,19 +6779,15 @@
       "max_response Scenario",
       "Synthetic Control Methods",
       "Channel X",
-      "Mean Absolute Percentage Error for experiments",
+      "Normalized Root Mean Square Error",
       "Cookie Contamination",
       "External Validity",
-      "Bayesian Theorem And Priors",
       "Marketing Science Theory",
-      "Bayes' Theorem",
       "Bayesian Statistics",
-      "Posterior Distribution",
       "Paid Channel Coefficients",
       "Competitor Marketing Investment",
       "Probabilistic Programming Language",
       "Trend and Seasonality",
-      "Sales",
       "Customer Journey",
       "First-Party Data",
       "Na\u00efve Calibration",
@@ -7912,45 +6795,36 @@
       "Innovation Tier",
       "Digital Advertising",
       "Paid Search and Online Display",
-      "Saturation Effect",
       "Legacy MMM Vendors",
-      "Budgeting with Bayesian Models",
-      "MMM",
       "Traditional Attribution Methods",
       "Registration",
+      "Upper-Funnel Channels",
       "Website Traffic",
       "Social Media Channel",
       "Dollars",
       "GaussianBasis",
       "Averaging Strategy",
-      "Display",
+      "Display / GDN",
       "Organic Cannibalization",
       "Conversion Rate Benchmarks",
       "Diminishing Returns",
-      "Marketing Spend",
       "Analyst Bias",
       "Normal Distribution",
       "Uncertainty Quantification",
-      "No-U-Turn Sampler",
-      "Sales Data",
+      "Synthetic Data",
       "Media Spend Data",
-      "Temporal Dynamics Neglect",
-      "Time-Varying Media Baseline",
       "Gaussian Process",
       "Baseline Intercept",
       "GP Extrapolation",
       "Attribution Blind Spots",
       "Correlations",
       "Unobserved Confounder",
-      "Time-Slice Cross-Validation",
       "Baseline Model",
       "ROAS Reparametrization Method",
       "Actual Sales",
       "Direct Response Campaign",
       "Audience Overlap Effect",
-      "Media Channels",
       "Key Performance Indicator",
-      "Privacy-friendly",
       "Signal-resilient",
       "Holistic",
       "Granular Data",
@@ -7962,13 +6836,13 @@
       "Causal Inference Challenges",
       "Meta MMM Badged Partner Program",
       "Cost per Incremental Conversion",
+      "Marginal ROAS",
       "Gamma Parameter",
       "eval_g_eq_effi Function",
       "eval_g_eq Function",
       "Break-even Point",
       "Linear TV",
       "Email",
-      "Privacy Changes",
       "Consumer Behavior",
       "A/B Testing",
       "Before vs After Analysis",
@@ -7977,9 +6851,7 @@
       "Group B*",
       "Blocking Local Campaigns",
       "Financial Outcome",
-      "Time-Series Forecasting",
       "Lasso",
-      "Normalized Root Mean Square Error",
       "Decomposition Root Sum of Squared Distance",
       "K-Means Clustering",
       "Velocity",
@@ -7989,7 +6861,6 @@
       "Weibull PDF Adstock",
       "Concave Saturation Curve",
       "Linear Saturation Curve",
-      "Sales Revenue Conversions",
       "Dimension Reduction",
       "Frequentist Philosophy",
       "Likelihood",
@@ -8002,7 +6873,6 @@
       "Customer Lifetime Value",
       "Acquisition Channels",
       "RD-D2 shrinkage prior",
-      "Markov Chain Monte Carlo Sampling",
       "Causal DAG",
       "Experiment Tracking",
       "Model Registry",
@@ -8011,7 +6881,6 @@
       "R-Squared",
       "Digital Media",
       "Marketing Measurement",
-      "Privacy By Design",
       "Historical Approach",
       "Media Strategies",
       "Correlation vs. Causation",
@@ -8023,17 +6892,12 @@
       "Performance Marketing",
       "Marketing Efficiency",
       "Marketing Effectiveness",
-      "Return on Investment and Return on Ad Spend",
       "Econometrics",
       "Creating the new",
       "Short-termism",
       "Over-investment",
-      "Privacy Regulations",
       "Funnel Effect",
       "Incremental Customer Acquisition Cost",
-      "Classical Media Mix Modeling",
-      "Hill Equation",
-      "Adstock Equation",
       "Target Sales",
       "External Control Variables",
       "Time Delay",
@@ -8044,7 +6908,6 @@
       "Constraint",
       "Total Media Channel Contribution",
       "Sample Response Distribution",
-      "ROAS",
       "Channel Return on Investment",
       "Model Uncertainty",
       "Default Skepticism",
@@ -8056,7 +6919,6 @@
       "Active Monitoring",
       "Organic Baseline Demand",
       "Double-Counting of Conversions",
-      "Upper-Funnel Channels",
       "Lower-Funnel Channels",
       "TV Channel",
       "Impressions",
@@ -8067,7 +6929,6 @@
       "MonthlyFourier",
       "HalfGaussianBasis",
       "AsymmetricGaussianBasis",
-      "Prior Class",
       "Fourier Seasonality",
       "Event Basis",
       "Omni-channel Marketing",
@@ -8078,28 +6939,21 @@
       "Search Non-Brand",
       "Search Brand",
       "Performance Max",
-      "Video / YouTube",
       "Organic Data",
-      "Bayesian Programming",
       "Time Series Cross-Validation",
       "Hyperparameter Optimization",
       "Correlated Variables",
-      "Prior Information",
-      "Multi-Channel Marketing Mix Modeling",
       "Gamma Distribution",
       "Highest Density Interval",
       "Python Implementation",
       "Cost-per-target Calibration",
       "Sampling Divergences",
-      "Synthetic Data",
-      "Attribution Model Construction",
       "Black Box",
       "Directed Acyclic Graph",
+      "Temporal Dynamics Neglect",
       "y_sigma",
       "Divergences",
       "R-hat Statistic",
-      "Basic Marketing Mix Model",
-      "Time-Varying Intercept",
       "Target Seasonal",
       "Cosine Wave",
       "Simple Patterns",
@@ -8107,7 +6961,6 @@
       "Efficient Frontier",
       "Selection Bias",
       "Expected Returns",
-      "Incremental ROAS",
       "Risk Profiles",
       "Enzyme kinetics",
       "Biochemistry",
@@ -8118,19 +6971,15 @@
       "Diffusion Limited Enzymes",
       "Continuous Ranked Probability Score",
       "First Purchase Breakeven",
-      "Media Mix Measurement",
       "Buying Habits",
       "Reach Function",
-      "Prior Knowledge",
       "Poisson Distribution",
       "Negative Binomial Distribution",
       "Cauchy Distribution",
       "Student\u2019s T-distribution",
-      "Adstock Transformation",
       "Law of Diminishing Returns",
       "Marketing ROI",
       "Business Outcome",
-      "Normalization Requirement",
       "Decomposition of Trends and Seasonality",
       "Response Level",
       "Budget Constraint",
@@ -8140,139 +6989,25 @@
       "Rational Campaign",
       "Emotional Priming",
       "Share of Voice",
-      "Prior Specifications",
       "Additive Linear Regression Model",
-      "Hill Saturation",
       "Model Adequacy",
-      "Marginal ROAS",
-      "Marginal CPA",
-      "Group B",
       "Bayesian Regression",
       "S-Shaped Saturation Curve",
       "Television, Outdoor, and Cinema",
       "Wholesale and Retail",
       "Shopping",
-      "Display / GDN",
       "Demand Gen / Discovery",
-      "Saturation Function",
-      "Time-Varying Parameter",
-      "Retail Sales Price",
-      "Risk-Adjusted ROAS"
-    ],
-    "ORGANIZATION": [
-      "Qonto",
-      "Meta",
-      "Recast",
-      "Lume",
-      "GetYourGuide",
-      "BARK",
-      "Meta Marketing Science",
-      "Google",
-      "Resident",
-      "Daily Harvest",
-      "Cassandra",
-      "Negative Underwear",
-      "Medium",
-      "Adidas",
-      "HelloFresh",
-      "KOHO",
-      "PyMC Labs",
-      "Facebook",
-      "Block",
-      "Cash App",
-      "Amazon",
-      "YouTube",
-      "Google Research",
-      "Los Angeles Times",
-      "Towards Data Science",
-      "Facebook Experimental",
-      "Meta Open Source",
-      "Meta Foresight",
-      "Analytic Edge",
-      "Alphabet",
-      "HelloTech",
-      "Artefact",
-      "Square",
-      "AppsFlyer",
-      "Walmart",
-      "Think with Google",
-      "Github",
-      "Shampoo Advertiser",
-      "Northeastern University",
-      "D\u2019Amore-McKim School of Business",
-      "Marketing Science",
-      "Growth Department",
-      "LinkedIn",
-      "Instagram",
-      "Booking.com",
-      "Netflix",
-      "Deloitte",
-      "Advertisers",
-      "Marketers",
-      "WARC",
-      "eMarketer",
-      "Marketing Week",
-      "Adobe",
-      "Mistplay",
-      "Afterpay",
-      "Bolt",
-      "GetYourGuide Marketing Experimentation Team",
-      "Harry's",
-      "Mockingbird",
-      "Kroger, Costco, Wegmans",
-      "Cetagostini",
-      "Wikipedia",
-      "JSTOR",
-      "ArXiv",
-      "TikTok",
-      "WordStream",
-      "LocalIQ",
-      "Forecastegy",
-      "Kaggle",
-      "Ebay",
-      "H2O.ai",
-      "Vexpower",
-      "Saxifrage",
-      "Target",
-      "H-E-B",
-      "Meijer",
-      "Meta Platform",
-      "Google Platform",
-      "Home Improvement Retailer",
-      "International Union of Biochemistry and Molecular Biology",
-      "Merchandising Team",
-      "Production Team",
-      "Planning Team",
-      "Institute of Practitioners in Advertising",
-      "adam&eve DDB",
-      "Wharton Business School",
-      "Thinkbox",
-      "Global Advisory Board on the Future of Advertising",
-      "MIT",
-      "Unsplash",
-      "Data Science Team",
-      "Facebook Incubator",
-      "GetYourGuide Data Science Team",
-      "GetYourGuide Marketing Teams",
-      "GetYourGuide Executive Team",
-      "HubSpot",
-      "Lifesight.io"
+      "Retail Sales Price"
     ],
     "PRODUCT": [
       "Robyn",
+      "GeoLift by Recast",
       "Recast Platform",
       "Measurement 360",
-      "Meta GeoLift",
-      "Multi-Channel Marketing Mix Modeling Class",
-      "GeoLift by Recast",
-      "Project Robyn",
-      "Conversion Lift Tests",
       "Television (TV)",
       "Meta Conversion Lift",
-      "In-house MMM Solution",
       "Search Engine Marketing",
       "CausalPy",
-      "Hill Saturation Function",
       "Complete Code Implementation",
       "BarkBox",
       "Super Chewer",
@@ -8281,16 +7016,12 @@
       "Nectar",
       "DreamCloud",
       "Online Business Account",
-      "Fictitious Dataset",
       "Instagram Only",
       "Pinterest",
       "Recast Insights Dashboards",
-      "Recast GeoLift Platform",
       "BuildMergedModel",
       "CustomModelWrapper",
       "Mando",
-      "Synthetic Dataset",
-      "Google Search",
       "Invertase",
       "Urease",
       "Fumarase",
@@ -8304,19 +7035,20 @@
     ],
     "TECHNOLOGY": [
       "PyMC-Marketing",
-      "LightweightMMM",
       "PyMC",
+      "LightweightMMM",
+      "Hill Function",
       "Markov Chain Monte Carlo",
       "Multi-stage Media Mix Modeling",
       "Python",
-      "Hill Function",
       "NumPy",
       "Prophet",
       "Ridge Regression",
-      "PyMC3",
+      "Geometric Adstock",
       "BudgetOptimizer",
       "Pandas",
       "Hilbert Space Gaussian Process",
+      "Scipy",
       "ArviZ",
       "Scikit-learn",
       "Data Version Control",
@@ -8328,18 +7060,15 @@
       "matplotlib",
       "Random Forest",
       "Stan",
-      "Geometric Adstock",
       "Meta Pixel",
       "R",
       "nloptr",
-      "Robyn v3.8",
       "Cookies (Web-tracking)",
       "Touch-Based Attribution",
       "Internal MTA Tool",
       "Google Ads",
       "Google Colab",
       "SHAP",
-      "Scipy Optimize Minimize",
       "Weibull CDF Adstock",
       "glmnet",
       "Git",
@@ -8349,28 +7078,20 @@
       "Google AMSS",
       "Constrained Optimization Algorithm",
       "PySTAN",
-      "Lightweight MMM",
       "MultiDimensionalBudgetOptimizerWrapper",
-      "Recast GeoLift",
       "Recast Optimizer",
-      "Bayesian Time Series Model",
       "Google Performance Planner",
       "build_mmm_from_yaml",
       "Optuna",
       "LIME",
-      "No-U-Turns Sampler",
       "CPython",
       "Google Analytics",
       "How Did You Hear About Us Survey Tool",
       "seaborn",
       "JAX",
       "nutpie",
-      "Bayesian Marketing Mix Models",
-      "SLSQP",
       "TV Broadcast",
       "Meridian",
-      "Scipy",
-      "PyMC Extras",
       "PreliZ",
       "IPython",
       "Gradient Boosting Machines",
@@ -8395,7 +7116,6 @@
       "Abadie et al.",
       "Gabriele Franco",
       "Peter Field",
-      "Dr. Vladislav Borisov",
       "Mario Filho",
       "Donald Van Slyke",
       "Evan Maridou",
@@ -8414,9 +7134,11 @@
       "Rhayssa Sonohata",
       "Vinicius Pacheco",
       "Wedeueis Braz",
+      "Koehler, J.",
       "Michael Wexler",
       "Ling Chiao",
       "Peter Zhou",
+      "Dr. Vladislav Borisov",
       "Yassine Bakri",
       "Lindsey Rodriguez",
       "Darcy Hinck",
@@ -8425,8 +7147,6 @@
       "Michael Kaminsky",
       "Shannon Klingman, MD (OB/GYN)",
       "Jordan Allen",
-      "Jin, Yuxue",
-      "Jin, Y., Wang, Y., Sun, Y., Chan, D., & Koehler, J.",
       "Harry Markowitz",
       "Leonor Michaelis",
       "Maud Menten",
@@ -8442,27 +7162,24 @@
       "Kakasarnold",
       "Wang, Y.",
       "Sun, Y.",
-      "Chan, D.",
-      "Koehler, J."
+      "Chan, D."
     ],
     "DOCUMENT": [
-      "Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects",
       "Marketing Measurement series: Marketing Mix Modeling at Qonto",
+      "Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects",
       "2026 Media Effectiveness Benchmarks",
       "The Qonto Way",
-      "Bayesian Media Mix Modeling with limited data",
       "Decision-Making Processes in Marketing Mix Modelling: A Survey of MMM Providers",
       "AdAnalyse Dataset",
+      "MMM Example Notebook",
       "Marketing in the Era of Accountability",
       "Analyst's Guide to MMM",
       "Calibration Simulation Project",
       "Article: Hitting ROAS target using Robyn's budget allocator",
       "Article: How to invest better in acquisition channels?",
       "Marketing Measurement series: Incrementality test scheduling",
-      "Marketing Measurement Series Part II",
       "The MMM Handbook",
       "More precision in MMM-experiment calibration with Robyn from Meta Marketing Science",
-      "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit",
       "Case Study: KOHO",
       "The Theory of Statistical Decision",
       "Improving Marketing Mix Modeling Using Machine Learning Approaches",
@@ -8474,17 +7191,13 @@
       "Marketing Mix Modeling series",
       "Project Halo",
       "Bayesian Methods for Hackers",
-      "Demo Notebook",
       "Part I: Getting started",
       "Part VI: MLOps",
       "Wikipedia - Marketing Mix Modeling",
       "Borden, N. H. (1964)",
       "Chan & Perry (2017)",
-      "Budget Allocation with PyMC-Marketing",
       "Case Study: LA Times",
       "Lume Case Study",
-      "MMM Example Notebook",
-      "Media Mix Modeling (MMM) Quickstart Guide",
       "Media Effect Estimation with PyMC",
       "Jin, Yuxue et al. (2017)",
       "media_tvp_data.csv",
@@ -8493,8 +7206,7 @@
       "Thinking, Fast and Slow",
       "How Brands Grow",
       "Seducing the Subconscious",
-      "The Long and the Short of It",
-      "PyMC-Marketing Documentation"
+      "The Long and the Short of It"
     ],
     "OTHER": [
       "Return on Ad Spend",
@@ -8502,11 +7214,94 @@
       "Los Angeles Times Data Science Team",
       "Gibbs Sampling",
       "Hamiltonian Monte Carlo",
-      "Marginal Return on Ad Spend",
       "Bayesian Information Criterion",
       "Propensity Score Methods",
       "Optimizer Tool",
       "Forecaster Tool"
+    ],
+    "ORGANIZATION": [
+      "Qonto",
+      "Facebook",
+      "Recast",
+      "Lume",
+      "Meta Marketing Science",
+      "GetYourGuide",
+      "BARK",
+      "Google",
+      "Daily Harvest",
+      "Resident",
+      "Negative Underwear",
+      "Medium",
+      "Cassandra",
+      "Adidas",
+      "HelloFresh",
+      "KOHO",
+      "PyMC Labs",
+      "Think with Google",
+      "YouTube",
+      "Block",
+      "Square",
+      "Cash App",
+      "Amazon",
+      "Google Research",
+      "Los Angeles Times",
+      "Analytic Edge",
+      "Alphabet",
+      "Artefact",
+      "AppsFlyer",
+      "Walmart",
+      "Github",
+      "Shampoo Advertiser",
+      "Northeastern University",
+      "D\u2019Amore-McKim School of Business",
+      "Growth Department",
+      "LinkedIn",
+      "Booking.com",
+      "Netflix",
+      "Deloitte",
+      "Advertisers",
+      "Marketers",
+      "WARC",
+      "eMarketer",
+      "Marketing Week",
+      "Adobe",
+      "Mistplay",
+      "Afterpay",
+      "Bolt",
+      "Harry's",
+      "Mockingbird",
+      "Kroger, Costco, Wegmans",
+      "Cetagostini",
+      "Wikipedia",
+      "JSTOR",
+      "ArXiv",
+      "TikTok",
+      "WordStream",
+      "LocalIQ",
+      "Forecastegy",
+      "Kaggle",
+      "Ebay",
+      "H2O.ai",
+      "Vexpower",
+      "Saxifrage",
+      "Target",
+      "H-E-B",
+      "Meijer",
+      "Home Improvement Retailer",
+      "International Union of Biochemistry and Molecular Biology",
+      "Merchandising Team",
+      "Production Team",
+      "Planning Team",
+      "Institute of Practitioners in Advertising",
+      "adam&eve DDB",
+      "Wharton Business School",
+      "Thinkbox",
+      "Global Advisory Board on the Future of Advertising",
+      "MIT",
+      "Unsplash",
+      "Data Science Team",
+      "HubSpot",
+      "Lifesight.io"
     ],
     "ENTITY": [
       "In-Platform Metrics",
@@ -8515,22 +7310,17 @@
       "Platform Performance",
       "Model Selection",
       "Spain",
-      " Marketing Measurement series: Marketing Mix Modeling at Qonto ",
-      "Square US",
-      "Optimization Result",
       "Prior Predictive Check",
       "Long-term Share Growth",
       "InputCollect Object",
       "CXL",
       "Best Practices",
-      "Facebook Business News",
       "Matt Patton",
+      "Optimization Result",
       "Incrementality System",
       "Opacity",
-      "Upper-funnel Economics",
       "Healthcare",
       "High Customer Lifetime Value",
-      "Marketing Budget Optimization",
       "Posterior Predictive Check",
       "Annual Budget",
       "Santiago Schnell",
@@ -8560,35 +7350,31 @@
     ],
     "LOCATION": [
       "France",
-      "New York",
       "US",
-      "UK",
+      "New York",
       "Latin America Market",
       "Brazil",
       "Berlin",
       "Canada",
-      "Western United States",
       "California"
     ]
   },
   "by_community": {
     "75": [
       "Marketing Mix Modeling",
+      "Adstock Transformation",
       "Multicollinearity",
       "Analyst's Guide to MMM",
       "Trend and Seasonality",
       "John Wanamaker",
       "Granular Data",
-      "Privacy-friendly",
       "Signal-resilient",
       "Holistic",
       "Key Performance Indicator",
       "Marketing Mix",
-      "Marginal Return on Ad Spend",
       "Traditional Models",
       "Cost per Incremental Conversion",
       "Avi Shenshakir",
-      "Privacy Changes",
       "Dimension Reduction",
       "Customer Lifetime Value",
       "Causal DAG",
@@ -8596,19 +7382,16 @@
       "Some Outcomes vs. All Outcomes",
       "ROAS Discrepancy",
       "Wikipedia - Marketing Mix Modeling",
-      "Bayesian Time Series Model",
       "H2O.ai",
       "Time Series Cross-Validation",
       "Vexpower",
       "seaborn",
       "Divergences",
       "R-hat Statistic",
-      "Adstock Transformation",
       "Law of Diminishing Returns"
     ],
     "76": [
       "Hill Function",
-      "Saturation Transformation",
       "Shape Effect",
       "Curvature Function",
       "Gamma Parameter"
@@ -8617,31 +7400,22 @@
       "Model Selection",
       "Bayesian Information Criterion"
     ],
-    "85": [
-      "Business Plausibility",
-      "Marketing Mix Modelling Decomposition",
-      "Statistical Fit"
-    ],
     "77": [
       "PyMC",
       "NumPy",
       "Reproducibility",
       "Overfitting",
-      "Bayesian Theorem And Priors",
-      "Markov Chain Monte Carlo Sampling",
       "RD-D2 shrinkage prior"
     ],
     "165": [
       "Incrementality Multiplier",
-      "The MMM Handbook",
       "Think with Google",
+      "The MMM Handbook",
       "Modern Measurement Playbook"
     ],
     "166": [
       "Incrementality Testing",
-      "Attribution",
-      "Acquisition Channels",
-      "Multi-Channel Marketing Mix Modeling"
+      "Acquisition Channels"
     ],
     "82": [
       "Bayes' Theorem",
@@ -8652,41 +7426,36 @@
       "Paid Channel Coefficients",
       "Half Normal Distribution"
     ],
-    "162": [
-      "Return on Investment",
-      "Sales",
-      "Marketing Spend",
-      "Incremental Sales Impact",
-      "Sales Revenue Conversions"
-    ],
     "167": [
       "Linear Regression",
       "Diminishing Returns",
       "Audience Overlap Effect"
     ],
     "84": [
-      "Temporal Dynamics Neglect",
-      "Basic Marketing Mix Model"
+      "Temporal Dynamics Neglect"
     ],
     "79": [
       "Hilbert Space Gaussian Process",
-      "Time-Varying Media Baseline",
       "Gaussian Process",
-      "Baseline Intercept",
-      "Time-Varying Intercept"
+      "Baseline Intercept"
     ],
     "163": [
       "Ordinary Least Squares",
       "Analyst Bias",
       "Correlated Variables"
     ],
+    "162": [
+      "Incremental Sales Impact"
+    ],
+    "85": [
+      "Business Plausibility",
+      "Statistical Fit"
+    ],
     "164": [
-      "Optimization Result",
-      "ROAS"
+      "Optimization Result"
     ],
     "173": [
       "Return on Ad Spend",
-      "Time-Slice Cross-Validation",
       "Break-even Point",
       "InputCollect Object"
     ],
@@ -8704,35 +7473,21 @@
       "Referral Program"
     ],
     "91": [
-      "Marketing Mix Model",
       "Cassandra",
       "Mean Absolute Percentage Error",
-      "Advertising Attribution",
       "Gabriele Franco",
       "Nicolas Arriv\u00e9",
       "Performance Incrementality Dashboard",
       "Organic Data"
     ],
-    "168": [
-      "Media Mix Model",
-      "Unobserved Confounder",
-      "Directed Acyclic Graph",
-      "Marketing Budget Optimization"
-    ],
     "170": [
       "Alpha Parameter",
       "Saturation Curve"
     ],
-    "172": [
-      "Sales Response",
-      "Optimal Media Mix"
-    ],
     "90": [
       "Budget Optimization",
       "Cost-per-Unit",
-      "Scipy Optimize Minimize",
-      "Response Level",
-      "SLSQP"
+      "Response Level"
     ],
     "92": [
       "Platform Attribution",
@@ -8741,6 +7496,10 @@
       "Organic Cannibalization",
       "Search Non-Brand",
       "Search Brand"
+    ],
+    "168": [
+      "Unobserved Confounder",
+      "Directed Acyclic Graph"
     ],
     "171": [
       "ROAS Reparametrization Method",
@@ -8753,9 +7512,11 @@
       "Post-Coronavirus Period",
       "Women's underwear"
     ],
+    "172": [
+      "Optimal Media Mix"
+    ],
     "169": [
-      "Saturation Effect",
-      "Hill Equation"
+      "Saturation Effect"
     ],
     "93": [
       "Qonto",
@@ -8773,7 +7534,6 @@
       "GetYourGuide",
       "Germany",
       "Italy",
-      "Recast GeoLift",
       "Recast Optimizer",
       "2025 Learning Agenda",
       "Model Uncertainty",
@@ -8783,15 +7543,13 @@
       "Berlin"
     ],
     "95": [
-      "Online Paid Acquisition",
       "YouTube",
+      "Online Paid Acquisition",
       "LinkedIn",
-      "Instagram",
       "TikTok"
     ],
     "96": [
-      "Dr. Vladislav Borisov",
-      "GetYourGuide Marketing Experimentation Team"
+      "Dr. Vladislav Borisov"
     ],
     "3": [
       "Geometric Adstock",
@@ -8802,24 +7560,13 @@
       "Propensity Score Methods",
       "Causal Inference Challenges"
     ],
-    "99": [
-      "Meta",
-      "Project Robyn",
-      "Meta Foresight",
-      "Meta Open Source",
-      "Meta MMM Badged Partner Program",
-      "Instagram Only",
-      "Meta Ads Manager",
-      "Demo Notebook"
-    ],
     "102": [
       "Randomized Controlled Trials",
       "Multi-Objective Optimization",
       "Nevergrad",
       "Meta Conversion Lift",
-      "Mean Absolute Percentage Error for experiments",
-      "Last Dollar vs. Average Dollar",
       "Normalized Root Mean Square Error",
+      "Last Dollar vs. Average Dollar",
       "Decomposition Root Sum of Squared Distance"
     ],
     "175": [
@@ -8831,11 +7578,9 @@
     ],
     "100": [
       "Resident",
-      "In-house MMM Solution",
+      "US",
       "Nectar",
       "DreamCloud",
-      "US",
-      "UK",
       "First Half of 2021"
     ],
     "179": [
@@ -8845,17 +7590,20 @@
     ],
     "178": [
       "Contextual Calibration",
-      "Na\u00efve Calibration",
-      "Robyn v3.8"
+      "Na\u00efve Calibration"
     ],
     "103": [
       "Decision-Making Processes in Marketing Mix Modelling: A Survey of MMM Providers",
       "Igor Skokan",
       "Julian Runge",
       "Alfonso Calatrava",
-      "Marketing Science",
       "Northeastern University",
       "D\u2019Amore-McKim School of Business"
+    ],
+    "99": [
+      "Meta MMM Badged Partner Program",
+      "Instagram Only",
+      "Meta Ads Manager"
     ],
     "98": [
       "BARK",
@@ -8875,33 +7623,24 @@
       "ROBYN HACKATHON 2022",
       "Mark Chen"
     ],
-    "176": [
-      "Facebook Experimental",
-      "Robyn Dataset"
-    ],
     "177": [
-      "Sequential Least Squares Quadratic Programming",
       "nloptr"
     ],
     "180": [
       "Article: Hitting ROAS target using Robyn's budget allocator",
       "Bernardo Lares"
     ],
+    "176": [
+      "Robyn Dataset"
+    ],
     "105": [
       "Marketing Measurement series: Marketing Mix Modeling at Qonto",
       "Machine Learning Operations",
       "Louis Magowan",
-      "Marketing Measurement Series Part II",
       "Marketing Measurement series: Incrementality test scheduling",
       "Part I: Getting started",
       "Part VI: MLOps",
       "DevOps"
-    ],
-    "104": [
-      "Ruari Walker",
-      " Marketing Measurement series: Marketing Mix Modeling at Qonto ",
-      "Article: How to invest better in acquisition channels?",
-      "Marianne Borzic Ducournau"
     ],
     "106": [
       "The Qonto Way",
@@ -8909,15 +7648,10 @@
       "Artefact",
       "Brazil"
     ],
-    "107": [
-      "Slava Kisilevich",
-      "Towards Data Science",
-      "Improving Marketing Mix Modeling Using Machine Learning Approaches",
-      "Practical Approaches to Optimizing Budget in Marketing Mix Modeling",
-      "Complete Code Implementation",
-      "Understanding Bayesian Marketing Mix Modeling: A Deep Dive into Prior Specifications",
-      "GitHub Repository slavakx/medium_posts",
-      "Kakasarnold"
+    "104": [
+      "Ruari Walker",
+      "Article: How to invest better in acquisition channels?",
+      "Marianne Borzic Ducournau"
     ],
     "108": [
       "Data Version Control",
@@ -8925,31 +7659,35 @@
       "Git",
       "Amazon Web Services Simple Storage Service"
     ],
-    "109": [
-      "Meta GeoLift",
-      "Synthetic Control Methods",
-      "Abadie et al.",
-      "Tobacco Control Program in California"
-    ],
-    "111": [
-      "Markov Chain Monte Carlo",
-      "Bayesian Methods",
-      "Bayesian Inference",
-      "Prior Information",
-      "Gibbs Sampling",
-      "Saxifrage"
+    "107": [
+      "Slava Kisilevich",
+      "Improving Marketing Mix Modeling Using Machine Learning Approaches",
+      "Practical Approaches to Optimizing Budget in Marketing Mix Modeling",
+      "Complete Code Implementation",
+      "Understanding Bayesian Marketing Mix Modeling: A Deep Dive into Prior Specifications",
+      "GitHub Repository slavakx/medium_posts",
+      "Kakasarnold"
     ],
     "112": [
       "Attribution Model",
       "Geo-based Experiment",
-      "Display",
       "Minimum Detectable Effect",
       "Multi-cell Test"
+    ],
+    "109": [
+      "Synthetic Control Methods",
+      "Abadie et al.",
+      "Tobacco Control Program in California"
     ],
     "110": [
       "Stan",
       "R",
       "Hamiltonian Monte Carlo"
+    ],
+    "111": [
+      "Markov Chain Monte Carlo",
+      "Gibbs Sampling",
+      "Saxifrage"
     ],
     "113": [
       "Finance",
@@ -8964,9 +7702,8 @@
       "Internal MTA Tool"
     ],
     "115": [
-      "Prophet",
       "Facebook",
-      "Attribution Modelling",
+      "Prophet",
       "Decomposition of Trends and Seasonality",
       "Adobe"
     ],
@@ -8990,7 +7727,6 @@
       "Jordan Allen",
       "Google Analytics",
       "How Did You Hear About Us Survey Tool",
-      "Attribution Model Construction",
       "Black Box",
       "Lume Case Study"
     ],
@@ -9017,7 +7753,6 @@
       "Group B*"
     ],
     "13": [
-      "Incrementality Experimentation",
       "Competitor Marketing Investment",
       "Booking.com",
       "Netflix",
@@ -9029,17 +7764,7 @@
     "121": [
       "Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects",
       "Google Research",
-      "Hill Saturation Function",
-      "Shampoo Advertiser",
-      "Jin, Yuxue",
-      "Jin, Y., Wang, Y., Sun, Y., Chan, D., & Koehler, J.",
-      "Normalization Requirement"
-    ],
-    "122": [
-      "Conversion Lift Tests",
-      "Cookie Contamination",
-      "External Validity",
-      "Product/Offering Changes"
+      "Shampoo Advertiser"
     ],
     "119": [
       "Google",
@@ -9047,14 +7772,6 @@
       "Google AMSS",
       "Meridian",
       "WARC"
-    ],
-    "120": [
-      "Bayesian Media Mix Modeling with limited data",
-      "Camila C. Moreno",
-      "Rafael Melo",
-      "Rhayssa Sonohata",
-      "Vinicius Pacheco",
-      "Wedeueis Braz"
     ],
     "123": [
       "Adidas",
@@ -9065,6 +7782,18 @@
       "Marketing Effectiveness",
       "Creating the new",
       "Latin America Market"
+    ],
+    "122": [
+      "Cookie Contamination",
+      "External Validity",
+      "Product/Offering Changes"
+    ],
+    "120": [
+      "Camila C. Moreno",
+      "Rafael Melo",
+      "Rhayssa Sonohata",
+      "Vinicius Pacheco",
+      "Wedeueis Braz"
     ],
     "15": [
       "Marketing Science Theory",
@@ -9080,19 +7809,16 @@
       "ArviZ",
       "No-U-Turn Sampler",
       "Bolt",
-      "Lightweight MMM",
       "MultiDimensionalBudgetOptimizerWrapper",
       "Sample Response Distribution",
       "build_mmm_from_yaml",
       "Cetagostini",
       "BuildMergedModel",
-      "CustomModelWrapper",
-      "Media Mix Modeling (MMM) Quickstart Guide"
+      "CustomModelWrapper"
     ],
     "127": [
       "Pandas",
-      "Media Spend Data",
-      "Sales Data"
+      "Media Spend Data"
     ],
     "125": [
       "LightweightMMM",
@@ -9104,35 +7830,12 @@
       "Forecastegy",
       "Additive Linear Regression Model"
     ],
-    "126": [
-      "Budgeting with Bayesian Models",
-      "Budget Allocation with PyMC-Marketing"
-    ],
     "128": [
       "PyMC Labs",
       "HelloFresh",
       "Luca Fiaschi",
-      "Bayesian Media Mix Modeling using PyMC3, for Fun and Profit",
-      "HelloTech",
       "Mistplay",
       "PyMCCon 2020"
-    ],
-    "130": [
-      "Adstock",
-      "Revenue",
-      "Media Channels",
-      "Fictitious Dataset",
-      "Hill Saturation"
-    ],
-    "129": [
-      "GeometricAdstock",
-      "Multi-Channel Marketing Mix Modeling Class",
-      "Saturation (Diminishing Returns)",
-      "LogisticSaturation",
-      "Marketing Investments",
-      "MMM",
-      "No-U-Turns Sampler",
-      "Synthetic Data"
     ],
     "134": [
       "Ridge Regression",
@@ -9144,30 +7847,32 @@
       "LIME"
     ],
     "132": [
-      "Adstock Function",
       "Television (TV)",
       "Search Engine Marketing",
       "Funnel Effect"
     ],
+    "130": [
+      "Revenue",
+      "Media Channels"
+    ],
     "131": [
       "Juan Orduz",
-      "GaussianBasis",
       "MMM Example Notebook",
+      "GaussianBasis",
       "Media Effect Estimation with PyMC"
     ],
+    "129": [
+      "Marketing Investments",
+      "LogisticSaturation",
+      "Synthetic Data"
+    ],
     "182": [
-      "MMM Class",
       "YearlyFourier",
       "MonthlyFourier",
       "HalfGaussianBasis",
       "AsymmetricGaussianBasis",
       "Event Basis",
-      "Fourier Seasonality",
-      "Google Search"
-    ],
-    "183": [
-      "MichaelisMentenSaturation",
-      "Prior Class"
+      "Fourier Seasonality"
     ],
     "19": [
       "Probabilistic Programming Language",
@@ -9184,12 +7889,10 @@
       "Marketers",
       "Historical Approach",
       "Media Strategies",
-      "Best Practices",
-      "Facebook Business News"
+      "Best Practices"
     ],
     "136": [
-      "First-Party Data",
-      "Privacy By Design"
+      "First-Party Data"
     ],
     "137": [
       "2026 Media Effectiveness Benchmarks",
@@ -9203,7 +7906,6 @@
       "R-Squared"
     ],
     "139": [
-      "Portfolio Strategy",
       "Innovation Tier",
       "Foundation Tier",
       "Growth Tier",
@@ -9240,11 +7942,9 @@
       "Institute of Practitioners in Advertising"
     ],
     "26": [
-      "Return on Investment and Return on Ad Spend",
       "Short-termism"
     ],
     "27": [
-      "Adstock Equation",
       "Time Delay"
     ],
     "145": [
@@ -9266,7 +7966,6 @@
       "Biannual Refresh Cycle"
     ],
     "29": [
-      "Square US",
       "Ling Chiao",
       "Peter Zhou"
     ],
@@ -9274,8 +7973,13 @@
       "Recast Insights Dashboards",
       "Market Saturation"
     ],
+    "184": [
+      "Recast",
+      "Weekly Refresh Cycle",
+      "Harry's",
+      "Mockingbird"
+    ],
     "151": [
-      "Incrementality",
       "Conversion Lift Test",
       "Meta Pixel",
       "Customer Journey",
@@ -9284,28 +7988,10 @@
       "Production Team",
       "Marketing Measurement"
     ],
-    "184": [
-      "Recast",
-      "Weekly Refresh Cycle",
-      "Harry's",
-      "Mockingbird",
-      "Media Mix Measurement"
-    ],
-    "187": [
-      "Media Mix Modeling",
-      "Borden, N. H. (1964)",
-      "Incremental Customer Acquisition Cost",
-      "Constrained Optimization Algorithm",
-      "Mike Bloomberg",
-      "Chan & Perry (2017)",
-      "Organic Baseline Demand",
-      "Synthetic Dataset",
-      "Posterior Predictive Check"
-    ],
     "152": [
+      "GeoLift by Recast",
       "Recast Platform",
       "Lift Testing",
-      "GeoLift by Recast",
       "CausalPy",
       "Los Angeles Times Data Science Team",
       "Optimizer Tool",
@@ -9328,13 +8014,21 @@
       "Seasonality",
       "Los Angeles Times Marketing Organization",
       "Actual Sales",
-      "Recast GeoLift Platform",
       "Double-Counting of Conversions",
       "Planning Team"
     ],
+    "187": [
+      "Borden, N. H. (1964)",
+      "Incremental Customer Acquisition Cost",
+      "Constrained Optimization Algorithm",
+      "Mike Bloomberg",
+      "Chan & Perry (2017)",
+      "Organic Baseline Demand",
+      "Posterior Predictive Check"
+    ],
     "189": [
-      "Cookies (Web-tracking)",
-      "Privacy Regulations"
+      "Privacy Regulations",
+      "Cookies (Web-tracking)"
     ],
     "188": [
       "Prior Predictive Check",
@@ -9349,7 +8043,6 @@
     ],
     "185": [
       "Los Angeles Times",
-      "Western United States",
       "Case Study: LA Times"
     ],
     "186": [
@@ -9372,24 +8065,18 @@
     ],
     "155": [
       "Bayesian Marketing Mix Modeling",
-      "Classical Media Mix Modeling",
+      "Scipy",
       "Target Sales",
       "External Control Variables",
       "Marketing Analytics",
       "Jin, Yuxue et al. (2017)",
-      "Reach Function",
-      "Prior Knowledge",
-      "Scipy",
-      "Prior Specifications"
+      "Reach Function"
     ],
     "156": [
       "Prior Distributions",
-      "PyMC3",
-      "Posterior Distribution",
       "Delphi Method",
       "PySTAN",
-      "Likelihood",
-      "Bayesian Programming"
+      "Likelihood"
     ],
     "36": [
       "Low Budget Scenario",
@@ -9451,10 +8138,6 @@
       "Performance Max",
       "Opacity"
     ],
-    "43": [
-      "Video / YouTube",
-      "Upper-funnel Economics"
-    ],
     "44": [
       "Healthcare",
       "High Customer Lifetime Value"
@@ -9500,9 +8183,7 @@
     ],
     "53": [
       "Platform Performance",
-      "Marketing Attribution Software",
-      "Meta Platform",
-      "Google Platform"
+      "Marketing Attribution Software"
     ],
     "54": [
       "Portfolio Theory",
@@ -9517,7 +8198,6 @@
       "Annual Budget"
     ],
     "56": [
-      "Bayesian Marketing Mix Models",
       "Incremental ROAS"
     ],
     "57": [
@@ -9602,19 +8282,25 @@
       "id": "Marketing Mix Modeling",
       "name": "Marketing Mix Modeling",
       "type": "CONCEPT",
-      "degree": 109
+      "degree": 158
     },
     {
       "id": "PyMC-Marketing",
       "name": "PyMC-Marketing",
       "type": "TECHNOLOGY",
-      "degree": 41
+      "degree": 37
     },
     {
       "id": "Robyn",
       "name": "Robyn",
       "type": "PRODUCT",
-      "degree": 34
+      "degree": 35
+    },
+    {
+      "id": "Bayesian Marketing Mix Modeling",
+      "name": "Bayesian Marketing Mix Modeling",
+      "type": "CONCEPT",
+      "degree": 33
     },
     {
       "id": "Qonto",
@@ -9623,44 +8309,38 @@
       "degree": 30
     },
     {
-      "id": "Media Mix Modeling",
-      "name": "Media Mix Modeling",
-      "type": "CONCEPT",
-      "degree": 24
-    },
-    {
-      "id": "Meta",
-      "name": "Meta",
-      "type": "ORGANIZATION",
-      "degree": 20
-    },
-    {
       "id": "Return on Ad Spend",
       "name": "Return on Ad Spend",
       "type": "OTHER",
-      "degree": 20
+      "degree": 29
+    },
+    {
+      "id": "Facebook",
+      "name": "Facebook",
+      "type": "ORGANIZATION",
+      "degree": 28
+    },
+    {
+      "id": "Michaelis-Menten Kinetics",
+      "name": "Michaelis-Menten Kinetics",
+      "type": "CONCEPT",
+      "degree": 18
+    },
+    {
+      "id": "Attribution Model",
+      "name": "Attribution Model",
+      "type": "CONCEPT",
+      "degree": 17
     },
     {
       "id": "Recast",
       "name": "Recast",
       "type": "ORGANIZATION",
-      "degree": 18
+      "degree": 17
     },
     {
-      "id": "Bayesian Marketing Mix Modeling",
-      "name": "Bayesian Marketing Mix Modeling",
-      "type": "CONCEPT",
-      "degree": 18
-    },
-    {
-      "id": "MMM Class",
-      "name": "MMM Class",
-      "type": "CONCEPT",
-      "degree": 16
-    },
-    {
-      "id": "Michaelis-Menten Kinetics",
-      "name": "Michaelis-Menten Kinetics",
+      "id": "Incrementality Testing",
+      "name": "Incrementality Testing",
       "type": "CONCEPT",
       "degree": 16
     },
@@ -9671,9 +8351,15 @@
       "degree": 16
     },
     {
-      "id": "Incrementality",
-      "name": "Incrementality",
+      "id": "Incremental ROAS",
+      "name": "Incremental ROAS",
       "type": "CONCEPT",
+      "degree": 16
+    },
+    {
+      "id": "Meta Marketing Science",
+      "name": "Meta Marketing Science",
+      "type": "ORGANIZATION",
       "degree": 15
     },
     {
@@ -9681,24 +8367,18 @@
       "name": "GetYourGuide",
       "type": "ORGANIZATION",
       "degree": 15
-    },
-    {
-      "id": "Media Mix Model",
-      "name": "Media Mix Model",
-      "type": "CONCEPT",
-      "degree": 15
     }
   ],
   "type_counts": {
-    "CONCEPT": 344,
-    "ORGANIZATION": 97,
-    "PRODUCT": 42,
-    "TECHNOLOGY": 74,
-    "PERSON": 65,
-    "DOCUMENT": 49,
-    "OTHER": 10,
-    "ENTITY": 30,
+    "CONCEPT": 284,
+    "PRODUCT": 32,
+    "TECHNOLOGY": 64,
+    "PERSON": 63,
+    "DOCUMENT": 42,
+    "OTHER": 9,
+    "ORGANIZATION": 82,
+    "ENTITY": 25,
     "EVENT": 16,
-    "LOCATION": 10
+    "LOCATION": 8
   }
 }
